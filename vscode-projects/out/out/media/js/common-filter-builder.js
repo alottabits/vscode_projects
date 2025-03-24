@@ -13,8 +13,15 @@ window.filterState = window.filterState || {
   builders: {}, // Filter builder instances
   activeBuilder: null, // Currently active builder
   conditions: [], // Current filter conditions
-  conjunction: 'and' // AND/OR conjunction
+  conjunction: 'and', // AND/OR conjunction
+  version: '1.1.0' // Version to track script loaded
 };
+
+// Debug function with timestamp
+function debugLog(message, obj) {
+  const timestamp = new Date().toISOString().substring(11, 19);
+  console.log(`[FilterBuilder ${timestamp}] ${message}`, obj);
+}
 
 /**
  * Create a filter builder instance

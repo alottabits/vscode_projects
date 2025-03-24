@@ -439,12 +439,28 @@ export class ViewProvider {
    */
   private async getFilterBuilderScript(): Promise<string> {
     try {
-      const scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'js', 'common-filter-builder.js'));
+      // Log the extension path to debug script loading
+      console.log(`[ViewProvider] Extension path: ${this.context.extensionPath}`);
+      
+      const scriptPath = path.join(this.context.extensionPath, 'media', 'js', 'common-filter-builder.js');
+      console.log(`[ViewProvider] Loading filter builder script from: ${scriptPath}`);
+      
+      const scriptUri = vscode.Uri.file(scriptPath);
       const scriptContent = await vscode.workspace.fs.readFile(scriptUri);
-      return Buffer.from(scriptContent).toString();
+      const scriptText = Buffer.from(scriptContent).toString();
+      
+      // Log script content length and a snippet to verify it's the right version
+      console.log(`[ViewProvider] Loaded filter builder script: ${scriptText.length} bytes`);
+      console.log(`[ViewProvider] Script snippet: ${scriptText.substring(0, 100)}...`);
+      
+      // Add timestamp to prevent caching
+      return `
+        // Version: ${new Date().toISOString()}
+        ${scriptText}
+      `;
     } catch (error) {
       console.error('Failed to load filter builder script:', error);
-      return '';
+      return `console.error("Failed to load filter builder script: ${error}");`;
     }
   }
 
@@ -453,12 +469,23 @@ export class ViewProvider {
    */
   private async getFilterHandlerScript(): Promise<string> {
     try {
-      const scriptUri = vscode.Uri.file(path.join(this.context.extensionPath, 'media', 'js', 'filter-handler.js'));
+      const scriptPath = path.join(this.context.extensionPath, 'media', 'js', 'filter-handler.js');
+      console.log(`[ViewProvider] Loading filter handler script from: ${scriptPath}`);
+      
+      const scriptUri = vscode.Uri.file(scriptPath);
       const scriptContent = await vscode.workspace.fs.readFile(scriptUri);
-      return Buffer.from(scriptContent).toString();
+      const scriptText = Buffer.from(scriptContent).toString();
+      
+      console.log(`[ViewProvider] Loaded filter handler script: ${scriptText.length} bytes`);
+      
+      // Add timestamp to prevent caching
+      return `
+        // Version: ${new Date().toISOString()}
+        ${scriptText}
+      `;
     } catch (error) {
       console.error('Failed to load filter handler script:', error);
-      return '';
+      return `console.error("Failed to load filter handler script: ${error}");`;
     }
   }
 
