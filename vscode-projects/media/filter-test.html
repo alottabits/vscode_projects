@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filter Functionality Test</title>
+  <style>
+    :root {
+      --container-background: #252526;
+      --item-background: #2d2d2d;
+      --text-color: #e7e7e7;
+      --border-color: #3c3c3c;
+      --highlight-color: #264f78;
+      --header-background: #333333;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: var(--text-color);
+      background-color: var(--container-background);
+      padding: 0;
+      margin: 0;
+    }
+    
+    .container {
+      padding: 16px;
+      max-width: 100%;
+    }
+    
+    .filter-bar {
+      margin-bottom: 16px;
+    }
+    
+    .filter-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-button {
+      background-color: var(--item-background);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 4px 8px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    .filter-panel {
+      background-color: var(--item-background);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 4px;
+    }
+    
+    .filter-builder {
+      margin-bottom: 16px;
+    }
+    
+    .filter-condition {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .filter-property, .filter-operator, .filter-value, .filter-join {
+      padding: 4px;
+      background-color: var(--container-background);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      border-radius: 4px;
+    }
+    
+    .filter-remove {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .filter-add {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+      margin-bottom: 16px;
+    }
+    
+    .filter-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .log-panel {
+      background-color: var(--item-background);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: monospace;
+    }
+    
+    .log-entry {
+      margin-bottom: 4px;
+      padding: 4px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .success {
+      color: #4caf50;
+    }
+    
+    .error {
+      color: #f44336;
+    }
+    
+    .info {
+      color: #2196f3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Filter Functionality Test</h1>
+    
+    <div class="filter-bar">
+      <div class="filter-controls">
+        <button id="showFiltersBtn" class="filter-button">Show Filters</button>
+      </div>
+      <div id="filterPanel" class="filter-panel" style="display: none;">
+        <h3>Filters</h3>
+        
+        <div id="filterBuilder" class="filter-builder">
+          <!-- Dynamic filter conditions will be added here -->
+        </div>
+        
+        <button id="addFilterBtn" class="filter-add">+ Add Condition</button>
+        
+        <div class="filter-actions">
+          <div>
+            <button id="saveFilterBtn" class="filter-button">Save Filter</button>
+          </div>
+          <div>
+            <button id="applyFiltersBtn" class="filter-button">Apply Filters</button>
+            <button id="clearFilterBtn" class="filter-button">Clear Filters</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <h2>Action Log</h2>
+    <div id="logPanel" class="log-panel">
+      <div class="log-entry info">
+        Test initialized. Click "Show Filters" to begin testing.
+      </div>
+    </div>
+    
+    <h2>Current Filter State</h2>
+    <pre id="filterState" style="background: var(--item-background); padding: 10px; border-radius: 4px;">No filters applied</pre>
+  </div>
+  
+  <script>
+    // Mock VSCode API
+    window.vscode = {
+      postMessage: function(message) {
+        logMessage(`Message sent to extension: ${JSON.stringify(message)}`, 'info');
+        
+        // Simulate response from extension
+        if (message.command === 'refreshData') {
+          setTimeout(() => {
+            logMessage(`Filter applied successfully with ${message.filterConditions.length} conditions`, 'success');
+            document.getElementById('filterState').textContent = JSON.stringify({
+              conjunction: message.conjunction,
+              conditions: message.filterConditions
+            }, null, 2);
+          }, 500);
+        } else if (message.command === 'saveFilter') {
+          setTimeout(() => {
+            logMessage('Filter configuration saved successfully', 'success');
+          }, 500);
+        }
+      },
+      setState: function(state) {
+        logMessage(`State updated: ${JSON.stringify(state)}`, 'info');
+      },
+      getState: function() {
+        return { filters: currentFilters };
+      }
+    };
+    
+    // Mock dataframe fields for testing
+    const testFields = [
+      { name: 'name', type: 'string' },
+      { name: 'description', type: 'string' },
+      { name: 'status', type: 'string' },
+      { name: 'priority', type: 'number' },
+      { name: 'dueDate', type: 'date' },
+      { name: 'tags', type: 'array' }
+    ];
+    
+    // Store current filters
+    let currentFilters = {
+      conjunction: 'and',
+      conditions: []
+    };
+    
+    // Logging function
+    function logMessage(message, type = 'info') {
+      const logPanel = document.getElementById('logPanel');
+      const logEntry = document.createElement('div');
+      logEntry.className = `log-entry ${type}`;
+      logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logPanel.appendChild(logEntry);
+      logPanel.scrollTop = logPanel.scrollHeight;
+    }
+    
+    // Initialization function
+    function init() {
+      logMessage('Initializing test harness', 'info');
+      
+      // Make sure filterState exists
+      window.filterState = window.filterState || {
+        builders: {},
+        activeBuilder: null,
+        conditions: [],
+        conjunction: 'and'
+      };
+      
+      // Handle filter panel toggle
+      const showFiltersBtn = document.getElementById('showFiltersBtn');
+      const filterPanel = document.getElementById('filterPanel');
+      
+      if (showFiltersBtn && filterPanel) {
+        showFiltersBtn.addEventListener('click', () => {
+          const isVisible = filterPanel.style.display !== 'none';
+          filterPanel.style.display = isVisible ? 'none' : 'block';
+          logMessage(`Filter panel ${isVisible ? 'hidden' : 'shown'}`, 'info');
+          
+          // Init the filter builder when the panel is shown
+          if (!isVisible && !window.filterState.activeBuilder) {
+            initFilterBuilder();
+          }
+        });
+      }
+    }
+    
+    function initFilterBuilder() {
+      try {
+        logMessage('Creating filter builder component', 'info');
+        
+        // Ensure the container element is valid
+        const container = document.getElementById('filterBuilder');
+        if (!container) {
+          throw new Error('Filter builder container not found');
+        }
+        
+        // Explicitly create the dataframe object with fields
+        const dataframe = { fields: testFields };
+        
+        // Create the builder directly without using createFilterBuilder
+        window.filterBuilderComponent = new FilterBuilder(
+          container,
+          dataframe,
+          [],
+          'test-filter'
+        );
+        
+        // Store in global state
+        window.filterState.activeBuilder = window.filterBuilderComponent;
+        
+        logMessage('Filter builder created successfully', 'success');
+        
+        // Initialize filter handler events
+        if (typeof initializeFilterHandlers === 'function') {
+          initializeFilterHandlers();
+        } else {
+          logMessage('WARNING: initializeFilterHandlers function not found', 'error');
+          
+          // Add backup event handlers
+          setupBackupHandlers();
+        }
+      } catch (error) {
+        logMessage(`Error creating filter builder: ${error.message}`, 'error');
+        console.error('Filter builder error:', error);
+      }
+    }
+    
+    function setupBackupHandlers() {
+      // Backup handlers for filter actions
+      const applyBtn = document.getElementById('applyFiltersBtn');
+      if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+          logMessage('Apply Filters button clicked (backup handler)', 'info');
+          if (window.filterBuilderComponent) {
+            const conditions = window.filterBuilderComponent.getConditions();
+            const conjunction = window.filterBuilderComponent.getConjunction();
+            
+            vscode.postMessage({
+              command: 'refreshData',
+              filterConditions: conditions,
+              conjunction: conjunction
+            });
+          }
+        });
+      }
+      
+      const saveBtn = document.getElementById('saveFilterBtn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          logMessage('Save Filter button clicked (backup handler)', 'info');
+          if (window.filterBuilderComponent) {
+            const conditions = window.filterBuilderComponent.getConditions();
+            const conjunction = window.filterBuilderComponent.getConjunction();
+            
+            vscode.postMessage({
+              command: 'saveFilter',
+              filterConditions: conditions,
+              conjunction: conjunction
+            });
+          }
+        });
+      }
+      
+      const clearBtn = document.getElementById('clearFilterBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          logMessage('Clear Filters button clicked (backup handler)', 'info');
+          if (window.filterBuilderComponent) {
+            window.filterBuilderComponent.clear();
+            document.getElementById('filterState').textContent = 'No filters applied';
+            
+            vscode.postMessage({
+              command: 'refreshData',
+              filterConditions: [],
+              conjunction: 'and'
+            });
+          }
+        });
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+  
+  <!-- Filter Builder Script -->
+  <script src="js/common-filter-builder.js"></script>
+  
+  <!-- Filter Handler Script -->
+  <script src="js/filter-handler.js"></script>
+</body>
+</html>
