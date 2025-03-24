@@ -286,11 +286,74 @@ export class ViewProvider {
               // Create a copy of the current view to modify
               const updatedView = { ...view };
               
-              // Create or update the config object
-              updatedView.config = {
-                ...updatedView.config,
-                ...message.config
-              };
+              // Handle special month navigation values
+              if (message.config.month !== undefined) {
+                // Get current calendar state
+                const currentYear = updatedView.config?.year || new Date().getFullYear();
+                const currentMonth = updatedView.config?.month !== undefined ? 
+                  updatedView.config.month : new Date().getMonth();
+                
+                // Process special month values
+                if (message.config.month === 'prev') {
+                  // Go to previous month, handle year change
+                  if (currentMonth === 0) {
+                    updatedView.config = {
+                      ...updatedView.config,
+                      year: currentYear - 1,
+                      month: 11 // December
+                    };
+                  } else {
+                    updatedView.config = {
+                      ...updatedView.config,
+                      month: currentMonth - 1
+                    };
+                  }
+                } else if (message.config.month === 'next') {
+                  // Go to next month, handle year change
+                  if (currentMonth === 11) {
+                    updatedView.config = {
+                      ...updatedView.config,
+                      year: currentYear + 1,
+                      month: 0 // January
+                    };
+                  } else {
+                    updatedView.config = {
+                      ...updatedView.config,
+                      month: currentMonth + 1
+                    };
+                  }
+                } else if (message.config.month === 'today') {
+                  // Reset to current month/year
+                  const today = new Date();
+                  updatedView.config = {
+                    ...updatedView.config,
+                    year: today.getFullYear(),
+                    month: today.getMonth()
+                  };
+                } else if (typeof message.config.month === 'number') {
+                  // If a direct month number is provided, use it
+                  updatedView.config = {
+                    ...updatedView.config,
+                    month: message.config.month
+                  };
+                }
+                // Ignore any other values for month
+              } else {
+                // Handle non-month config changes
+                updatedView.config = {
+                  ...updatedView.config,
+                  ...message.config
+                };
+              }
+              
+              // Validate the month and year values
+              if (updatedView.config?.month !== undefined) {
+                const month = updatedView.config.month;
+                // Ensure month is in valid range (0-11)
+                if (typeof month === 'number' && (month < 0 || month > 11)) {
+                  throw new Error(`Invalid month value: ${month}. Must be between 0 and 11.`);
+                }
+              }
               
               // Update the project with the new view configuration
               const updatedProject = {

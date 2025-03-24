@@ -136,7 +136,6 @@ class FilterBuilder {
       e.preventDefault();
       this.addCondition();
     });
-    this.container.appendChild(this.addFilterBtn);
     
     // Add initial conditions or create a blank one
     if (this.initialConditions && this.initialConditions.length > 0) {
@@ -144,8 +143,12 @@ class FilterBuilder {
         this.addCondition(condition, index === 0);
       });
     } else {
+      // Always add an initial blank condition
       this.addCondition(null, true);
     }
+    
+    // Add the button AFTER creating the condition to match Obsidian behavior
+    this.container.appendChild(this.addFilterBtn);
   }
   
   /**
