@@ -3,8 +3,18 @@
  * This provides a unified interface for building filter conditions across different views
  */
 
-// Keep track of all filter builder instances
-window.filterBuilders = window.filterBuilders || {};
+// Debug function to log to console
+function debugLog(message, obj) {
+  console.log(`[FilterBuilder] ${message}`, obj);
+}
+
+// Global state object to share across modules
+window.filterState = window.filterState || {
+  builders: {}, // Filter builder instances
+  activeBuilder: null, // Currently active builder
+  conditions: [], // Current filter conditions
+  conjunction: 'and' // AND/OR conjunction
+};
 
 /**
  * Create a filter builder instance
@@ -17,36 +27,72 @@ window.filterBuilders = window.filterBuilders || {};
  * @returns {FilterBuilder} The created filter builder instance
  */
 function createFilterBuilder(options) {
+  debugLog('Creating filter builder with options:', options);
+  
   // Create a unique ID for this filter builder
   const id = `filter-builder-${Date.now()}`;
   
-  // Create the filter builder instance
-  const builder = new FilterBuilder(
-    options.container,
-    { fields: options.fields },
-    options.conditions || [],
-    id
-  );
-  
-  // If an external add button is provided, use it instead of the internal one
-  if (options.addButton) {
-    // Instead of removing the internal button, just hide it since we'll use its functionality
-    const internalAddBtn = builder.addFilterBtn;
-    if (internalAddBtn) {
-      internalAddBtn.style.display = 'none';
+  try {
+    // Create the filter builder instance
+    const builder = new FilterBuilder(
+      options.container,
+      { fields: options.fields },
+      options.conditions || [],
+      id
+    );
+    
+    // If an external add button is provided, connect it to the builder
+    if (options.addButton) {
+      debugLog('Connecting external add button', options.addButton);
+      
+      // Hide the internal button but keep it for functionality
+      const internalAddBtn = builder.addFilterBtn;
+      if (internalAddBtn) {
+        internalAddBtn.style.display = 'none';
+      }
+      
+      // Explicitly remove any existing event listeners from the button
+      const newButton = options.addButton.cloneNode(true);
+      if (options.addButton.parentNode) {
+        options.addButton.parentNode.replaceChild(newButton, options.addButton);
+      }
+      
+      // Add the click event listener with proper binding
+      newButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        debugLog('Add condition button clicked');
+        builder.addCondition();
+        
+        // Notify the parent window that a condition was added
+        if (window.vscode) {
+          window.vscode.postMessage({
+            command: 'filterConditionAdded'
+          });
+        }
+      });
+      
+      // Store the button reference
+      builder.externalAddBtn = newButton;
     }
     
-    // Connect the external add button - make sure it's properly connected with a direct event handler
-    options.addButton.addEventListener('click', function(e) {
-      e.preventDefault();
-      builder.addCondition();
-    });
+    // Store both globally and in our state object
+    window.filterBuilders = window.filterBuilders || {};
+    window.filterBuilders[id] = builder;
+    window.filterState.builders[id] = builder;
+    window.filterState.activeBuilder = builder;
+    window.filterBuilderComponent = builder; // Legacy support
+    
+    // Update the shared state
+    window.filterState.conditions = options.conditions || [];
+    window.filterState.conjunction = options.conjunction || 'and';
+    
+    debugLog('Filter builder created successfully', builder);
+    return builder;
+  } catch (error) {
+    console.error('Error creating filter builder:', error);
+    throw error;
   }
-  
-  // Store the instance in the global registry
-  window.filterBuilders[id] = builder;
-  
-  return builder;
 }
 
 /**
