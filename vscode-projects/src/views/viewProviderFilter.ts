@@ -259,6 +259,29 @@ export class ViewProvider {
             // Update our local reference
             view = updatedView;
             
+            // Get fresh data
+            const updatedCalendarDataframe = await this.projectManager.queryProject(project);
+            
+            // Apply filters if they exist
+            let filteredDataframe = updatedCalendarDataframe;
+            if (view.filter && view.filter.conditions && view.filter.conditions.length > 0) {
+              const filterEngine = new DataFilterEngine();
+              filteredDataframe = filterEngine.applyFilters(updatedCalendarDataframe, view.filter);
+            }
+            
+            // Update the dataframe
+            dataframe = filteredDataframe;
+            
+            // Refresh the webview content with the new configuration and data
+            panel.webview.html = this.getWebviewContent(
+              panel.webview,
+              project,
+              view,
+              dataframe,
+              filterBuilderScript,
+              filterHandlerScript
+            );
+            
             // Send confirmation back to webview
             panel.webview.postMessage({
               command: 'configUpdated',
@@ -1180,8 +1203,9 @@ export class ViewProvider {
         <script>
           // Client-side code for interactivity
           (function() {
-            // Store a reference to the VS Code API
-            const vscode = acquireVsCodeApi();
+            // Acquire the VS Code API once and make it globally available
+            window.vscode = window.vscode || acquireVsCodeApi();
+            const vscode = window.vscode;
             
             // Initialize event listeners
             document.addEventListener('DOMContentLoaded', () => {

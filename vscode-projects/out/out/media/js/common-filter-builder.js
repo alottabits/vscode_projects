@@ -2,6 +2,56 @@
  * Common Filter Builder component for VS Code Projects extension
  * This provides a unified interface for building filter conditions across different views
  */
+
+// Keep track of all filter builder instances
+window.filterBuilders = window.filterBuilders || {};
+
+/**
+ * Create a filter builder instance
+ * @param {Object} options - Configuration options
+ * @param {HTMLElement} options.container - Container element to place the filter builder in
+ * @param {Array} options.fields - Field definitions
+ * @param {HTMLElement} options.addButton - Optional external add button to use
+ * @param {Array} options.conditions - Initial filter conditions (optional)
+ * @param {string} options.conjunction - Initial conjunction (optional)
+ * @returns {FilterBuilder} The created filter builder instance
+ */
+function createFilterBuilder(options) {
+  // Create a unique ID for this filter builder
+  const id = `filter-builder-${Date.now()}`;
+  
+  // Create the filter builder instance
+  const builder = new FilterBuilder(
+    options.container,
+    { fields: options.fields },
+    options.conditions || [],
+    id
+  );
+  
+  // If an external add button is provided, use it instead of the internal one
+  if (options.addButton) {
+    // Instead of removing the internal button, just hide it since we'll use its functionality
+    const internalAddBtn = builder.addFilterBtn;
+    if (internalAddBtn) {
+      internalAddBtn.style.display = 'none';
+    }
+    
+    // Connect the external add button - make sure it's properly connected with a direct event handler
+    options.addButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      builder.addCondition();
+    });
+  }
+  
+  // Store the instance in the global registry
+  window.filterBuilders[id] = builder;
+  
+  return builder;
+}
+
+/**
+ * Filter Builder class for building filter conditions
+ */
 class FilterBuilder {
   /**
    * Create a new FilterBuilder
@@ -36,7 +86,10 @@ class FilterBuilder {
     this.addFilterBtn.className = 'filter-add';
     this.addFilterBtn.id = `${this.idPrefix}-add-btn`;
     this.addFilterBtn.textContent = '+ Add Condition';
-    this.addFilterBtn.addEventListener('click', () => this.addCondition());
+    this.addFilterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.addCondition();
+    });
     this.container.appendChild(this.addFilterBtn);
     
     // Add initial conditions or create a blank one

@@ -3,9 +3,13 @@
  * Handles the communication between filter UI components and the extension
  */
 
+// This script expects the VS Code API to be provided globally as 'vscode'
 (function() {
-    // Get vscode API
-    const vscode = acquireVsCodeApi();
+    // Use the globally provided VS Code API instead of acquiring it again
+    const vscode = window.vscode || acquireVsCodeApi();
+    
+    // Make the VS Code API available globally
+    window.vscode = vscode;
     
     // Store current filter state
     let currentFilters = {
@@ -13,10 +17,13 @@
         conditions: []
     };
     
-    // Initialize filter handlers when document is loaded
-    document.addEventListener('DOMContentLoaded', () => {
+    // Initialize filter handlers when document is loaded or immediately if DOM is already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeFilterHandlers);
+    } else {
+        // DOM is already loaded, call the function directly
         initializeFilterHandlers();
-    });
+    }
     
     /**
      * Initialize filter-related event handlers
