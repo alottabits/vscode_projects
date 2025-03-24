@@ -159,11 +159,66 @@ if (!allDepsFound) {
 // Ensure a clean build with esbuild
 console.log('\n🔨 Building with esbuild...');
 try {
-  execSync('NODE_ENV=production node esbuild.js', { 
+  // Set both NODE_ENV and PACKAGING flags to control build behavior
+  const env = Object.assign({}, process.env, { 
+    NODE_ENV: 'production',
+    PACKAGING: 'true' 
+  });
+  
+  execSync('node esbuild.js', { 
     stdio: 'inherit', 
-    cwd: extensionRoot 
+    cwd: extensionRoot,
+    env: env
   });
   console.log('✅ esbuild build completed');
+  
+  // Verify that crucial files exist in output directory
+  const filterBuilderOutputPath = path.join(extensionRoot, 'out', 'media', 'js', 'common-filter-builder.js');
+  
+  if (fs.existsSync(filterBuilderOutputPath)) {
+    console.log(`✓ Verified filter builder script in output directory: ${filterBuilderOutputPath}`);
+    const stats = fs.statSync(filterBuilderOutputPath);
+    console.log(`  Output size: ${stats.size} bytes, Modified: ${stats.mtime.toISOString()}`);
+    
+    // Check for syntax errors in the file
+    const content = fs.readFileSync(filterBuilderOutputPath, 'utf8');
+    const firstLines = content.substring(0, 200);
+    console.log(`  Content preview:\n${firstLines}...`);
+    
+    // Simple check for common syntax errors
+    if (content.includes('function debugLog(message obj)') || 
+        content.includes('builders: {} //') ||
+        content.includes('activeBuilder: null //')) {
+      console.error('⚠️ WARNING: Potential syntax errors detected in the filter builder script!');
+      console.error('The compiled JavaScript may have missing commas or other issues.');
+      
+      // Try to make a safe copy of the original correctly-formatted file
+      const sourceFile = path.join(extensionRoot, 'media', 'js', 'common-filter-builder.js');
+      if (fs.existsSync(sourceFile)) {
+        console.log('🔧 Copying original filter builder script to output as backup...');
+        fs.copyFileSync(sourceFile, filterBuilderOutputPath);
+        console.log('✅ Fixed filter builder script by direct copy');
+      }
+    }
+  } else {
+    console.error('❌ ERROR: Filter builder script not found in output directory!');
+    console.log('Attempting to fix by manually copying from source...');
+    
+    // Create the target directory if it doesn't exist
+    const targetDir = path.dirname(filterBuilderOutputPath);
+    if (!fs.existsSync(targetDir)) {
+      fs.mkdirSync(targetDir, { recursive: true });
+    }
+    
+    // Copy the file from source
+    const sourceFile = path.join(extensionRoot, 'media', 'js', 'common-filter-builder.js');
+    if (fs.existsSync(sourceFile)) {
+      fs.copyFileSync(sourceFile, filterBuilderOutputPath);
+      console.log('✅ Fixed filter builder script by manual copy');
+    } else {
+      console.error('❌ Source filter builder script not found either!');
+    }
+  }
 } catch (error) {
   console.error('❌ esbuild build failed:', error.message);
   process.exit(1);

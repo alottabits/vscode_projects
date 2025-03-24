@@ -200,10 +200,63 @@ function debugLog(message, obj) {
      * Handle Apply Filter button click
      */
     function handleApplyFilter() {
+        debugLog('handleApplyFilter() called');
+
+        // Check if we can access filterState
+        if (window.filterState) {
+            debugLog('filterState found:', window.filterState);
+        } else {
+            debugLog('WARNING: filterState not found in window object!');
+        }
+
+        // Check if we can access the active builder
+        const activeBuilder = window.filterState && window.filterState.activeBuilder;
+        if (activeBuilder) {
+            debugLog('Active filter builder found:', activeBuilder);
+        } else {
+            debugLog('WARNING: Active filter builder not found!');
+            // Fallback to classic component if available
+            if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
+                debugLog('Using legacy filterBuilderComponent instead');
+            } else {
+                debugLog('ERROR: No filter builder available! Cannot apply filters.');
+                // Create a visual error notification
+                try {
+                    const filterPanel = document.getElementById('filterPanel');
+                    if (filterPanel) {
+                        const errorMsg = document.createElement('div');
+                        errorMsg.className = 'filter-error';
+                        errorMsg.textContent = 'Error: Filter builder not initialized properly.';
+                        errorMsg.style.color = 'red';
+                        errorMsg.style.padding = '8px';
+                        errorMsg.style.margin = '8px 0';
+                        errorMsg.style.border = '1px solid red';
+                        filterPanel.prepend(errorMsg);
+                        
+                        // Auto-remove after 5 seconds
+                        setTimeout(() => {
+                            if (errorMsg.parentNode) {
+                                errorMsg.parentNode.removeChild(errorMsg);
+                            }
+                        }, 5000);
+                    }
+                } catch (e) {
+                    // Ignore DOM errors
+                }
+                return;
+            }
+        }
+        
         // Get filter conditions from the UI
-        if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
-            const conditions = filterBuilderComponent.getConditions();
-            const conjunction = filterBuilderComponent.getConjunction();
+        const builder = activeBuilder || filterBuilderComponent;
+        if (builder) {
+            debugLog('Getting conditions from builder:', builder);
+            
+            const conditions = builder.getConditions();
+            const conjunction = builder.getConjunction();
+            
+            debugLog('Retrieved conditions:', conditions);
+            debugLog('Retrieved conjunction:', conjunction);
             
             // Update current filters
             currentFilters = {
@@ -215,11 +268,31 @@ function debugLog(message, obj) {
             vscode.setState({ filters: currentFilters });
             
             // Send filter command to extension
-            vscode.postMessage({
+            const message = {
                 command: 'refreshData',
                 filterConditions: conditions,
                 conjunction: conjunction
-            });
+            };
+            
+            debugLog('Sending message to extension:', message);
+            vscode.postMessage(message);
+            
+            // Visual confirmation
+            try {
+                const applyBtn = document.getElementById('applyFiltersBtn');
+                if (applyBtn) {
+                    const originalText = applyBtn.textContent;
+                    applyBtn.textContent = '✓ Applied';
+                    applyBtn.style.backgroundColor = '#4CAF50';
+                    
+                    setTimeout(() => {
+                        applyBtn.textContent = originalText;
+                        applyBtn.style.backgroundColor = '';
+                    }, 2000);
+                }
+            } catch (e) {
+                // Ignore DOM errors
+            }
         }
     }
     

@@ -1,37 +1,21 @@
 /**
  * Common Filter Builder component for VS Code Projects extension
  * This provides a unified interface for building filter conditions across different views
- * Version 1.3.0 - Syntax-error-proof implementation for packaging
+ * Version 1.2.0 - with debug markers
  */
 
-// ES5 syntax without commas for maximum compatibility
-function debugLog(message) {
-  // Use arguments object directly to avoid comma issues
-  var obj = undefined;
-  if (arguments.length > 1) {
-    obj = arguments[1];
-  }
+// Enhanced debug logging function with timestamp
+function debugLog(message, obj) {
+  const timestamp = new Date().toISOString().substring(11, 19);
+  console.log(`[FilterBuilder ${timestamp}] ${message}`, obj || '');
   
-  // Get timestamp piece by piece to avoid comma issues
-  var now = new Date();
-  var timestamp = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-  
-  // Safe console logging with separate statements
-  console.log("[FilterBuilder " + timestamp + "] " + message);
-  
-  // Only log object if provided
-  if (obj !== undefined) {
-    console.log("Object data:");
-    console.log(obj);
-  }
-  
-  // Try to log to an element in the DOM if it exists
+  // Try to log to an element in the DOM if it exists (for visual debugging)
   try {
-    var logPanel = document.getElementById('logPanel');
+    const logPanel = document.getElementById('logPanel');
     if (logPanel) {
-      var logEntry = document.createElement('div');
+      const logEntry = document.createElement('div');
       logEntry.className = 'log-entry info';
-      logEntry.textContent = "[FilterBuilder " + timestamp + "] " + message;
+      logEntry.textContent = `[FilterBuilder ${timestamp}] ${message}`;
       logPanel.appendChild(logEntry);
       logPanel.scrollTop = logPanel.scrollHeight;
     }
@@ -49,9 +33,8 @@ window.filterState = window.filterState || {
   activeBuilder: null, // Currently active builder
   conditions: [], // Current filter conditions
   conjunction: 'and', // AND/OR conjunction
-  version: '1.3.0', // Version to track script loaded
-  loadTime: new Date().toISOString(), // When script was loaded
-  debug: true // Enable additional debugging
+  version: '1.2.0', // Version to track script loaded
+  loadTime: new Date().toISOString() // When script was loaded
 };
 
 // Log state initialization
