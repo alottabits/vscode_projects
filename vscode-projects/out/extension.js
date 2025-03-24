@@ -1,1654 +1,49 @@
-"use strict";var Ci=Object.create;var Se=Object.defineProperty;var Ai=Object.getOwnPropertyDescriptor;var Ii=Object.getOwnPropertyNames;var ki=Object.getPrototypeOf,Di=Object.prototype.hasOwnProperty;var f=(e,t)=>()=>(t||e((t={exports:{}}).exports,t),t.exports),ji=(e,t)=>{for(var r in t)Se(e,r,{get:t[r],enumerable:!0})},jt=(e,t,r,i)=>{if(t&&typeof t=="object"||typeof t=="function")for(let n of Ii(t))!Di.call(e,n)&&n!==r&&Se(e,n,{get:()=>t[n],enumerable:!(i=Ai(t,n))||i.enumerable});return e};var P=(e,t,r)=>(r=e!=null?Ci(ki(e)):{},jt(t||!e||!e.__esModule?Se(r,"default",{value:e,enumerable:!0}):r,e)),_i=e=>jt(Se({},"__esModule",{value:!0}),e);var ct=f(lt=>{"use strict";Object.defineProperty(lt,"__esModule",{value:!0});lt.default=Bi;var Pi=Ti(require("crypto"));function Ti(e){return e&&e.__esModule?e:{default:e}}var Ae=new Uint8Array(256),Ce=Ae.length;function Bi(){return Ce>Ae.length-16&&(Pi.default.randomFillSync(Ae),Ce=0),Ae.slice(Ce,Ce+=16)}});var Pt=f(Ie=>{"use strict";Object.defineProperty(Ie,"__esModule",{value:!0});Ie.default=void 0;var Oi=/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;Ie.default=Oi});var pe=f(ke=>{"use strict";Object.defineProperty(ke,"__esModule",{value:!0});ke.default=void 0;var Mi=Ni(Pt());function Ni(e){return e&&e.__esModule?e:{default:e}}function Li(e){return typeof e=="string"&&Mi.default.test(e)}var qi=Li;ke.default=qi});var fe=f(De=>{"use strict";Object.defineProperty(De,"__esModule",{value:!0});De.default=void 0;var Ri=$i(pe());function $i(e){return e&&e.__esModule?e:{default:e}}var A=[];for(let e=0;e<256;++e)A.push((e+256).toString(16).substr(1));function Vi(e,t=0){let r=(A[e[t+0]]+A[e[t+1]]+A[e[t+2]]+A[e[t+3]]+"-"+A[e[t+4]]+A[e[t+5]]+"-"+A[e[t+6]]+A[e[t+7]]+"-"+A[e[t+8]]+A[e[t+9]]+"-"+A[e[t+10]]+A[e[t+11]]+A[e[t+12]]+A[e[t+13]]+A[e[t+14]]+A[e[t+15]]).toLowerCase();if(!(0,Ri.default)(r))throw TypeError("Stringified UUID is invalid");return r}var Ui=Vi;De.default=Ui});var Ot=f(je=>{"use strict";Object.defineProperty(je,"__esModule",{value:!0});je.default=void 0;var Hi=Bt(ct()),Yi=Bt(fe());function Bt(e){return e&&e.__esModule?e:{default:e}}var Tt,st,dt=0,ut=0;function Ki(e,t,r){let i=t&&r||0,n=t||new Array(16);e=e||{};let a=e.node||Tt,o=e.clockseq!==void 0?e.clockseq:st;if(a==null||o==null){let p=e.random||(e.rng||Hi.default)();a==null&&(a=Tt=[p[0]|1,p[1],p[2],p[3],p[4],p[5]]),o==null&&(o=st=(p[6]<<8|p[7])&16383)}let l=e.msecs!==void 0?e.msecs:Date.now(),c=e.nsecs!==void 0?e.nsecs:ut+1,s=l-dt+(c-ut)/1e4;if(s<0&&e.clockseq===void 0&&(o=o+1&16383),(s<0||l>dt)&&e.nsecs===void 0&&(c=0),c>=1e4)throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");dt=l,ut=c,st=o,l+=122192928e5;let d=((l&268435455)*1e4+c)%4294967296;n[i++]=d>>>24&255,n[i++]=d>>>16&255,n[i++]=d>>>8&255,n[i++]=d&255;let u=l/4294967296*1e4&268435455;n[i++]=u>>>8&255,n[i++]=u&255,n[i++]=u>>>24&15|16,n[i++]=u>>>16&255,n[i++]=o>>>8|128,n[i++]=o&255;for(let p=0;p<6;++p)n[i+p]=a[p];return t||(0,Yi.default)(n)}var Gi=Ki;je.default=Gi});var pt=f(_e=>{"use strict";Object.defineProperty(_e,"__esModule",{value:!0});_e.default=void 0;var Wi=Ji(pe());function Ji(e){return e&&e.__esModule?e:{default:e}}function Qi(e){if(!(0,Wi.default)(e))throw TypeError("Invalid UUID");let t,r=new Uint8Array(16);return r[0]=(t=parseInt(e.slice(0,8),16))>>>24,r[1]=t>>>16&255,r[2]=t>>>8&255,r[3]=t&255,r[4]=(t=parseInt(e.slice(9,13),16))>>>8,r[5]=t&255,r[6]=(t=parseInt(e.slice(14,18),16))>>>8,r[7]=t&255,r[8]=(t=parseInt(e.slice(19,23),16))>>>8,r[9]=t&255,r[10]=(t=parseInt(e.slice(24,36),16))/1099511627776&255,r[11]=t/4294967296&255,r[12]=t>>>24&255,r[13]=t>>>16&255,r[14]=t>>>8&255,r[15]=t&255,r}var zi=Qi;_e.default=zi});var ft=f(G=>{"use strict";Object.defineProperty(G,"__esModule",{value:!0});G.default=to;G.URL=G.DNS=void 0;var Xi=Mt(fe()),Zi=Mt(pt());function Mt(e){return e&&e.__esModule?e:{default:e}}function eo(e){e=unescape(encodeURIComponent(e));let t=[];for(let r=0;r<e.length;++r)t.push(e.charCodeAt(r));return t}var Nt="6ba7b810-9dad-11d1-80b4-00c04fd430c8";G.DNS=Nt;var Lt="6ba7b811-9dad-11d1-80b4-00c04fd430c8";G.URL=Lt;function to(e,t,r){function i(n,a,o,l){if(typeof n=="string"&&(n=eo(n)),typeof a=="string"&&(a=(0,Zi.default)(a)),a.length!==16)throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");let c=new Uint8Array(16+n.length);if(c.set(a),c.set(n,a.length),c=r(c),c[6]=c[6]&15|t,c[8]=c[8]&63|128,o){l=l||0;for(let s=0;s<16;++s)o[l+s]=c[s];return o}return(0,Xi.default)(c)}try{i.name=e}catch{}return i.DNS=Nt,i.URL=Lt,i}});var qt=f(Pe=>{"use strict";Object.defineProperty(Pe,"__esModule",{value:!0});Pe.default=void 0;var ro=no(require("crypto"));function no(e){return e&&e.__esModule?e:{default:e}}function io(e){return Array.isArray(e)?e=Buffer.from(e):typeof e=="string"&&(e=Buffer.from(e,"utf8")),ro.default.createHash("md5").update(e).digest()}var oo=io;Pe.default=oo});var $t=f(Te=>{"use strict";Object.defineProperty(Te,"__esModule",{value:!0});Te.default=void 0;var ao=Rt(ft()),lo=Rt(qt());function Rt(e){return e&&e.__esModule?e:{default:e}}var co=(0,ao.default)("v3",48,lo.default),so=co;Te.default=so});var Ut=f(Be=>{"use strict";Object.defineProperty(Be,"__esModule",{value:!0});Be.default=void 0;var uo=Vt(ct()),po=Vt(fe());function Vt(e){return e&&e.__esModule?e:{default:e}}function fo(e,t,r){e=e||{};let i=e.random||(e.rng||uo.default)();if(i[6]=i[6]&15|64,i[8]=i[8]&63|128,t){r=r||0;for(let n=0;n<16;++n)t[r+n]=i[n];return t}return(0,po.default)(i)}var ho=fo;Be.default=ho});var Ht=f(Oe=>{"use strict";Object.defineProperty(Oe,"__esModule",{value:!0});Oe.default=void 0;var mo=vo(require("crypto"));function vo(e){return e&&e.__esModule?e:{default:e}}function go(e){return Array.isArray(e)?e=Buffer.from(e):typeof e=="string"&&(e=Buffer.from(e,"utf8")),mo.default.createHash("sha1").update(e).digest()}var yo=go;Oe.default=yo});var Kt=f(Me=>{"use strict";Object.defineProperty(Me,"__esModule",{value:!0});Me.default=void 0;var wo=Yt(ft()),xo=Yt(Ht());function Yt(e){return e&&e.__esModule?e:{default:e}}var bo=(0,wo.default)("v5",80,xo.default),Eo=bo;Me.default=Eo});var Gt=f(Ne=>{"use strict";Object.defineProperty(Ne,"__esModule",{value:!0});Ne.default=void 0;var So="00000000-0000-0000-0000-000000000000";Ne.default=So});var Wt=f(Le=>{"use strict";Object.defineProperty(Le,"__esModule",{value:!0});Le.default=void 0;var Fo=Co(pe());function Co(e){return e&&e.__esModule?e:{default:e}}function Ao(e){if(!(0,Fo.default)(e))throw TypeError("Invalid UUID");return parseInt(e.substr(14,1),16)}var Io=Ao;Le.default=Io});var Jt=f(O=>{"use strict";Object.defineProperty(O,"__esModule",{value:!0});Object.defineProperty(O,"v1",{enumerable:!0,get:function(){return ko.default}});Object.defineProperty(O,"v3",{enumerable:!0,get:function(){return Do.default}});Object.defineProperty(O,"v4",{enumerable:!0,get:function(){return jo.default}});Object.defineProperty(O,"v5",{enumerable:!0,get:function(){return _o.default}});Object.defineProperty(O,"NIL",{enumerable:!0,get:function(){return Po.default}});Object.defineProperty(O,"version",{enumerable:!0,get:function(){return To.default}});Object.defineProperty(O,"validate",{enumerable:!0,get:function(){return Bo.default}});Object.defineProperty(O,"stringify",{enumerable:!0,get:function(){return Oo.default}});Object.defineProperty(O,"parse",{enumerable:!0,get:function(){return Mo.default}});var ko=q(Ot()),Do=q($t()),jo=q(Ut()),_o=q(Kt()),Po=q(Gt()),To=q(Wt()),Bo=q(pe()),Oo=q(fe()),Mo=q(pt());function q(e){return e&&e.__esModule?e:{default:e}}});var me=f((Ps,er)=>{var No=Object.prototype.toString;er.exports=function(t){if(t===void 0)return"undefined";if(t===null)return"null";var r=typeof t;if(r==="boolean")return"boolean";if(r==="string")return"string";if(r==="number")return"number";if(r==="symbol")return"symbol";if(r==="function")return Vo(t)?"generatorfunction":"function";if(Lo(t))return"array";if(Yo(t))return"buffer";if(Ho(t))return"arguments";if(Ro(t))return"date";if(qo(t))return"error";if($o(t))return"regexp";switch(Zt(t)){case"Symbol":return"symbol";case"Promise":return"promise";case"WeakMap":return"weakmap";case"WeakSet":return"weakset";case"Map":return"map";case"Set":return"set";case"Int8Array":return"int8array";case"Uint8Array":return"uint8array";case"Uint8ClampedArray":return"uint8clampedarray";case"Int16Array":return"int16array";case"Uint16Array":return"uint16array";case"Int32Array":return"int32array";case"Uint32Array":return"uint32array";case"Float32Array":return"float32array";case"Float64Array":return"float64array"}if(Uo(t))return"generator";switch(r=No.call(t),r){case"[object Object]":return"object";case"[object Map Iterator]":return"mapiterator";case"[object Set Iterator]":return"setiterator";case"[object String Iterator]":return"stringiterator";case"[object Array Iterator]":return"arrayiterator"}return r.slice(8,-1).toLowerCase().replace(/\s/g,"")};function Zt(e){return typeof e.constructor=="function"?e.constructor.name:null}function Lo(e){return Array.isArray?Array.isArray(e):e instanceof Array}function qo(e){return e instanceof Error||typeof e.message=="string"&&e.constructor&&typeof e.constructor.stackTraceLimit=="number"}function Ro(e){return e instanceof Date?!0:typeof e.toDateString=="function"&&typeof e.getDate=="function"&&typeof e.setDate=="function"}function $o(e){return e instanceof RegExp?!0:typeof e.flags=="string"&&typeof e.ignoreCase=="boolean"&&typeof e.multiline=="boolean"&&typeof e.global=="boolean"}function Vo(e,t){return Zt(e)==="GeneratorFunction"}function Uo(e){return typeof e.throw=="function"&&typeof e.return=="function"&&typeof e.next=="function"}function Ho(e){try{if(typeof e.length=="number"&&typeof e.callee=="function")return!0}catch(t){if(t.message.indexOf("callee")!==-1)return!0}return!1}function Yo(e){return e.constructor&&typeof e.constructor.isBuffer=="function"?e.constructor.isBuffer(e):!1}});var rr=f((Ts,tr)=>{"use strict";tr.exports=function(t){return typeof t<"u"&&t!==null&&(typeof t=="object"||typeof t=="function")}});var or=f((Bs,ir)=>{"use strict";var nr=rr();ir.exports=function(t){nr(t)||(t={});for(var r=arguments.length,i=1;i<r;i++){var n=arguments[i];nr(n)&&Ko(t,n)}return t};function Ko(e,t){for(var r in t)Go(t,r)&&(e[r]=t[r])}function Go(e,t){return Object.prototype.hasOwnProperty.call(e,t)}});var cr=f((Os,lr)=>{"use strict";var Wo=me(),Jo=or();lr.exports=function(e,t){typeof t=="function"&&(t={parse:t});var r=zo(e),i={section_delimiter:"---",parse:Zo},n=Jo({},i,t),a=n.section_delimiter,o=r.content.split(/\r?\n/),l=null,c=ar(),s=[],d=[];function u(M){r.content=M,l=[],s=[]}function p(M){d.length&&(c.key=Xo(d[0],a),c.content=M,n.parse(c,l),l.push(c),c=ar(),s=[],d=[])}for(var h=0;h<o.length;h++){var g=o[h],x=d.length,v=g.trim();if(Qo(v,a)){if(v.length===3&&h!==0){if(x===0||x===2){s.push(g);continue}d.push(v),c.data=s.join(`
-`),s=[];continue}l===null&&u(s.join(`
-`)),x===2&&p(s.join(`
-`)),d.push(v);continue}s.push(g)}return l===null?u(s.join(`
-`)):p(s.join(`
-`)),r.sections=l,r};function Qo(e,t){return!(e.slice(0,t.length)!==t||e.charAt(t.length+1)===t.slice(-1))}function zo(e){if(Wo(e)!=="object"&&(e={content:e}),typeof e.content!="string"&&!ea(e.content))throw new TypeError("expected a buffer or string");return e.content=e.content.toString(),e.sections=[],e}function Xo(e,t){return e?e.slice(t.length).trim():""}function ar(){return{key:"",data:"",content:""}}function Zo(e){return e}function ea(e){return e&&e.constructor&&typeof e.constructor.isBuffer=="function"?e.constructor.isBuffer(e):!1}});var J=f((Ms,W)=>{"use strict";function sr(e){return typeof e>"u"||e===null}function ta(e){return typeof e=="object"&&e!==null}function ra(e){return Array.isArray(e)?e:sr(e)?[]:[e]}function na(e,t){var r,i,n,a;if(t)for(a=Object.keys(t),r=0,i=a.length;r<i;r+=1)n=a[r],e[n]=t[n];return e}function ia(e,t){var r="",i;for(i=0;i<t;i+=1)r+=e;return r}function oa(e){return e===0&&Number.NEGATIVE_INFINITY===1/e}W.exports.isNothing=sr;W.exports.isObject=ta;W.exports.toArray=ra;W.exports.repeat=ia;W.exports.isNegativeZero=oa;W.exports.extend=na});var ne=f((Ns,dr)=>{"use strict";function ve(e,t){Error.call(this),this.name="YAMLException",this.reason=e,this.mark=t,this.message=(this.reason||"(unknown reason)")+(this.mark?" "+this.mark.toString():""),Error.captureStackTrace?Error.captureStackTrace(this,this.constructor):this.stack=new Error().stack||""}ve.prototype=Object.create(Error.prototype);ve.prototype.constructor=ve;ve.prototype.toString=function(t){var r=this.name+": ";return r+=this.reason||"(unknown reason)",!t&&this.mark&&(r+=" "+this.mark.toString()),r};dr.exports=ve});var fr=f((Ls,pr)=>{"use strict";var ur=J();function ht(e,t,r,i,n){this.name=e,this.buffer=t,this.position=r,this.line=i,this.column=n}ht.prototype.getSnippet=function(t,r){var i,n,a,o,l;if(!this.buffer)return null;for(t=t||4,r=r||75,i="",n=this.position;n>0&&`\0\r
-\x85\u2028\u2029`.indexOf(this.buffer.charAt(n-1))===-1;)if(n-=1,this.position-n>r/2-1){i=" ... ",n+=5;break}for(a="",o=this.position;o<this.buffer.length&&`\0\r
-\x85\u2028\u2029`.indexOf(this.buffer.charAt(o))===-1;)if(o+=1,o-this.position>r/2-1){a=" ... ",o-=5;break}return l=this.buffer.slice(n,o),ur.repeat(" ",t)+i+l+a+`
-`+ur.repeat(" ",t+this.position-n+i.length)+"^"};ht.prototype.toString=function(t){var r,i="";return this.name&&(i+='in "'+this.name+'" '),i+="at line "+(this.line+1)+", column "+(this.column+1),t||(r=this.getSnippet(),r&&(i+=`:
-`+r)),i};pr.exports=ht});var S=f((qs,mr)=>{"use strict";var hr=ne(),aa=["kind","resolve","construct","instanceOf","predicate","represent","defaultStyle","styleAliases"],la=["scalar","sequence","mapping"];function ca(e){var t={};return e!==null&&Object.keys(e).forEach(function(r){e[r].forEach(function(i){t[String(i)]=r})}),t}function sa(e,t){if(t=t||{},Object.keys(t).forEach(function(r){if(aa.indexOf(r)===-1)throw new hr('Unknown option "'+r+'" is met in definition of "'+e+'" YAML type.')}),this.tag=e,this.kind=t.kind||null,this.resolve=t.resolve||function(){return!0},this.construct=t.construct||function(r){return r},this.instanceOf=t.instanceOf||null,this.predicate=t.predicate||null,this.represent=t.represent||null,this.defaultStyle=t.defaultStyle||null,this.styleAliases=ca(t.styleAliases||null),la.indexOf(this.kind)===-1)throw new hr('Unknown kind "'+this.kind+'" is specified for "'+e+'" YAML type.')}mr.exports=sa});var Q=f((Rs,gr)=>{"use strict";var vr=J(),Ve=ne(),da=S();function mt(e,t,r){var i=[];return e.include.forEach(function(n){r=mt(n,t,r)}),e[t].forEach(function(n){r.forEach(function(a,o){a.tag===n.tag&&a.kind===n.kind&&i.push(o)}),r.push(n)}),r.filter(function(n,a){return i.indexOf(a)===-1})}function ua(){var e={scalar:{},sequence:{},mapping:{},fallback:{}},t,r;function i(n){e[n.kind][n.tag]=e.fallback[n.tag]=n}for(t=0,r=arguments.length;t<r;t+=1)arguments[t].forEach(i);return e}function ie(e){this.include=e.include||[],this.implicit=e.implicit||[],this.explicit=e.explicit||[],this.implicit.forEach(function(t){if(t.loadKind&&t.loadKind!=="scalar")throw new Ve("There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.")}),this.compiledImplicit=mt(this,"implicit",[]),this.compiledExplicit=mt(this,"explicit",[]),this.compiledTypeMap=ua(this.compiledImplicit,this.compiledExplicit)}ie.DEFAULT=null;ie.create=function(){var t,r;switch(arguments.length){case 1:t=ie.DEFAULT,r=arguments[0];break;case 2:t=arguments[0],r=arguments[1];break;default:throw new Ve("Wrong number of arguments for Schema.create function")}if(t=vr.toArray(t),r=vr.toArray(r),!t.every(function(i){return i instanceof ie}))throw new Ve("Specified list of super schemas (or a single Schema object) contains a non-Schema object.");if(!r.every(function(i){return i instanceof da}))throw new Ve("Specified list of YAML types (or a single Type object) contains a non-Type object.");return new ie({include:t,explicit:r})};gr.exports=ie});var wr=f(($s,yr)=>{"use strict";var pa=S();yr.exports=new pa("tag:yaml.org,2002:str",{kind:"scalar",construct:function(e){return e!==null?e:""}})});var br=f((Vs,xr)=>{"use strict";var fa=S();xr.exports=new fa("tag:yaml.org,2002:seq",{kind:"sequence",construct:function(e){return e!==null?e:[]}})});var Sr=f((Us,Er)=>{"use strict";var ha=S();Er.exports=new ha("tag:yaml.org,2002:map",{kind:"mapping",construct:function(e){return e!==null?e:{}}})});var Ue=f((Hs,Fr)=>{"use strict";var ma=Q();Fr.exports=new ma({explicit:[wr(),br(),Sr()]})});var Ar=f((Ys,Cr)=>{"use strict";var va=S();function ga(e){if(e===null)return!0;var t=e.length;return t===1&&e==="~"||t===4&&(e==="null"||e==="Null"||e==="NULL")}function ya(){return null}function wa(e){return e===null}Cr.exports=new va("tag:yaml.org,2002:null",{kind:"scalar",resolve:ga,construct:ya,predicate:wa,represent:{canonical:function(){return"~"},lowercase:function(){return"null"},uppercase:function(){return"NULL"},camelcase:function(){return"Null"}},defaultStyle:"lowercase"})});var kr=f((Ks,Ir)=>{"use strict";var xa=S();function ba(e){if(e===null)return!1;var t=e.length;return t===4&&(e==="true"||e==="True"||e==="TRUE")||t===5&&(e==="false"||e==="False"||e==="FALSE")}function Ea(e){return e==="true"||e==="True"||e==="TRUE"}function Sa(e){return Object.prototype.toString.call(e)==="[object Boolean]"}Ir.exports=new xa("tag:yaml.org,2002:bool",{kind:"scalar",resolve:ba,construct:Ea,predicate:Sa,represent:{lowercase:function(e){return e?"true":"false"},uppercase:function(e){return e?"TRUE":"FALSE"},camelcase:function(e){return e?"True":"False"}},defaultStyle:"lowercase"})});var jr=f((Gs,Dr)=>{"use strict";var Fa=J(),Ca=S();function Aa(e){return 48<=e&&e<=57||65<=e&&e<=70||97<=e&&e<=102}function Ia(e){return 48<=e&&e<=55}function ka(e){return 48<=e&&e<=57}function Da(e){if(e===null)return!1;var t=e.length,r=0,i=!1,n;if(!t)return!1;if(n=e[r],(n==="-"||n==="+")&&(n=e[++r]),n==="0"){if(r+1===t)return!0;if(n=e[++r],n==="b"){for(r++;r<t;r++)if(n=e[r],n!=="_"){if(n!=="0"&&n!=="1")return!1;i=!0}return i&&n!=="_"}if(n==="x"){for(r++;r<t;r++)if(n=e[r],n!=="_"){if(!Aa(e.charCodeAt(r)))return!1;i=!0}return i&&n!=="_"}for(;r<t;r++)if(n=e[r],n!=="_"){if(!Ia(e.charCodeAt(r)))return!1;i=!0}return i&&n!=="_"}if(n==="_")return!1;for(;r<t;r++)if(n=e[r],n!=="_"){if(n===":")break;if(!ka(e.charCodeAt(r)))return!1;i=!0}return!i||n==="_"?!1:n!==":"?!0:/^(:[0-5]?[0-9])+$/.test(e.slice(r))}function ja(e){var t=e,r=1,i,n,a=[];return t.indexOf("_")!==-1&&(t=t.replace(/_/g,"")),i=t[0],(i==="-"||i==="+")&&(i==="-"&&(r=-1),t=t.slice(1),i=t[0]),t==="0"?0:i==="0"?t[1]==="b"?r*parseInt(t.slice(2),2):t[1]==="x"?r*parseInt(t,16):r*parseInt(t,8):t.indexOf(":")!==-1?(t.split(":").forEach(function(o){a.unshift(parseInt(o,10))}),t=0,n=1,a.forEach(function(o){t+=o*n,n*=60}),r*t):r*parseInt(t,10)}function _a(e){return Object.prototype.toString.call(e)==="[object Number]"&&e%1===0&&!Fa.isNegativeZero(e)}Dr.exports=new Ca("tag:yaml.org,2002:int",{kind:"scalar",resolve:Da,construct:ja,predicate:_a,represent:{binary:function(e){return e>=0?"0b"+e.toString(2):"-0b"+e.toString(2).slice(1)},octal:function(e){return e>=0?"0"+e.toString(8):"-0"+e.toString(8).slice(1)},decimal:function(e){return e.toString(10)},hexadecimal:function(e){return e>=0?"0x"+e.toString(16).toUpperCase():"-0x"+e.toString(16).toUpperCase().slice(1)}},defaultStyle:"decimal",styleAliases:{binary:[2,"bin"],octal:[8,"oct"],decimal:[10,"dec"],hexadecimal:[16,"hex"]}})});var Tr=f((Ws,Pr)=>{"use strict";var _r=J(),Pa=S(),Ta=new RegExp("^(?:[-+]?(?:0|[1-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");function Ba(e){return!(e===null||!Ta.test(e)||e[e.length-1]==="_")}function Oa(e){var t,r,i,n;return t=e.replace(/_/g,"").toLowerCase(),r=t[0]==="-"?-1:1,n=[],"+-".indexOf(t[0])>=0&&(t=t.slice(1)),t===".inf"?r===1?Number.POSITIVE_INFINITY:Number.NEGATIVE_INFINITY:t===".nan"?NaN:t.indexOf(":")>=0?(t.split(":").forEach(function(a){n.unshift(parseFloat(a,10))}),t=0,i=1,n.forEach(function(a){t+=a*i,i*=60}),r*t):r*parseFloat(t,10)}var Ma=/^[-+]?[0-9]+e/;function Na(e,t){var r;if(isNaN(e))switch(t){case"lowercase":return".nan";case"uppercase":return".NAN";case"camelcase":return".NaN"}else if(Number.POSITIVE_INFINITY===e)switch(t){case"lowercase":return".inf";case"uppercase":return".INF";case"camelcase":return".Inf"}else if(Number.NEGATIVE_INFINITY===e)switch(t){case"lowercase":return"-.inf";case"uppercase":return"-.INF";case"camelcase":return"-.Inf"}else if(_r.isNegativeZero(e))return"-0.0";return r=e.toString(10),Ma.test(r)?r.replace("e",".e"):r}function La(e){return Object.prototype.toString.call(e)==="[object Number]"&&(e%1!==0||_r.isNegativeZero(e))}Pr.exports=new Pa("tag:yaml.org,2002:float",{kind:"scalar",resolve:Ba,construct:Oa,predicate:La,represent:Na,defaultStyle:"lowercase"})});var vt=f((Js,Br)=>{"use strict";var qa=Q();Br.exports=new qa({include:[Ue()],implicit:[Ar(),kr(),jr(),Tr()]})});var gt=f((Qs,Or)=>{"use strict";var Ra=Q();Or.exports=new Ra({include:[vt()]})});var qr=f((zs,Lr)=>{"use strict";var $a=S(),Mr=new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"),Nr=new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");function Va(e){return e===null?!1:Mr.exec(e)!==null||Nr.exec(e)!==null}function Ua(e){var t,r,i,n,a,o,l,c=0,s=null,d,u,p;if(t=Mr.exec(e),t===null&&(t=Nr.exec(e)),t===null)throw new Error("Date resolve error");if(r=+t[1],i=+t[2]-1,n=+t[3],!t[4])return new Date(Date.UTC(r,i,n));if(a=+t[4],o=+t[5],l=+t[6],t[7]){for(c=t[7].slice(0,3);c.length<3;)c+="0";c=+c}return t[9]&&(d=+t[10],u=+(t[11]||0),s=(d*60+u)*6e4,t[9]==="-"&&(s=-s)),p=new Date(Date.UTC(r,i,n,a,o,l,c)),s&&p.setTime(p.getTime()-s),p}function Ha(e){return e.toISOString()}Lr.exports=new $a("tag:yaml.org,2002:timestamp",{kind:"scalar",resolve:Va,construct:Ua,instanceOf:Date,represent:Ha})});var $r=f((Xs,Rr)=>{"use strict";var Ya=S();function Ka(e){return e==="<<"||e===null}Rr.exports=new Ya("tag:yaml.org,2002:merge",{kind:"scalar",resolve:Ka})});var Hr=f((Zs,Ur)=>{"use strict";var z;try{Vr=require,z=Vr("buffer").Buffer}catch{}var Vr,Ga=S(),yt=`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
-\r`;function Wa(e){if(e===null)return!1;var t,r,i=0,n=e.length,a=yt;for(r=0;r<n;r++)if(t=a.indexOf(e.charAt(r)),!(t>64)){if(t<0)return!1;i+=6}return i%8===0}function Ja(e){var t,r,i=e.replace(/[\r\n=]/g,""),n=i.length,a=yt,o=0,l=[];for(t=0;t<n;t++)t%4===0&&t&&(l.push(o>>16&255),l.push(o>>8&255),l.push(o&255)),o=o<<6|a.indexOf(i.charAt(t));return r=n%4*6,r===0?(l.push(o>>16&255),l.push(o>>8&255),l.push(o&255)):r===18?(l.push(o>>10&255),l.push(o>>2&255)):r===12&&l.push(o>>4&255),z?z.from?z.from(l):new z(l):l}function Qa(e){var t="",r=0,i,n,a=e.length,o=yt;for(i=0;i<a;i++)i%3===0&&i&&(t+=o[r>>18&63],t+=o[r>>12&63],t+=o[r>>6&63],t+=o[r&63]),r=(r<<8)+e[i];return n=a%3,n===0?(t+=o[r>>18&63],t+=o[r>>12&63],t+=o[r>>6&63],t+=o[r&63]):n===2?(t+=o[r>>10&63],t+=o[r>>4&63],t+=o[r<<2&63],t+=o[64]):n===1&&(t+=o[r>>2&63],t+=o[r<<4&63],t+=o[64],t+=o[64]),t}function za(e){return z&&z.isBuffer(e)}Ur.exports=new Ga("tag:yaml.org,2002:binary",{kind:"scalar",resolve:Wa,construct:Ja,predicate:za,represent:Qa})});var Kr=f((ed,Yr)=>{"use strict";var Xa=S(),Za=Object.prototype.hasOwnProperty,el=Object.prototype.toString;function tl(e){if(e===null)return!0;var t=[],r,i,n,a,o,l=e;for(r=0,i=l.length;r<i;r+=1){if(n=l[r],o=!1,el.call(n)!=="[object Object]")return!1;for(a in n)if(Za.call(n,a))if(!o)o=!0;else return!1;if(!o)return!1;if(t.indexOf(a)===-1)t.push(a);else return!1}return!0}function rl(e){return e!==null?e:[]}Yr.exports=new Xa("tag:yaml.org,2002:omap",{kind:"sequence",resolve:tl,construct:rl})});var Wr=f((td,Gr)=>{"use strict";var nl=S(),il=Object.prototype.toString;function ol(e){if(e===null)return!0;var t,r,i,n,a,o=e;for(a=new Array(o.length),t=0,r=o.length;t<r;t+=1){if(i=o[t],il.call(i)!=="[object Object]"||(n=Object.keys(i),n.length!==1))return!1;a[t]=[n[0],i[n[0]]]}return!0}function al(e){if(e===null)return[];var t,r,i,n,a,o=e;for(a=new Array(o.length),t=0,r=o.length;t<r;t+=1)i=o[t],n=Object.keys(i),a[t]=[n[0],i[n[0]]];return a}Gr.exports=new nl("tag:yaml.org,2002:pairs",{kind:"sequence",resolve:ol,construct:al})});var Qr=f((rd,Jr)=>{"use strict";var ll=S(),cl=Object.prototype.hasOwnProperty;function sl(e){if(e===null)return!0;var t,r=e;for(t in r)if(cl.call(r,t)&&r[t]!==null)return!1;return!0}function dl(e){return e!==null?e:{}}Jr.exports=new ll("tag:yaml.org,2002:set",{kind:"mapping",resolve:sl,construct:dl})});var oe=f((nd,zr)=>{"use strict";var ul=Q();zr.exports=new ul({include:[gt()],implicit:[qr(),$r()],explicit:[Hr(),Kr(),Wr(),Qr()]})});var Zr=f((id,Xr)=>{"use strict";var pl=S();function fl(){return!0}function hl(){}function ml(){return""}function vl(e){return typeof e>"u"}Xr.exports=new pl("tag:yaml.org,2002:js/undefined",{kind:"scalar",resolve:fl,construct:hl,predicate:vl,represent:ml})});var tn=f((od,en)=>{"use strict";var gl=S();function yl(e){if(e===null||e.length===0)return!1;var t=e,r=/\/([gim]*)$/.exec(e),i="";return!(t[0]==="/"&&(r&&(i=r[1]),i.length>3||t[t.length-i.length-1]!=="/"))}function wl(e){var t=e,r=/\/([gim]*)$/.exec(e),i="";return t[0]==="/"&&(r&&(i=r[1]),t=t.slice(1,t.length-i.length-1)),new RegExp(t,i)}function xl(e){var t="/"+e.source+"/";return e.global&&(t+="g"),e.multiline&&(t+="m"),e.ignoreCase&&(t+="i"),t}function bl(e){return Object.prototype.toString.call(e)==="[object RegExp]"}en.exports=new gl("tag:yaml.org,2002:js/regexp",{kind:"scalar",resolve:yl,construct:wl,predicate:bl,represent:xl})});var on=f((ad,nn)=>{"use strict";var He;try{rn=require,He=rn("esprima")}catch{typeof window<"u"&&(He=window.esprima)}var rn,El=S();function Sl(e){if(e===null)return!1;try{var t="("+e+")",r=He.parse(t,{range:!0});return!(r.type!=="Program"||r.body.length!==1||r.body[0].type!=="ExpressionStatement"||r.body[0].expression.type!=="ArrowFunctionExpression"&&r.body[0].expression.type!=="FunctionExpression")}catch{return!1}}function Fl(e){var t="("+e+")",r=He.parse(t,{range:!0}),i=[],n;if(r.type!=="Program"||r.body.length!==1||r.body[0].type!=="ExpressionStatement"||r.body[0].expression.type!=="ArrowFunctionExpression"&&r.body[0].expression.type!=="FunctionExpression")throw new Error("Failed to resolve function");return r.body[0].expression.params.forEach(function(a){i.push(a.name)}),n=r.body[0].expression.body.range,r.body[0].expression.body.type==="BlockStatement"?new Function(i,t.slice(n[0]+1,n[1]-1)):new Function(i,"return "+t.slice(n[0],n[1]))}function Cl(e){return e.toString()}function Al(e){return Object.prototype.toString.call(e)==="[object Function]"}nn.exports=new El("tag:yaml.org,2002:js/function",{kind:"scalar",resolve:Sl,construct:Fl,predicate:Al,represent:Cl})});var ge=f((ld,ln)=>{"use strict";var an=Q();ln.exports=an.DEFAULT=new an({include:[oe()],explicit:[Zr(),tn(),on()]})});var An=f((cd,ye)=>{"use strict";var R=J(),hn=ne(),Il=fr(),mn=oe(),kl=ge(),H=Object.prototype.hasOwnProperty,Ye=1,vn=2,gn=3,Ke=4,wt=1,Dl=2,cn=3,jl=/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/,_l=/[\x85\u2028\u2029]/,Pl=/[,\[\]\{\}]/,yn=/^(?:!|!!|![a-z\-]+!)$/i,wn=/^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;function sn(e){return Object.prototype.toString.call(e)}function L(e){return e===10||e===13}function Z(e){return e===9||e===32}function D(e){return e===9||e===32||e===10||e===13}function ae(e){return e===44||e===91||e===93||e===123||e===125}function Tl(e){var t;return 48<=e&&e<=57?e-48:(t=e|32,97<=t&&t<=102?t-97+10:-1)}function Bl(e){return e===120?2:e===117?4:e===85?8:0}function Ol(e){return 48<=e&&e<=57?e-48:-1}function dn(e){return e===48?"\0":e===97?"\x07":e===98?"\b":e===116||e===9?"	":e===110?`
-`:e===118?"\v":e===102?"\f":e===114?"\r":e===101?"\x1B":e===32?" ":e===34?'"':e===47?"/":e===92?"\\":e===78?"\x85":e===95?"\xA0":e===76?"\u2028":e===80?"\u2029":""}function Ml(e){return e<=65535?String.fromCharCode(e):String.fromCharCode((e-65536>>10)+55296,(e-65536&1023)+56320)}var xn=new Array(256),bn=new Array(256);for(X=0;X<256;X++)xn[X]=dn(X)?1:0,bn[X]=dn(X);var X;function Nl(e,t){this.input=e,this.filename=t.filename||null,this.schema=t.schema||kl,this.onWarning=t.onWarning||null,this.legacy=t.legacy||!1,this.json=t.json||!1,this.listener=t.listener||null,this.implicitTypes=this.schema.compiledImplicit,this.typeMap=this.schema.compiledTypeMap,this.length=e.length,this.position=0,this.line=0,this.lineStart=0,this.lineIndent=0,this.documents=[]}function En(e,t){return new hn(t,new Il(e.filename,e.input,e.position,e.line,e.position-e.lineStart))}function m(e,t){throw En(e,t)}function Ge(e,t){e.onWarning&&e.onWarning.call(null,En(e,t))}var un={YAML:function(t,r,i){var n,a,o;t.version!==null&&m(t,"duplication of %YAML directive"),i.length!==1&&m(t,"YAML directive accepts exactly one argument"),n=/^([0-9]+)\.([0-9]+)$/.exec(i[0]),n===null&&m(t,"ill-formed argument of the YAML directive"),a=parseInt(n[1],10),o=parseInt(n[2],10),a!==1&&m(t,"unacceptable YAML version of the document"),t.version=i[0],t.checkLineBreaks=o<2,o!==1&&o!==2&&Ge(t,"unsupported YAML version of the document")},TAG:function(t,r,i){var n,a;i.length!==2&&m(t,"TAG directive accepts exactly two arguments"),n=i[0],a=i[1],yn.test(n)||m(t,"ill-formed tag handle (first argument) of the TAG directive"),H.call(t.tagMap,n)&&m(t,'there is a previously declared suffix for "'+n+'" tag handle'),wn.test(a)||m(t,"ill-formed tag prefix (second argument) of the TAG directive"),t.tagMap[n]=a}};function U(e,t,r,i){var n,a,o,l;if(t<r){if(l=e.input.slice(t,r),i)for(n=0,a=l.length;n<a;n+=1)o=l.charCodeAt(n),o===9||32<=o&&o<=1114111||m(e,"expected valid JSON character");else jl.test(l)&&m(e,"the stream contains non-printable characters");e.result+=l}}function pn(e,t,r,i){var n,a,o,l;for(R.isObject(r)||m(e,"cannot merge mappings; the provided source object is unacceptable"),n=Object.keys(r),o=0,l=n.length;o<l;o+=1)a=n[o],H.call(t,a)||(t[a]=r[a],i[a]=!0)}function le(e,t,r,i,n,a,o,l){var c,s;if(Array.isArray(n))for(n=Array.prototype.slice.call(n),c=0,s=n.length;c<s;c+=1)Array.isArray(n[c])&&m(e,"nested arrays are not supported inside keys"),typeof n=="object"&&sn(n[c])==="[object Object]"&&(n[c]="[object Object]");if(typeof n=="object"&&sn(n)==="[object Object]"&&(n="[object Object]"),n=String(n),t===null&&(t={}),i==="tag:yaml.org,2002:merge")if(Array.isArray(a))for(c=0,s=a.length;c<s;c+=1)pn(e,t,a[c],r);else pn(e,t,a,r);else!e.json&&!H.call(r,n)&&H.call(t,n)&&(e.line=o||e.line,e.position=l||e.position,m(e,"duplicated mapping key")),t[n]=a,delete r[n];return t}function xt(e){var t;t=e.input.charCodeAt(e.position),t===10?e.position++:t===13?(e.position++,e.input.charCodeAt(e.position)===10&&e.position++):m(e,"a line break is expected"),e.line+=1,e.lineStart=e.position}function E(e,t,r){for(var i=0,n=e.input.charCodeAt(e.position);n!==0;){for(;Z(n);)n=e.input.charCodeAt(++e.position);if(t&&n===35)do n=e.input.charCodeAt(++e.position);while(n!==10&&n!==13&&n!==0);if(L(n))for(xt(e),n=e.input.charCodeAt(e.position),i++,e.lineIndent=0;n===32;)e.lineIndent++,n=e.input.charCodeAt(++e.position);else break}return r!==-1&&i!==0&&e.lineIndent<r&&Ge(e,"deficient indentation"),i}function We(e){var t=e.position,r;return r=e.input.charCodeAt(t),!!((r===45||r===46)&&r===e.input.charCodeAt(t+1)&&r===e.input.charCodeAt(t+2)&&(t+=3,r=e.input.charCodeAt(t),r===0||D(r)))}function bt(e,t){t===1?e.result+=" ":t>1&&(e.result+=R.repeat(`
-`,t-1))}function Ll(e,t,r){var i,n,a,o,l,c,s,d,u=e.kind,p=e.result,h;if(h=e.input.charCodeAt(e.position),D(h)||ae(h)||h===35||h===38||h===42||h===33||h===124||h===62||h===39||h===34||h===37||h===64||h===96||(h===63||h===45)&&(n=e.input.charCodeAt(e.position+1),D(n)||r&&ae(n)))return!1;for(e.kind="scalar",e.result="",a=o=e.position,l=!1;h!==0;){if(h===58){if(n=e.input.charCodeAt(e.position+1),D(n)||r&&ae(n))break}else if(h===35){if(i=e.input.charCodeAt(e.position-1),D(i))break}else{if(e.position===e.lineStart&&We(e)||r&&ae(h))break;if(L(h))if(c=e.line,s=e.lineStart,d=e.lineIndent,E(e,!1,-1),e.lineIndent>=t){l=!0,h=e.input.charCodeAt(e.position);continue}else{e.position=o,e.line=c,e.lineStart=s,e.lineIndent=d;break}}l&&(U(e,a,o,!1),bt(e,e.line-c),a=o=e.position,l=!1),Z(h)||(o=e.position+1),h=e.input.charCodeAt(++e.position)}return U(e,a,o,!1),e.result?!0:(e.kind=u,e.result=p,!1)}function ql(e,t){var r,i,n;if(r=e.input.charCodeAt(e.position),r!==39)return!1;for(e.kind="scalar",e.result="",e.position++,i=n=e.position;(r=e.input.charCodeAt(e.position))!==0;)if(r===39)if(U(e,i,e.position,!0),r=e.input.charCodeAt(++e.position),r===39)i=e.position,e.position++,n=e.position;else return!0;else L(r)?(U(e,i,n,!0),bt(e,E(e,!1,t)),i=n=e.position):e.position===e.lineStart&&We(e)?m(e,"unexpected end of the document within a single quoted scalar"):(e.position++,n=e.position);m(e,"unexpected end of the stream within a single quoted scalar")}function Rl(e,t){var r,i,n,a,o,l;if(l=e.input.charCodeAt(e.position),l!==34)return!1;for(e.kind="scalar",e.result="",e.position++,r=i=e.position;(l=e.input.charCodeAt(e.position))!==0;){if(l===34)return U(e,r,e.position,!0),e.position++,!0;if(l===92){if(U(e,r,e.position,!0),l=e.input.charCodeAt(++e.position),L(l))E(e,!1,t);else if(l<256&&xn[l])e.result+=bn[l],e.position++;else if((o=Bl(l))>0){for(n=o,a=0;n>0;n--)l=e.input.charCodeAt(++e.position),(o=Tl(l))>=0?a=(a<<4)+o:m(e,"expected hexadecimal character");e.result+=Ml(a),e.position++}else m(e,"unknown escape sequence");r=i=e.position}else L(l)?(U(e,r,i,!0),bt(e,E(e,!1,t)),r=i=e.position):e.position===e.lineStart&&We(e)?m(e,"unexpected end of the document within a double quoted scalar"):(e.position++,i=e.position)}m(e,"unexpected end of the stream within a double quoted scalar")}function $l(e,t){var r=!0,i,n=e.tag,a,o=e.anchor,l,c,s,d,u,p={},h,g,x,v;if(v=e.input.charCodeAt(e.position),v===91)c=93,u=!1,a=[];else if(v===123)c=125,u=!0,a={};else return!1;for(e.anchor!==null&&(e.anchorMap[e.anchor]=a),v=e.input.charCodeAt(++e.position);v!==0;){if(E(e,!0,t),v=e.input.charCodeAt(e.position),v===c)return e.position++,e.tag=n,e.anchor=o,e.kind=u?"mapping":"sequence",e.result=a,!0;r||m(e,"missed comma between flow collection entries"),g=h=x=null,s=d=!1,v===63&&(l=e.input.charCodeAt(e.position+1),D(l)&&(s=d=!0,e.position++,E(e,!0,t))),i=e.line,ce(e,t,Ye,!1,!0),g=e.tag,h=e.result,E(e,!0,t),v=e.input.charCodeAt(e.position),(d||e.line===i)&&v===58&&(s=!0,v=e.input.charCodeAt(++e.position),E(e,!0,t),ce(e,t,Ye,!1,!0),x=e.result),u?le(e,a,p,g,h,x):s?a.push(le(e,null,p,g,h,x)):a.push(h),E(e,!0,t),v=e.input.charCodeAt(e.position),v===44?(r=!0,v=e.input.charCodeAt(++e.position)):r=!1}m(e,"unexpected end of the stream within a flow collection")}function Vl(e,t){var r,i,n=wt,a=!1,o=!1,l=t,c=0,s=!1,d,u;if(u=e.input.charCodeAt(e.position),u===124)i=!1;else if(u===62)i=!0;else return!1;for(e.kind="scalar",e.result="";u!==0;)if(u=e.input.charCodeAt(++e.position),u===43||u===45)wt===n?n=u===43?cn:Dl:m(e,"repeat of a chomping mode identifier");else if((d=Ol(u))>=0)d===0?m(e,"bad explicit indentation width of a block scalar; it cannot be less than one"):o?m(e,"repeat of an indentation width identifier"):(l=t+d-1,o=!0);else break;if(Z(u)){do u=e.input.charCodeAt(++e.position);while(Z(u));if(u===35)do u=e.input.charCodeAt(++e.position);while(!L(u)&&u!==0)}for(;u!==0;){for(xt(e),e.lineIndent=0,u=e.input.charCodeAt(e.position);(!o||e.lineIndent<l)&&u===32;)e.lineIndent++,u=e.input.charCodeAt(++e.position);if(!o&&e.lineIndent>l&&(l=e.lineIndent),L(u)){c++;continue}if(e.lineIndent<l){n===cn?e.result+=R.repeat(`
-`,a?1+c:c):n===wt&&a&&(e.result+=`
-`);break}for(i?Z(u)?(s=!0,e.result+=R.repeat(`
-`,a?1+c:c)):s?(s=!1,e.result+=R.repeat(`
-`,c+1)):c===0?a&&(e.result+=" "):e.result+=R.repeat(`
-`,c):e.result+=R.repeat(`
-`,a?1+c:c),a=!0,o=!0,c=0,r=e.position;!L(u)&&u!==0;)u=e.input.charCodeAt(++e.position);U(e,r,e.position,!1)}return!0}function fn(e,t){var r,i=e.tag,n=e.anchor,a=[],o,l=!1,c;for(e.anchor!==null&&(e.anchorMap[e.anchor]=a),c=e.input.charCodeAt(e.position);c!==0&&!(c!==45||(o=e.input.charCodeAt(e.position+1),!D(o)));){if(l=!0,e.position++,E(e,!0,-1)&&e.lineIndent<=t){a.push(null),c=e.input.charCodeAt(e.position);continue}if(r=e.line,ce(e,t,gn,!1,!0),a.push(e.result),E(e,!0,-1),c=e.input.charCodeAt(e.position),(e.line===r||e.lineIndent>t)&&c!==0)m(e,"bad indentation of a sequence entry");else if(e.lineIndent<t)break}return l?(e.tag=i,e.anchor=n,e.kind="sequence",e.result=a,!0):!1}function Ul(e,t,r){var i,n,a,o,l=e.tag,c=e.anchor,s={},d={},u=null,p=null,h=null,g=!1,x=!1,v;for(e.anchor!==null&&(e.anchorMap[e.anchor]=s),v=e.input.charCodeAt(e.position);v!==0;){if(i=e.input.charCodeAt(e.position+1),a=e.line,o=e.position,(v===63||v===58)&&D(i))v===63?(g&&(le(e,s,d,u,p,null),u=p=h=null),x=!0,g=!0,n=!0):g?(g=!1,n=!0):m(e,"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"),e.position+=1,v=i;else if(ce(e,r,vn,!1,!0))if(e.line===a){for(v=e.input.charCodeAt(e.position);Z(v);)v=e.input.charCodeAt(++e.position);if(v===58)v=e.input.charCodeAt(++e.position),D(v)||m(e,"a whitespace character is expected after the key-value separator within a block mapping"),g&&(le(e,s,d,u,p,null),u=p=h=null),x=!0,g=!1,n=!1,u=e.tag,p=e.result;else if(x)m(e,"can not read an implicit mapping pair; a colon is missed");else return e.tag=l,e.anchor=c,!0}else if(x)m(e,"can not read a block mapping entry; a multiline key may not be an implicit key");else return e.tag=l,e.anchor=c,!0;else break;if((e.line===a||e.lineIndent>t)&&(ce(e,t,Ke,!0,n)&&(g?p=e.result:h=e.result),g||(le(e,s,d,u,p,h,a,o),u=p=h=null),E(e,!0,-1),v=e.input.charCodeAt(e.position)),e.lineIndent>t&&v!==0)m(e,"bad indentation of a mapping entry");else if(e.lineIndent<t)break}return g&&le(e,s,d,u,p,null),x&&(e.tag=l,e.anchor=c,e.kind="mapping",e.result=s),x}function Hl(e){var t,r=!1,i=!1,n,a,o;if(o=e.input.charCodeAt(e.position),o!==33)return!1;if(e.tag!==null&&m(e,"duplication of a tag property"),o=e.input.charCodeAt(++e.position),o===60?(r=!0,o=e.input.charCodeAt(++e.position)):o===33?(i=!0,n="!!",o=e.input.charCodeAt(++e.position)):n="!",t=e.position,r){do o=e.input.charCodeAt(++e.position);while(o!==0&&o!==62);e.position<e.length?(a=e.input.slice(t,e.position),o=e.input.charCodeAt(++e.position)):m(e,"unexpected end of the stream within a verbatim tag")}else{for(;o!==0&&!D(o);)o===33&&(i?m(e,"tag suffix cannot contain exclamation marks"):(n=e.input.slice(t-1,e.position+1),yn.test(n)||m(e,"named tag handle cannot contain such characters"),i=!0,t=e.position+1)),o=e.input.charCodeAt(++e.position);a=e.input.slice(t,e.position),Pl.test(a)&&m(e,"tag suffix cannot contain flow indicator characters")}return a&&!wn.test(a)&&m(e,"tag name cannot contain such characters: "+a),r?e.tag=a:H.call(e.tagMap,n)?e.tag=e.tagMap[n]+a:n==="!"?e.tag="!"+a:n==="!!"?e.tag="tag:yaml.org,2002:"+a:m(e,'undeclared tag handle "'+n+'"'),!0}function Yl(e){var t,r;if(r=e.input.charCodeAt(e.position),r!==38)return!1;for(e.anchor!==null&&m(e,"duplication of an anchor property"),r=e.input.charCodeAt(++e.position),t=e.position;r!==0&&!D(r)&&!ae(r);)r=e.input.charCodeAt(++e.position);return e.position===t&&m(e,"name of an anchor node must contain at least one character"),e.anchor=e.input.slice(t,e.position),!0}function Kl(e){var t,r,i;if(i=e.input.charCodeAt(e.position),i!==42)return!1;for(i=e.input.charCodeAt(++e.position),t=e.position;i!==0&&!D(i)&&!ae(i);)i=e.input.charCodeAt(++e.position);return e.position===t&&m(e,"name of an alias node must contain at least one character"),r=e.input.slice(t,e.position),H.call(e.anchorMap,r)||m(e,'unidentified alias "'+r+'"'),e.result=e.anchorMap[r],E(e,!0,-1),!0}function ce(e,t,r,i,n){var a,o,l,c=1,s=!1,d=!1,u,p,h,g,x;if(e.listener!==null&&e.listener("open",e),e.tag=null,e.anchor=null,e.kind=null,e.result=null,a=o=l=Ke===r||gn===r,i&&E(e,!0,-1)&&(s=!0,e.lineIndent>t?c=1:e.lineIndent===t?c=0:e.lineIndent<t&&(c=-1)),c===1)for(;Hl(e)||Yl(e);)E(e,!0,-1)?(s=!0,l=a,e.lineIndent>t?c=1:e.lineIndent===t?c=0:e.lineIndent<t&&(c=-1)):l=!1;if(l&&(l=s||n),(c===1||Ke===r)&&(Ye===r||vn===r?g=t:g=t+1,x=e.position-e.lineStart,c===1?l&&(fn(e,x)||Ul(e,x,g))||$l(e,g)?d=!0:(o&&Vl(e,g)||ql(e,g)||Rl(e,g)?d=!0:Kl(e)?(d=!0,(e.tag!==null||e.anchor!==null)&&m(e,"alias node should not have any properties")):Ll(e,g,Ye===r)&&(d=!0,e.tag===null&&(e.tag="?")),e.anchor!==null&&(e.anchorMap[e.anchor]=e.result)):c===0&&(d=l&&fn(e,x))),e.tag!==null&&e.tag!=="!")if(e.tag==="?"){for(e.result!==null&&e.kind!=="scalar"&&m(e,'unacceptable node kind for !<?> tag; it should be "scalar", not "'+e.kind+'"'),u=0,p=e.implicitTypes.length;u<p;u+=1)if(h=e.implicitTypes[u],h.resolve(e.result)){e.result=h.construct(e.result),e.tag=h.tag,e.anchor!==null&&(e.anchorMap[e.anchor]=e.result);break}}else H.call(e.typeMap[e.kind||"fallback"],e.tag)?(h=e.typeMap[e.kind||"fallback"][e.tag],e.result!==null&&h.kind!==e.kind&&m(e,"unacceptable node kind for !<"+e.tag+'> tag; it should be "'+h.kind+'", not "'+e.kind+'"'),h.resolve(e.result)?(e.result=h.construct(e.result),e.anchor!==null&&(e.anchorMap[e.anchor]=e.result)):m(e,"cannot resolve a node with !<"+e.tag+"> explicit tag")):m(e,"unknown tag !<"+e.tag+">");return e.listener!==null&&e.listener("close",e),e.tag!==null||e.anchor!==null||d}function Gl(e){var t=e.position,r,i,n,a=!1,o;for(e.version=null,e.checkLineBreaks=e.legacy,e.tagMap={},e.anchorMap={};(o=e.input.charCodeAt(e.position))!==0&&(E(e,!0,-1),o=e.input.charCodeAt(e.position),!(e.lineIndent>0||o!==37));){for(a=!0,o=e.input.charCodeAt(++e.position),r=e.position;o!==0&&!D(o);)o=e.input.charCodeAt(++e.position);for(i=e.input.slice(r,e.position),n=[],i.length<1&&m(e,"directive name must not be less than one character in length");o!==0;){for(;Z(o);)o=e.input.charCodeAt(++e.position);if(o===35){do o=e.input.charCodeAt(++e.position);while(o!==0&&!L(o));break}if(L(o))break;for(r=e.position;o!==0&&!D(o);)o=e.input.charCodeAt(++e.position);n.push(e.input.slice(r,e.position))}o!==0&&xt(e),H.call(un,i)?un[i](e,i,n):Ge(e,'unknown document directive "'+i+'"')}if(E(e,!0,-1),e.lineIndent===0&&e.input.charCodeAt(e.position)===45&&e.input.charCodeAt(e.position+1)===45&&e.input.charCodeAt(e.position+2)===45?(e.position+=3,E(e,!0,-1)):a&&m(e,"directives end mark is expected"),ce(e,e.lineIndent-1,Ke,!1,!0),E(e,!0,-1),e.checkLineBreaks&&_l.test(e.input.slice(t,e.position))&&Ge(e,"non-ASCII line breaks are interpreted as content"),e.documents.push(e.result),e.position===e.lineStart&&We(e)){e.input.charCodeAt(e.position)===46&&(e.position+=3,E(e,!0,-1));return}if(e.position<e.length-1)m(e,"end of the stream or a document separator is expected");else return}function Sn(e,t){e=String(e),t=t||{},e.length!==0&&(e.charCodeAt(e.length-1)!==10&&e.charCodeAt(e.length-1)!==13&&(e+=`
-`),e.charCodeAt(0)===65279&&(e=e.slice(1)));var r=new Nl(e,t),i=e.indexOf("\0");for(i!==-1&&(r.position=i,m(r,"null byte is not allowed in input")),r.input+="\0";r.input.charCodeAt(r.position)===32;)r.lineIndent+=1,r.position+=1;for(;r.position<r.length-1;)Gl(r);return r.documents}function Fn(e,t,r){t!==null&&typeof t=="object"&&typeof r>"u"&&(r=t,t=null);var i=Sn(e,r);if(typeof t!="function")return i;for(var n=0,a=i.length;n<a;n+=1)t(i[n])}function Cn(e,t){var r=Sn(e,t);if(r.length!==0){if(r.length===1)return r[0];throw new hn("expected a single document in the stream, but found more")}}function Wl(e,t,r){return typeof t=="object"&&t!==null&&typeof r>"u"&&(r=t,t=null),Fn(e,t,R.extend({schema:mn},r))}function Jl(e,t){return Cn(e,R.extend({schema:mn},t))}ye.exports.loadAll=Fn;ye.exports.load=Cn;ye.exports.safeLoadAll=Wl;ye.exports.safeLoad=Jl});var Jn=f((sd,Ct)=>{"use strict";var xe=J(),be=ne(),Ql=ge(),zl=oe(),Bn=Object.prototype.toString,On=Object.prototype.hasOwnProperty,Xl=9,we=10,Zl=13,ec=32,tc=33,rc=34,Mn=35,nc=37,ic=38,oc=39,ac=42,Nn=44,lc=45,Ln=58,cc=61,sc=62,dc=63,uc=64,qn=91,Rn=93,pc=96,$n=123,fc=124,Vn=125,I={};I[0]="\\0";I[7]="\\a";I[8]="\\b";I[9]="\\t";I[10]="\\n";I[11]="\\v";I[12]="\\f";I[13]="\\r";I[27]="\\e";I[34]='\\"';I[92]="\\\\";I[133]="\\N";I[160]="\\_";I[8232]="\\L";I[8233]="\\P";var hc=["y","Y","yes","Yes","YES","on","On","ON","n","N","no","No","NO","off","Off","OFF"];function mc(e,t){var r,i,n,a,o,l,c;if(t===null)return{};for(r={},i=Object.keys(t),n=0,a=i.length;n<a;n+=1)o=i[n],l=String(t[o]),o.slice(0,2)==="!!"&&(o="tag:yaml.org,2002:"+o.slice(2)),c=e.compiledTypeMap.fallback[o],c&&On.call(c.styleAliases,l)&&(l=c.styleAliases[l]),r[o]=l;return r}function In(e){var t,r,i;if(t=e.toString(16).toUpperCase(),e<=255)r="x",i=2;else if(e<=65535)r="u",i=4;else if(e<=4294967295)r="U",i=8;else throw new be("code point within a string may not be greater than 0xFFFFFFFF");return"\\"+r+xe.repeat("0",i-t.length)+t}function vc(e){this.schema=e.schema||Ql,this.indent=Math.max(1,e.indent||2),this.noArrayIndent=e.noArrayIndent||!1,this.skipInvalid=e.skipInvalid||!1,this.flowLevel=xe.isNothing(e.flowLevel)?-1:e.flowLevel,this.styleMap=mc(this.schema,e.styles||null),this.sortKeys=e.sortKeys||!1,this.lineWidth=e.lineWidth||80,this.noRefs=e.noRefs||!1,this.noCompatMode=e.noCompatMode||!1,this.condenseFlow=e.condenseFlow||!1,this.implicitTypes=this.schema.compiledImplicit,this.explicitTypes=this.schema.compiledExplicit,this.tag=null,this.result="",this.duplicates=[],this.usedDuplicates=null}function kn(e,t){for(var r=xe.repeat(" ",t),i=0,n=-1,a="",o,l=e.length;i<l;)n=e.indexOf(`
-`,i),n===-1?(o=e.slice(i),i=l):(o=e.slice(i,n+1),i=n+1),o.length&&o!==`
-`&&(a+=r),a+=o;return a}function Et(e,t){return`
-`+xe.repeat(" ",e.indent*t)}function gc(e,t){var r,i,n;for(r=0,i=e.implicitTypes.length;r<i;r+=1)if(n=e.implicitTypes[r],n.resolve(t))return!0;return!1}function Ft(e){return e===ec||e===Xl}function se(e){return 32<=e&&e<=126||161<=e&&e<=55295&&e!==8232&&e!==8233||57344<=e&&e<=65533&&e!==65279||65536<=e&&e<=1114111}function yc(e){return se(e)&&!Ft(e)&&e!==65279&&e!==Zl&&e!==we}function Dn(e,t){return se(e)&&e!==65279&&e!==Nn&&e!==qn&&e!==Rn&&e!==$n&&e!==Vn&&e!==Ln&&(e!==Mn||t&&yc(t))}function wc(e){return se(e)&&e!==65279&&!Ft(e)&&e!==lc&&e!==dc&&e!==Ln&&e!==Nn&&e!==qn&&e!==Rn&&e!==$n&&e!==Vn&&e!==Mn&&e!==ic&&e!==ac&&e!==tc&&e!==fc&&e!==cc&&e!==sc&&e!==oc&&e!==rc&&e!==nc&&e!==uc&&e!==pc}function Un(e){var t=/^\n* /;return t.test(e)}var Hn=1,Yn=2,Kn=3,Gn=4,Je=5;function xc(e,t,r,i,n){var a,o,l,c=!1,s=!1,d=i!==-1,u=-1,p=wc(e.charCodeAt(0))&&!Ft(e.charCodeAt(e.length-1));if(t)for(a=0;a<e.length;a++){if(o=e.charCodeAt(a),!se(o))return Je;l=a>0?e.charCodeAt(a-1):null,p=p&&Dn(o,l)}else{for(a=0;a<e.length;a++){if(o=e.charCodeAt(a),o===we)c=!0,d&&(s=s||a-u-1>i&&e[u+1]!==" ",u=a);else if(!se(o))return Je;l=a>0?e.charCodeAt(a-1):null,p=p&&Dn(o,l)}s=s||d&&a-u-1>i&&e[u+1]!==" "}return!c&&!s?p&&!n(e)?Hn:Yn:r>9&&Un(e)?Je:s?Gn:Kn}function bc(e,t,r,i){e.dump=function(){if(t.length===0)return"''";if(!e.noCompatMode&&hc.indexOf(t)!==-1)return"'"+t+"'";var n=e.indent*Math.max(1,r),a=e.lineWidth===-1?-1:Math.max(Math.min(e.lineWidth,40),e.lineWidth-n),o=i||e.flowLevel>-1&&r>=e.flowLevel;function l(c){return gc(e,c)}switch(xc(t,o,e.indent,a,l)){case Hn:return t;case Yn:return"'"+t.replace(/'/g,"''")+"'";case Kn:return"|"+jn(t,e.indent)+_n(kn(t,n));case Gn:return">"+jn(t,e.indent)+_n(kn(Ec(t,a),n));case Je:return'"'+Sc(t,a)+'"';default:throw new be("impossible error: invalid scalar style")}}()}function jn(e,t){var r=Un(e)?String(t):"",i=e[e.length-1]===`
+"use strict";var Ei=Object.create;var Se=Object.defineProperty;var ki=Object.getOwnPropertyDescriptor;var ji=Object.getOwnPropertyNames;var Di=Object.getPrototypeOf,_i=Object.prototype.hasOwnProperty;var h=(e,r)=>()=>(r||e((r={exports:{}}).exports,r),r.exports),Pi=(e,r)=>{for(var t in r)Se(e,t,{get:r[t],enumerable:!0})},Pr=(e,r,t,i)=>{if(r&&typeof r=="object"||typeof r=="function")for(let n of ji(r))!_i.call(e,n)&&n!==t&&Se(e,n,{get:()=>r[n],enumerable:!(i=ki(r,n))||i.enumerable});return e};var T=(e,r,t)=>(t=e!=null?Ei(Di(e)):{},Pr(r||!e||!e.__esModule?Se(t,"default",{value:e,enumerable:!0}):t,e)),Ti=e=>Pr(Se({},"__esModule",{value:!0}),e);var lr=h(cr=>{"use strict";Object.defineProperty(cr,"__esModule",{value:!0});cr.default=Oi;var Ii=Mi(require("crypto"));function Mi(e){return e&&e.__esModule?e:{default:e}}var ke=new Uint8Array(256),Ee=ke.length;function Oi(){return Ee>ke.length-16&&(Ii.default.randomFillSync(ke),Ee=0),ke.slice(Ee,Ee+=16)}});var Ir=h(je=>{"use strict";Object.defineProperty(je,"__esModule",{value:!0});je.default=void 0;var Li=/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;je.default=Li});var pe=h(De=>{"use strict";Object.defineProperty(De,"__esModule",{value:!0});De.default=void 0;var qi=Bi(Ir());function Bi(e){return e&&e.__esModule?e:{default:e}}function Ni(e){return typeof e=="string"&&qi.default.test(e)}var $i=Ni;De.default=$i});var he=h(_e=>{"use strict";Object.defineProperty(_e,"__esModule",{value:!0});_e.default=void 0;var Ri=Ui(pe());function Ui(e){return e&&e.__esModule?e:{default:e}}var k=[];for(let e=0;e<256;++e)k.push((e+256).toString(16).substr(1));function Hi(e,r=0){let t=(k[e[r+0]]+k[e[r+1]]+k[e[r+2]]+k[e[r+3]]+"-"+k[e[r+4]]+k[e[r+5]]+"-"+k[e[r+6]]+k[e[r+7]]+"-"+k[e[r+8]]+k[e[r+9]]+"-"+k[e[r+10]]+k[e[r+11]]+k[e[r+12]]+k[e[r+13]]+k[e[r+14]]+k[e[r+15]]).toLowerCase();if(!(0,Ri.default)(t))throw TypeError("Stringified UUID is invalid");return t}var Yi=Hi;_e.default=Yi});var Lr=h(Pe=>{"use strict";Object.defineProperty(Pe,"__esModule",{value:!0});Pe.default=void 0;var Vi=Or(lr()),Wi=Or(he());function Or(e){return e&&e.__esModule?e:{default:e}}var Mr,ur,dr=0,fr=0;function Gi(e,r,t){let i=r&&t||0,n=r||new Array(16);e=e||{};let a=e.node||Mr,o=e.clockseq!==void 0?e.clockseq:ur;if(a==null||o==null){let f=e.random||(e.rng||Vi.default)();a==null&&(a=Mr=[f[0]|1,f[1],f[2],f[3],f[4],f[5]]),o==null&&(o=ur=(f[6]<<8|f[7])&16383)}let s=e.msecs!==void 0?e.msecs:Date.now(),c=e.nsecs!==void 0?e.nsecs:fr+1,l=s-dr+(c-fr)/1e4;if(l<0&&e.clockseq===void 0&&(o=o+1&16383),(l<0||s>dr)&&e.nsecs===void 0&&(c=0),c>=1e4)throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");dr=s,fr=c,ur=o,s+=122192928e5;let u=((s&268435455)*1e4+c)%4294967296;n[i++]=u>>>24&255,n[i++]=u>>>16&255,n[i++]=u>>>8&255,n[i++]=u&255;let d=s/4294967296*1e4&268435455;n[i++]=d>>>8&255,n[i++]=d&255,n[i++]=d>>>24&15|16,n[i++]=d>>>16&255,n[i++]=o>>>8|128,n[i++]=o&255;for(let f=0;f<6;++f)n[i+f]=a[f];return r||(0,Wi.default)(n)}var Ki=Gi;Pe.default=Ki});var pr=h(Te=>{"use strict";Object.defineProperty(Te,"__esModule",{value:!0});Te.default=void 0;var Qi=Ji(pe());function Ji(e){return e&&e.__esModule?e:{default:e}}function zi(e){if(!(0,Qi.default)(e))throw TypeError("Invalid UUID");let r,t=new Uint8Array(16);return t[0]=(r=parseInt(e.slice(0,8),16))>>>24,t[1]=r>>>16&255,t[2]=r>>>8&255,t[3]=r&255,t[4]=(r=parseInt(e.slice(9,13),16))>>>8,t[5]=r&255,t[6]=(r=parseInt(e.slice(14,18),16))>>>8,t[7]=r&255,t[8]=(r=parseInt(e.slice(19,23),16))>>>8,t[9]=r&255,t[10]=(r=parseInt(e.slice(24,36),16))/1099511627776&255,t[11]=r/4294967296&255,t[12]=r>>>24&255,t[13]=r>>>16&255,t[14]=r>>>8&255,t[15]=r&255,t}var Xi=zi;Te.default=Xi});var hr=h(G=>{"use strict";Object.defineProperty(G,"__esModule",{value:!0});G.default=to;G.URL=G.DNS=void 0;var Zi=qr(he()),eo=qr(pr());function qr(e){return e&&e.__esModule?e:{default:e}}function ro(e){e=unescape(encodeURIComponent(e));let r=[];for(let t=0;t<e.length;++t)r.push(e.charCodeAt(t));return r}var Br="6ba7b810-9dad-11d1-80b4-00c04fd430c8";G.DNS=Br;var Nr="6ba7b811-9dad-11d1-80b4-00c04fd430c8";G.URL=Nr;function to(e,r,t){function i(n,a,o,s){if(typeof n=="string"&&(n=ro(n)),typeof a=="string"&&(a=(0,eo.default)(a)),a.length!==16)throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");let c=new Uint8Array(16+n.length);if(c.set(a),c.set(n,a.length),c=t(c),c[6]=c[6]&15|r,c[8]=c[8]&63|128,o){s=s||0;for(let l=0;l<16;++l)o[s+l]=c[l];return o}return(0,Zi.default)(c)}try{i.name=e}catch{}return i.DNS=Br,i.URL=Nr,i}});var $r=h(Ie=>{"use strict";Object.defineProperty(Ie,"__esModule",{value:!0});Ie.default=void 0;var no=io(require("crypto"));function io(e){return e&&e.__esModule?e:{default:e}}function oo(e){return Array.isArray(e)?e=Buffer.from(e):typeof e=="string"&&(e=Buffer.from(e,"utf8")),no.default.createHash("md5").update(e).digest()}var ao=oo;Ie.default=ao});var Ur=h(Me=>{"use strict";Object.defineProperty(Me,"__esModule",{value:!0});Me.default=void 0;var so=Rr(hr()),co=Rr($r());function Rr(e){return e&&e.__esModule?e:{default:e}}var lo=(0,so.default)("v3",48,co.default),uo=lo;Me.default=uo});var Yr=h(Oe=>{"use strict";Object.defineProperty(Oe,"__esModule",{value:!0});Oe.default=void 0;var fo=Hr(lr()),po=Hr(he());function Hr(e){return e&&e.__esModule?e:{default:e}}function ho(e,r,t){e=e||{};let i=e.random||(e.rng||fo.default)();if(i[6]=i[6]&15|64,i[8]=i[8]&63|128,r){t=t||0;for(let n=0;n<16;++n)r[t+n]=i[n];return r}return(0,po.default)(i)}var go=ho;Oe.default=go});var Vr=h(Le=>{"use strict";Object.defineProperty(Le,"__esModule",{value:!0});Le.default=void 0;var mo=vo(require("crypto"));function vo(e){return e&&e.__esModule?e:{default:e}}function yo(e){return Array.isArray(e)?e=Buffer.from(e):typeof e=="string"&&(e=Buffer.from(e,"utf8")),mo.default.createHash("sha1").update(e).digest()}var wo=yo;Le.default=wo});var Gr=h(qe=>{"use strict";Object.defineProperty(qe,"__esModule",{value:!0});qe.default=void 0;var xo=Wr(hr()),bo=Wr(Vr());function Wr(e){return e&&e.__esModule?e:{default:e}}var Fo=(0,xo.default)("v5",80,bo.default),Co=Fo;qe.default=Co});var Kr=h(Be=>{"use strict";Object.defineProperty(Be,"__esModule",{value:!0});Be.default=void 0;var So="00000000-0000-0000-0000-000000000000";Be.default=So});var Qr=h(Ne=>{"use strict";Object.defineProperty(Ne,"__esModule",{value:!0});Ne.default=void 0;var Ao=Eo(pe());function Eo(e){return e&&e.__esModule?e:{default:e}}function ko(e){if(!(0,Ao.default)(e))throw TypeError("Invalid UUID");return parseInt(e.substr(14,1),16)}var jo=ko;Ne.default=jo});var Jr=h(O=>{"use strict";Object.defineProperty(O,"__esModule",{value:!0});Object.defineProperty(O,"v1",{enumerable:!0,get:function(){return Do.default}});Object.defineProperty(O,"v3",{enumerable:!0,get:function(){return _o.default}});Object.defineProperty(O,"v4",{enumerable:!0,get:function(){return Po.default}});Object.defineProperty(O,"v5",{enumerable:!0,get:function(){return To.default}});Object.defineProperty(O,"NIL",{enumerable:!0,get:function(){return Io.default}});Object.defineProperty(O,"version",{enumerable:!0,get:function(){return Mo.default}});Object.defineProperty(O,"validate",{enumerable:!0,get:function(){return Oo.default}});Object.defineProperty(O,"stringify",{enumerable:!0,get:function(){return Lo.default}});Object.defineProperty(O,"parse",{enumerable:!0,get:function(){return qo.default}});var Do=N(Lr()),_o=N(Ur()),Po=N(Yr()),To=N(Gr()),Io=N(Kr()),Mo=N(Qr()),Oo=N(pe()),Lo=N(he()),qo=N(pr());function N(e){return e&&e.__esModule?e:{default:e}}});var me=h((Il,rt)=>{var Bo=Object.prototype.toString;rt.exports=function(r){if(r===void 0)return"undefined";if(r===null)return"null";var t=typeof r;if(t==="boolean")return"boolean";if(t==="string")return"string";if(t==="number")return"number";if(t==="symbol")return"symbol";if(t==="function")return Ho(r)?"generatorfunction":"function";if(No(r))return"array";if(Wo(r))return"buffer";if(Vo(r))return"arguments";if(Ro(r))return"date";if($o(r))return"error";if(Uo(r))return"regexp";switch(et(r)){case"Symbol":return"symbol";case"Promise":return"promise";case"WeakMap":return"weakmap";case"WeakSet":return"weakset";case"Map":return"map";case"Set":return"set";case"Int8Array":return"int8array";case"Uint8Array":return"uint8array";case"Uint8ClampedArray":return"uint8clampedarray";case"Int16Array":return"int16array";case"Uint16Array":return"uint16array";case"Int32Array":return"int32array";case"Uint32Array":return"uint32array";case"Float32Array":return"float32array";case"Float64Array":return"float64array"}if(Yo(r))return"generator";switch(t=Bo.call(r),t){case"[object Object]":return"object";case"[object Map Iterator]":return"mapiterator";case"[object Set Iterator]":return"setiterator";case"[object String Iterator]":return"stringiterator";case"[object Array Iterator]":return"arrayiterator"}return t.slice(8,-1).toLowerCase().replace(/\s/g,"")};function et(e){return typeof e.constructor=="function"?e.constructor.name:null}function No(e){return Array.isArray?Array.isArray(e):e instanceof Array}function $o(e){return e instanceof Error||typeof e.message=="string"&&e.constructor&&typeof e.constructor.stackTraceLimit=="number"}function Ro(e){return e instanceof Date?!0:typeof e.toDateString=="function"&&typeof e.getDate=="function"&&typeof e.setDate=="function"}function Uo(e){return e instanceof RegExp?!0:typeof e.flags=="string"&&typeof e.ignoreCase=="boolean"&&typeof e.multiline=="boolean"&&typeof e.global=="boolean"}function Ho(e,r){return et(e)==="GeneratorFunction"}function Yo(e){return typeof e.throw=="function"&&typeof e.return=="function"&&typeof e.next=="function"}function Vo(e){try{if(typeof e.length=="number"&&typeof e.callee=="function")return!0}catch(r){if(r.message.indexOf("callee")!==-1)return!0}return!1}function Wo(e){return e.constructor&&typeof e.constructor.isBuffer=="function"?e.constructor.isBuffer(e):!1}});var nt=h((Ml,tt)=>{"use strict";tt.exports=function(r){return typeof r<"u"&&r!==null&&(typeof r=="object"||typeof r=="function")}});var at=h((Ol,ot)=>{"use strict";var it=nt();ot.exports=function(r){it(r)||(r={});for(var t=arguments.length,i=1;i<t;i++){var n=arguments[i];it(n)&&Go(r,n)}return r};function Go(e,r){for(var t in r)Ko(r,t)&&(e[t]=r[t])}function Ko(e,r){return Object.prototype.hasOwnProperty.call(e,r)}});var lt=h((Ll,ct)=>{"use strict";var Qo=me(),Jo=at();ct.exports=function(e,r){typeof r=="function"&&(r={parse:r});var t=Xo(e),i={section_delimiter:"---",parse:ea},n=Jo({},i,r),a=n.section_delimiter,o=t.content.split(/\r?\n/),s=null,c=st(),l=[],u=[];function d(L){t.content=L,s=[],l=[]}function f(L){u.length&&(c.key=Zo(u[0],a),c.content=L,n.parse(c,s),s.push(c),c=st(),l=[],u=[])}for(var p=0;p<o.length;p++){var m=o[p],x=u.length,v=m.trim();if(zo(v,a)){if(v.length===3&&p!==0){if(x===0||x===2){l.push(m);continue}u.push(v),c.data=l.join(`
+`),l=[];continue}s===null&&d(l.join(`
+`)),x===2&&f(l.join(`
+`)),u.push(v);continue}l.push(m)}return s===null?d(l.join(`
+`)):f(l.join(`
+`)),t.sections=s,t};function zo(e,r){return!(e.slice(0,r.length)!==r||e.charAt(r.length+1)===r.slice(-1))}function Xo(e){if(Qo(e)!=="object"&&(e={content:e}),typeof e.content!="string"&&!ra(e.content))throw new TypeError("expected a buffer or string");return e.content=e.content.toString(),e.sections=[],e}function Zo(e,r){return e?e.slice(r.length).trim():""}function st(){return{key:"",data:"",content:""}}function ea(e){return e}function ra(e){return e&&e.constructor&&typeof e.constructor.isBuffer=="function"?e.constructor.isBuffer(e):!1}});var Q=h((ql,K)=>{"use strict";function ut(e){return typeof e>"u"||e===null}function ta(e){return typeof e=="object"&&e!==null}function na(e){return Array.isArray(e)?e:ut(e)?[]:[e]}function ia(e,r){var t,i,n,a;if(r)for(a=Object.keys(r),t=0,i=a.length;t<i;t+=1)n=a[t],e[n]=r[n];return e}function oa(e,r){var t="",i;for(i=0;i<r;i+=1)t+=e;return t}function aa(e){return e===0&&Number.NEGATIVE_INFINITY===1/e}K.exports.isNothing=ut;K.exports.isObject=ta;K.exports.toArray=na;K.exports.repeat=oa;K.exports.isNegativeZero=aa;K.exports.extend=ia});var ne=h((Bl,dt)=>{"use strict";function ve(e,r){Error.call(this),this.name="YAMLException",this.reason=e,this.mark=r,this.message=(this.reason||"(unknown reason)")+(this.mark?" "+this.mark.toString():""),Error.captureStackTrace?Error.captureStackTrace(this,this.constructor):this.stack=new Error().stack||""}ve.prototype=Object.create(Error.prototype);ve.prototype.constructor=ve;ve.prototype.toString=function(r){var t=this.name+": ";return t+=this.reason||"(unknown reason)",!r&&this.mark&&(t+=" "+this.mark.toString()),t};dt.exports=ve});var ht=h((Nl,pt)=>{"use strict";var ft=Q();function gr(e,r,t,i,n){this.name=e,this.buffer=r,this.position=t,this.line=i,this.column=n}gr.prototype.getSnippet=function(r,t){var i,n,a,o,s;if(!this.buffer)return null;for(r=r||4,t=t||75,i="",n=this.position;n>0&&`\0\r
+\x85\u2028\u2029`.indexOf(this.buffer.charAt(n-1))===-1;)if(n-=1,this.position-n>t/2-1){i=" ... ",n+=5;break}for(a="",o=this.position;o<this.buffer.length&&`\0\r
+\x85\u2028\u2029`.indexOf(this.buffer.charAt(o))===-1;)if(o+=1,o-this.position>t/2-1){a=" ... ",o-=5;break}return s=this.buffer.slice(n,o),ft.repeat(" ",r)+i+s+a+`
+`+ft.repeat(" ",r+this.position-n+i.length)+"^"};gr.prototype.toString=function(r){var t,i="";return this.name&&(i+='in "'+this.name+'" '),i+="at line "+(this.line+1)+", column "+(this.column+1),r||(t=this.getSnippet(),t&&(i+=`:
+`+t)),i};pt.exports=gr});var C=h(($l,mt)=>{"use strict";var gt=ne(),sa=["kind","resolve","construct","instanceOf","predicate","represent","defaultStyle","styleAliases"],ca=["scalar","sequence","mapping"];function la(e){var r={};return e!==null&&Object.keys(e).forEach(function(t){e[t].forEach(function(i){r[String(i)]=t})}),r}function ua(e,r){if(r=r||{},Object.keys(r).forEach(function(t){if(sa.indexOf(t)===-1)throw new gt('Unknown option "'+t+'" is met in definition of "'+e+'" YAML type.')}),this.tag=e,this.kind=r.kind||null,this.resolve=r.resolve||function(){return!0},this.construct=r.construct||function(t){return t},this.instanceOf=r.instanceOf||null,this.predicate=r.predicate||null,this.represent=r.represent||null,this.defaultStyle=r.defaultStyle||null,this.styleAliases=la(r.styleAliases||null),ca.indexOf(this.kind)===-1)throw new gt('Unknown kind "'+this.kind+'" is specified for "'+e+'" YAML type.')}mt.exports=ua});var J=h((Rl,yt)=>{"use strict";var vt=Q(),He=ne(),da=C();function mr(e,r,t){var i=[];return e.include.forEach(function(n){t=mr(n,r,t)}),e[r].forEach(function(n){t.forEach(function(a,o){a.tag===n.tag&&a.kind===n.kind&&i.push(o)}),t.push(n)}),t.filter(function(n,a){return i.indexOf(a)===-1})}function fa(){var e={scalar:{},sequence:{},mapping:{},fallback:{}},r,t;function i(n){e[n.kind][n.tag]=e.fallback[n.tag]=n}for(r=0,t=arguments.length;r<t;r+=1)arguments[r].forEach(i);return e}function ie(e){this.include=e.include||[],this.implicit=e.implicit||[],this.explicit=e.explicit||[],this.implicit.forEach(function(r){if(r.loadKind&&r.loadKind!=="scalar")throw new He("There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.")}),this.compiledImplicit=mr(this,"implicit",[]),this.compiledExplicit=mr(this,"explicit",[]),this.compiledTypeMap=fa(this.compiledImplicit,this.compiledExplicit)}ie.DEFAULT=null;ie.create=function(){var r,t;switch(arguments.length){case 1:r=ie.DEFAULT,t=arguments[0];break;case 2:r=arguments[0],t=arguments[1];break;default:throw new He("Wrong number of arguments for Schema.create function")}if(r=vt.toArray(r),t=vt.toArray(t),!r.every(function(i){return i instanceof ie}))throw new He("Specified list of super schemas (or a single Schema object) contains a non-Schema object.");if(!t.every(function(i){return i instanceof da}))throw new He("Specified list of YAML types (or a single Type object) contains a non-Type object.");return new ie({include:r,explicit:t})};yt.exports=ie});var xt=h((Ul,wt)=>{"use strict";var pa=C();wt.exports=new pa("tag:yaml.org,2002:str",{kind:"scalar",construct:function(e){return e!==null?e:""}})});var Ft=h((Hl,bt)=>{"use strict";var ha=C();bt.exports=new ha("tag:yaml.org,2002:seq",{kind:"sequence",construct:function(e){return e!==null?e:[]}})});var St=h((Yl,Ct)=>{"use strict";var ga=C();Ct.exports=new ga("tag:yaml.org,2002:map",{kind:"mapping",construct:function(e){return e!==null?e:{}}})});var Ye=h((Vl,At)=>{"use strict";var ma=J();At.exports=new ma({explicit:[xt(),Ft(),St()]})});var kt=h((Wl,Et)=>{"use strict";var va=C();function ya(e){if(e===null)return!0;var r=e.length;return r===1&&e==="~"||r===4&&(e==="null"||e==="Null"||e==="NULL")}function wa(){return null}function xa(e){return e===null}Et.exports=new va("tag:yaml.org,2002:null",{kind:"scalar",resolve:ya,construct:wa,predicate:xa,represent:{canonical:function(){return"~"},lowercase:function(){return"null"},uppercase:function(){return"NULL"},camelcase:function(){return"Null"}},defaultStyle:"lowercase"})});var Dt=h((Gl,jt)=>{"use strict";var ba=C();function Fa(e){if(e===null)return!1;var r=e.length;return r===4&&(e==="true"||e==="True"||e==="TRUE")||r===5&&(e==="false"||e==="False"||e==="FALSE")}function Ca(e){return e==="true"||e==="True"||e==="TRUE"}function Sa(e){return Object.prototype.toString.call(e)==="[object Boolean]"}jt.exports=new ba("tag:yaml.org,2002:bool",{kind:"scalar",resolve:Fa,construct:Ca,predicate:Sa,represent:{lowercase:function(e){return e?"true":"false"},uppercase:function(e){return e?"TRUE":"FALSE"},camelcase:function(e){return e?"True":"False"}},defaultStyle:"lowercase"})});var Pt=h((Kl,_t)=>{"use strict";var Aa=Q(),Ea=C();function ka(e){return 48<=e&&e<=57||65<=e&&e<=70||97<=e&&e<=102}function ja(e){return 48<=e&&e<=55}function Da(e){return 48<=e&&e<=57}function _a(e){if(e===null)return!1;var r=e.length,t=0,i=!1,n;if(!r)return!1;if(n=e[t],(n==="-"||n==="+")&&(n=e[++t]),n==="0"){if(t+1===r)return!0;if(n=e[++t],n==="b"){for(t++;t<r;t++)if(n=e[t],n!=="_"){if(n!=="0"&&n!=="1")return!1;i=!0}return i&&n!=="_"}if(n==="x"){for(t++;t<r;t++)if(n=e[t],n!=="_"){if(!ka(e.charCodeAt(t)))return!1;i=!0}return i&&n!=="_"}for(;t<r;t++)if(n=e[t],n!=="_"){if(!ja(e.charCodeAt(t)))return!1;i=!0}return i&&n!=="_"}if(n==="_")return!1;for(;t<r;t++)if(n=e[t],n!=="_"){if(n===":")break;if(!Da(e.charCodeAt(t)))return!1;i=!0}return!i||n==="_"?!1:n!==":"?!0:/^(:[0-5]?[0-9])+$/.test(e.slice(t))}function Pa(e){var r=e,t=1,i,n,a=[];return r.indexOf("_")!==-1&&(r=r.replace(/_/g,"")),i=r[0],(i==="-"||i==="+")&&(i==="-"&&(t=-1),r=r.slice(1),i=r[0]),r==="0"?0:i==="0"?r[1]==="b"?t*parseInt(r.slice(2),2):r[1]==="x"?t*parseInt(r,16):t*parseInt(r,8):r.indexOf(":")!==-1?(r.split(":").forEach(function(o){a.unshift(parseInt(o,10))}),r=0,n=1,a.forEach(function(o){r+=o*n,n*=60}),t*r):t*parseInt(r,10)}function Ta(e){return Object.prototype.toString.call(e)==="[object Number]"&&e%1===0&&!Aa.isNegativeZero(e)}_t.exports=new Ea("tag:yaml.org,2002:int",{kind:"scalar",resolve:_a,construct:Pa,predicate:Ta,represent:{binary:function(e){return e>=0?"0b"+e.toString(2):"-0b"+e.toString(2).slice(1)},octal:function(e){return e>=0?"0"+e.toString(8):"-0"+e.toString(8).slice(1)},decimal:function(e){return e.toString(10)},hexadecimal:function(e){return e>=0?"0x"+e.toString(16).toUpperCase():"-0x"+e.toString(16).toUpperCase().slice(1)}},defaultStyle:"decimal",styleAliases:{binary:[2,"bin"],octal:[8,"oct"],decimal:[10,"dec"],hexadecimal:[16,"hex"]}})});var Mt=h((Ql,It)=>{"use strict";var Tt=Q(),Ia=C(),Ma=new RegExp("^(?:[-+]?(?:0|[1-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");function Oa(e){return!(e===null||!Ma.test(e)||e[e.length-1]==="_")}function La(e){var r,t,i,n;return r=e.replace(/_/g,"").toLowerCase(),t=r[0]==="-"?-1:1,n=[],"+-".indexOf(r[0])>=0&&(r=r.slice(1)),r===".inf"?t===1?Number.POSITIVE_INFINITY:Number.NEGATIVE_INFINITY:r===".nan"?NaN:r.indexOf(":")>=0?(r.split(":").forEach(function(a){n.unshift(parseFloat(a,10))}),r=0,i=1,n.forEach(function(a){r+=a*i,i*=60}),t*r):t*parseFloat(r,10)}var qa=/^[-+]?[0-9]+e/;function Ba(e,r){var t;if(isNaN(e))switch(r){case"lowercase":return".nan";case"uppercase":return".NAN";case"camelcase":return".NaN"}else if(Number.POSITIVE_INFINITY===e)switch(r){case"lowercase":return".inf";case"uppercase":return".INF";case"camelcase":return".Inf"}else if(Number.NEGATIVE_INFINITY===e)switch(r){case"lowercase":return"-.inf";case"uppercase":return"-.INF";case"camelcase":return"-.Inf"}else if(Tt.isNegativeZero(e))return"-0.0";return t=e.toString(10),qa.test(t)?t.replace("e",".e"):t}function Na(e){return Object.prototype.toString.call(e)==="[object Number]"&&(e%1!==0||Tt.isNegativeZero(e))}It.exports=new Ia("tag:yaml.org,2002:float",{kind:"scalar",resolve:Oa,construct:La,predicate:Na,represent:Ba,defaultStyle:"lowercase"})});var vr=h((Jl,Ot)=>{"use strict";var $a=J();Ot.exports=new $a({include:[Ye()],implicit:[kt(),Dt(),Pt(),Mt()]})});var yr=h((zl,Lt)=>{"use strict";var Ra=J();Lt.exports=new Ra({include:[vr()]})});var $t=h((Xl,Nt)=>{"use strict";var Ua=C(),qt=new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"),Bt=new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");function Ha(e){return e===null?!1:qt.exec(e)!==null||Bt.exec(e)!==null}function Ya(e){var r,t,i,n,a,o,s,c=0,l=null,u,d,f;if(r=qt.exec(e),r===null&&(r=Bt.exec(e)),r===null)throw new Error("Date resolve error");if(t=+r[1],i=+r[2]-1,n=+r[3],!r[4])return new Date(Date.UTC(t,i,n));if(a=+r[4],o=+r[5],s=+r[6],r[7]){for(c=r[7].slice(0,3);c.length<3;)c+="0";c=+c}return r[9]&&(u=+r[10],d=+(r[11]||0),l=(u*60+d)*6e4,r[9]==="-"&&(l=-l)),f=new Date(Date.UTC(t,i,n,a,o,s,c)),l&&f.setTime(f.getTime()-l),f}function Va(e){return e.toISOString()}Nt.exports=new Ua("tag:yaml.org,2002:timestamp",{kind:"scalar",resolve:Ha,construct:Ya,instanceOf:Date,represent:Va})});var Ut=h((Zl,Rt)=>{"use strict";var Wa=C();function Ga(e){return e==="<<"||e===null}Rt.exports=new Wa("tag:yaml.org,2002:merge",{kind:"scalar",resolve:Ga})});var Vt=h((eu,Yt)=>{"use strict";var z;try{Ht=require,z=Ht("buffer").Buffer}catch{}var Ht,Ka=C(),wr=`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=
+\r`;function Qa(e){if(e===null)return!1;var r,t,i=0,n=e.length,a=wr;for(t=0;t<n;t++)if(r=a.indexOf(e.charAt(t)),!(r>64)){if(r<0)return!1;i+=6}return i%8===0}function Ja(e){var r,t,i=e.replace(/[\r\n=]/g,""),n=i.length,a=wr,o=0,s=[];for(r=0;r<n;r++)r%4===0&&r&&(s.push(o>>16&255),s.push(o>>8&255),s.push(o&255)),o=o<<6|a.indexOf(i.charAt(r));return t=n%4*6,t===0?(s.push(o>>16&255),s.push(o>>8&255),s.push(o&255)):t===18?(s.push(o>>10&255),s.push(o>>2&255)):t===12&&s.push(o>>4&255),z?z.from?z.from(s):new z(s):s}function za(e){var r="",t=0,i,n,a=e.length,o=wr;for(i=0;i<a;i++)i%3===0&&i&&(r+=o[t>>18&63],r+=o[t>>12&63],r+=o[t>>6&63],r+=o[t&63]),t=(t<<8)+e[i];return n=a%3,n===0?(r+=o[t>>18&63],r+=o[t>>12&63],r+=o[t>>6&63],r+=o[t&63]):n===2?(r+=o[t>>10&63],r+=o[t>>4&63],r+=o[t<<2&63],r+=o[64]):n===1&&(r+=o[t>>2&63],r+=o[t<<4&63],r+=o[64],r+=o[64]),r}function Xa(e){return z&&z.isBuffer(e)}Yt.exports=new Ka("tag:yaml.org,2002:binary",{kind:"scalar",resolve:Qa,construct:Ja,predicate:Xa,represent:za})});var Gt=h((ru,Wt)=>{"use strict";var Za=C(),es=Object.prototype.hasOwnProperty,rs=Object.prototype.toString;function ts(e){if(e===null)return!0;var r=[],t,i,n,a,o,s=e;for(t=0,i=s.length;t<i;t+=1){if(n=s[t],o=!1,rs.call(n)!=="[object Object]")return!1;for(a in n)if(es.call(n,a))if(!o)o=!0;else return!1;if(!o)return!1;if(r.indexOf(a)===-1)r.push(a);else return!1}return!0}function ns(e){return e!==null?e:[]}Wt.exports=new Za("tag:yaml.org,2002:omap",{kind:"sequence",resolve:ts,construct:ns})});var Qt=h((tu,Kt)=>{"use strict";var is=C(),os=Object.prototype.toString;function as(e){if(e===null)return!0;var r,t,i,n,a,o=e;for(a=new Array(o.length),r=0,t=o.length;r<t;r+=1){if(i=o[r],os.call(i)!=="[object Object]"||(n=Object.keys(i),n.length!==1))return!1;a[r]=[n[0],i[n[0]]]}return!0}function ss(e){if(e===null)return[];var r,t,i,n,a,o=e;for(a=new Array(o.length),r=0,t=o.length;r<t;r+=1)i=o[r],n=Object.keys(i),a[r]=[n[0],i[n[0]]];return a}Kt.exports=new is("tag:yaml.org,2002:pairs",{kind:"sequence",resolve:as,construct:ss})});var zt=h((nu,Jt)=>{"use strict";var cs=C(),ls=Object.prototype.hasOwnProperty;function us(e){if(e===null)return!0;var r,t=e;for(r in t)if(ls.call(t,r)&&t[r]!==null)return!1;return!0}function ds(e){return e!==null?e:{}}Jt.exports=new cs("tag:yaml.org,2002:set",{kind:"mapping",resolve:us,construct:ds})});var oe=h((iu,Xt)=>{"use strict";var fs=J();Xt.exports=new fs({include:[yr()],implicit:[$t(),Ut()],explicit:[Vt(),Gt(),Qt(),zt()]})});var en=h((ou,Zt)=>{"use strict";var ps=C();function hs(){return!0}function gs(){}function ms(){return""}function vs(e){return typeof e>"u"}Zt.exports=new ps("tag:yaml.org,2002:js/undefined",{kind:"scalar",resolve:hs,construct:gs,predicate:vs,represent:ms})});var tn=h((au,rn)=>{"use strict";var ys=C();function ws(e){if(e===null||e.length===0)return!1;var r=e,t=/\/([gim]*)$/.exec(e),i="";return!(r[0]==="/"&&(t&&(i=t[1]),i.length>3||r[r.length-i.length-1]!=="/"))}function xs(e){var r=e,t=/\/([gim]*)$/.exec(e),i="";return r[0]==="/"&&(t&&(i=t[1]),r=r.slice(1,r.length-i.length-1)),new RegExp(r,i)}function bs(e){var r="/"+e.source+"/";return e.global&&(r+="g"),e.multiline&&(r+="m"),e.ignoreCase&&(r+="i"),r}function Fs(e){return Object.prototype.toString.call(e)==="[object RegExp]"}rn.exports=new ys("tag:yaml.org,2002:js/regexp",{kind:"scalar",resolve:ws,construct:xs,predicate:Fs,represent:bs})});var an=h((su,on)=>{"use strict";var Ve;try{nn=require,Ve=nn("esprima")}catch{typeof window<"u"&&(Ve=window.esprima)}var nn,Cs=C();function Ss(e){if(e===null)return!1;try{var r="("+e+")",t=Ve.parse(r,{range:!0});return!(t.type!=="Program"||t.body.length!==1||t.body[0].type!=="ExpressionStatement"||t.body[0].expression.type!=="ArrowFunctionExpression"&&t.body[0].expression.type!=="FunctionExpression")}catch{return!1}}function As(e){var r="("+e+")",t=Ve.parse(r,{range:!0}),i=[],n;if(t.type!=="Program"||t.body.length!==1||t.body[0].type!=="ExpressionStatement"||t.body[0].expression.type!=="ArrowFunctionExpression"&&t.body[0].expression.type!=="FunctionExpression")throw new Error("Failed to resolve function");return t.body[0].expression.params.forEach(function(a){i.push(a.name)}),n=t.body[0].expression.body.range,t.body[0].expression.body.type==="BlockStatement"?new Function(i,r.slice(n[0]+1,n[1]-1)):new Function(i,"return "+r.slice(n[0],n[1]))}function Es(e){return e.toString()}function ks(e){return Object.prototype.toString.call(e)==="[object Function]"}on.exports=new Cs("tag:yaml.org,2002:js/function",{kind:"scalar",resolve:Ss,construct:As,predicate:ks,represent:Es})});var ye=h((cu,cn)=>{"use strict";var sn=J();cn.exports=sn.DEFAULT=new sn({include:[oe()],explicit:[en(),tn(),an()]})});var kn=h((lu,we)=>{"use strict";var $=Q(),gn=ne(),js=ht(),mn=oe(),Ds=ye(),Y=Object.prototype.hasOwnProperty,We=1,vn=2,yn=3,Ge=4,xr=1,_s=2,ln=3,Ps=/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/,Ts=/[\x85\u2028\u2029]/,Is=/[,\[\]\{\}]/,wn=/^(?:!|!!|![a-z\-]+!)$/i,xn=/^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;function un(e){return Object.prototype.toString.call(e)}function B(e){return e===10||e===13}function Z(e){return e===9||e===32}function _(e){return e===9||e===32||e===10||e===13}function ae(e){return e===44||e===91||e===93||e===123||e===125}function Ms(e){var r;return 48<=e&&e<=57?e-48:(r=e|32,97<=r&&r<=102?r-97+10:-1)}function Os(e){return e===120?2:e===117?4:e===85?8:0}function Ls(e){return 48<=e&&e<=57?e-48:-1}function dn(e){return e===48?"\0":e===97?"\x07":e===98?"\b":e===116||e===9?"	":e===110?`
+`:e===118?"\v":e===102?"\f":e===114?"\r":e===101?"\x1B":e===32?" ":e===34?'"':e===47?"/":e===92?"\\":e===78?"\x85":e===95?"\xA0":e===76?"\u2028":e===80?"\u2029":""}function qs(e){return e<=65535?String.fromCharCode(e):String.fromCharCode((e-65536>>10)+55296,(e-65536&1023)+56320)}var bn=new Array(256),Fn=new Array(256);for(X=0;X<256;X++)bn[X]=dn(X)?1:0,Fn[X]=dn(X);var X;function Bs(e,r){this.input=e,this.filename=r.filename||null,this.schema=r.schema||Ds,this.onWarning=r.onWarning||null,this.legacy=r.legacy||!1,this.json=r.json||!1,this.listener=r.listener||null,this.implicitTypes=this.schema.compiledImplicit,this.typeMap=this.schema.compiledTypeMap,this.length=e.length,this.position=0,this.line=0,this.lineStart=0,this.lineIndent=0,this.documents=[]}function Cn(e,r){return new gn(r,new js(e.filename,e.input,e.position,e.line,e.position-e.lineStart))}function g(e,r){throw Cn(e,r)}function Ke(e,r){e.onWarning&&e.onWarning.call(null,Cn(e,r))}var fn={YAML:function(r,t,i){var n,a,o;r.version!==null&&g(r,"duplication of %YAML directive"),i.length!==1&&g(r,"YAML directive accepts exactly one argument"),n=/^([0-9]+)\.([0-9]+)$/.exec(i[0]),n===null&&g(r,"ill-formed argument of the YAML directive"),a=parseInt(n[1],10),o=parseInt(n[2],10),a!==1&&g(r,"unacceptable YAML version of the document"),r.version=i[0],r.checkLineBreaks=o<2,o!==1&&o!==2&&Ke(r,"unsupported YAML version of the document")},TAG:function(r,t,i){var n,a;i.length!==2&&g(r,"TAG directive accepts exactly two arguments"),n=i[0],a=i[1],wn.test(n)||g(r,"ill-formed tag handle (first argument) of the TAG directive"),Y.call(r.tagMap,n)&&g(r,'there is a previously declared suffix for "'+n+'" tag handle'),xn.test(a)||g(r,"ill-formed tag prefix (second argument) of the TAG directive"),r.tagMap[n]=a}};function H(e,r,t,i){var n,a,o,s;if(r<t){if(s=e.input.slice(r,t),i)for(n=0,a=s.length;n<a;n+=1)o=s.charCodeAt(n),o===9||32<=o&&o<=1114111||g(e,"expected valid JSON character");else Ps.test(s)&&g(e,"the stream contains non-printable characters");e.result+=s}}function pn(e,r,t,i){var n,a,o,s;for($.isObject(t)||g(e,"cannot merge mappings; the provided source object is unacceptable"),n=Object.keys(t),o=0,s=n.length;o<s;o+=1)a=n[o],Y.call(r,a)||(r[a]=t[a],i[a]=!0)}function se(e,r,t,i,n,a,o,s){var c,l;if(Array.isArray(n))for(n=Array.prototype.slice.call(n),c=0,l=n.length;c<l;c+=1)Array.isArray(n[c])&&g(e,"nested arrays are not supported inside keys"),typeof n=="object"&&un(n[c])==="[object Object]"&&(n[c]="[object Object]");if(typeof n=="object"&&un(n)==="[object Object]"&&(n="[object Object]"),n=String(n),r===null&&(r={}),i==="tag:yaml.org,2002:merge")if(Array.isArray(a))for(c=0,l=a.length;c<l;c+=1)pn(e,r,a[c],t);else pn(e,r,a,t);else!e.json&&!Y.call(t,n)&&Y.call(r,n)&&(e.line=o||e.line,e.position=s||e.position,g(e,"duplicated mapping key")),r[n]=a,delete t[n];return r}function br(e){var r;r=e.input.charCodeAt(e.position),r===10?e.position++:r===13?(e.position++,e.input.charCodeAt(e.position)===10&&e.position++):g(e,"a line break is expected"),e.line+=1,e.lineStart=e.position}function F(e,r,t){for(var i=0,n=e.input.charCodeAt(e.position);n!==0;){for(;Z(n);)n=e.input.charCodeAt(++e.position);if(r&&n===35)do n=e.input.charCodeAt(++e.position);while(n!==10&&n!==13&&n!==0);if(B(n))for(br(e),n=e.input.charCodeAt(e.position),i++,e.lineIndent=0;n===32;)e.lineIndent++,n=e.input.charCodeAt(++e.position);else break}return t!==-1&&i!==0&&e.lineIndent<t&&Ke(e,"deficient indentation"),i}function Qe(e){var r=e.position,t;return t=e.input.charCodeAt(r),!!((t===45||t===46)&&t===e.input.charCodeAt(r+1)&&t===e.input.charCodeAt(r+2)&&(r+=3,t=e.input.charCodeAt(r),t===0||_(t)))}function Fr(e,r){r===1?e.result+=" ":r>1&&(e.result+=$.repeat(`
+`,r-1))}function Ns(e,r,t){var i,n,a,o,s,c,l,u,d=e.kind,f=e.result,p;if(p=e.input.charCodeAt(e.position),_(p)||ae(p)||p===35||p===38||p===42||p===33||p===124||p===62||p===39||p===34||p===37||p===64||p===96||(p===63||p===45)&&(n=e.input.charCodeAt(e.position+1),_(n)||t&&ae(n)))return!1;for(e.kind="scalar",e.result="",a=o=e.position,s=!1;p!==0;){if(p===58){if(n=e.input.charCodeAt(e.position+1),_(n)||t&&ae(n))break}else if(p===35){if(i=e.input.charCodeAt(e.position-1),_(i))break}else{if(e.position===e.lineStart&&Qe(e)||t&&ae(p))break;if(B(p))if(c=e.line,l=e.lineStart,u=e.lineIndent,F(e,!1,-1),e.lineIndent>=r){s=!0,p=e.input.charCodeAt(e.position);continue}else{e.position=o,e.line=c,e.lineStart=l,e.lineIndent=u;break}}s&&(H(e,a,o,!1),Fr(e,e.line-c),a=o=e.position,s=!1),Z(p)||(o=e.position+1),p=e.input.charCodeAt(++e.position)}return H(e,a,o,!1),e.result?!0:(e.kind=d,e.result=f,!1)}function $s(e,r){var t,i,n;if(t=e.input.charCodeAt(e.position),t!==39)return!1;for(e.kind="scalar",e.result="",e.position++,i=n=e.position;(t=e.input.charCodeAt(e.position))!==0;)if(t===39)if(H(e,i,e.position,!0),t=e.input.charCodeAt(++e.position),t===39)i=e.position,e.position++,n=e.position;else return!0;else B(t)?(H(e,i,n,!0),Fr(e,F(e,!1,r)),i=n=e.position):e.position===e.lineStart&&Qe(e)?g(e,"unexpected end of the document within a single quoted scalar"):(e.position++,n=e.position);g(e,"unexpected end of the stream within a single quoted scalar")}function Rs(e,r){var t,i,n,a,o,s;if(s=e.input.charCodeAt(e.position),s!==34)return!1;for(e.kind="scalar",e.result="",e.position++,t=i=e.position;(s=e.input.charCodeAt(e.position))!==0;){if(s===34)return H(e,t,e.position,!0),e.position++,!0;if(s===92){if(H(e,t,e.position,!0),s=e.input.charCodeAt(++e.position),B(s))F(e,!1,r);else if(s<256&&bn[s])e.result+=Fn[s],e.position++;else if((o=Os(s))>0){for(n=o,a=0;n>0;n--)s=e.input.charCodeAt(++e.position),(o=Ms(s))>=0?a=(a<<4)+o:g(e,"expected hexadecimal character");e.result+=qs(a),e.position++}else g(e,"unknown escape sequence");t=i=e.position}else B(s)?(H(e,t,i,!0),Fr(e,F(e,!1,r)),t=i=e.position):e.position===e.lineStart&&Qe(e)?g(e,"unexpected end of the document within a double quoted scalar"):(e.position++,i=e.position)}g(e,"unexpected end of the stream within a double quoted scalar")}function Us(e,r){var t=!0,i,n=e.tag,a,o=e.anchor,s,c,l,u,d,f={},p,m,x,v;if(v=e.input.charCodeAt(e.position),v===91)c=93,d=!1,a=[];else if(v===123)c=125,d=!0,a={};else return!1;for(e.anchor!==null&&(e.anchorMap[e.anchor]=a),v=e.input.charCodeAt(++e.position);v!==0;){if(F(e,!0,r),v=e.input.charCodeAt(e.position),v===c)return e.position++,e.tag=n,e.anchor=o,e.kind=d?"mapping":"sequence",e.result=a,!0;t||g(e,"missed comma between flow collection entries"),m=p=x=null,l=u=!1,v===63&&(s=e.input.charCodeAt(e.position+1),_(s)&&(l=u=!0,e.position++,F(e,!0,r))),i=e.line,ce(e,r,We,!1,!0),m=e.tag,p=e.result,F(e,!0,r),v=e.input.charCodeAt(e.position),(u||e.line===i)&&v===58&&(l=!0,v=e.input.charCodeAt(++e.position),F(e,!0,r),ce(e,r,We,!1,!0),x=e.result),d?se(e,a,f,m,p,x):l?a.push(se(e,null,f,m,p,x)):a.push(p),F(e,!0,r),v=e.input.charCodeAt(e.position),v===44?(t=!0,v=e.input.charCodeAt(++e.position)):t=!1}g(e,"unexpected end of the stream within a flow collection")}function Hs(e,r){var t,i,n=xr,a=!1,o=!1,s=r,c=0,l=!1,u,d;if(d=e.input.charCodeAt(e.position),d===124)i=!1;else if(d===62)i=!0;else return!1;for(e.kind="scalar",e.result="";d!==0;)if(d=e.input.charCodeAt(++e.position),d===43||d===45)xr===n?n=d===43?ln:_s:g(e,"repeat of a chomping mode identifier");else if((u=Ls(d))>=0)u===0?g(e,"bad explicit indentation width of a block scalar; it cannot be less than one"):o?g(e,"repeat of an indentation width identifier"):(s=r+u-1,o=!0);else break;if(Z(d)){do d=e.input.charCodeAt(++e.position);while(Z(d));if(d===35)do d=e.input.charCodeAt(++e.position);while(!B(d)&&d!==0)}for(;d!==0;){for(br(e),e.lineIndent=0,d=e.input.charCodeAt(e.position);(!o||e.lineIndent<s)&&d===32;)e.lineIndent++,d=e.input.charCodeAt(++e.position);if(!o&&e.lineIndent>s&&(s=e.lineIndent),B(d)){c++;continue}if(e.lineIndent<s){n===ln?e.result+=$.repeat(`
+`,a?1+c:c):n===xr&&a&&(e.result+=`
+`);break}for(i?Z(d)?(l=!0,e.result+=$.repeat(`
+`,a?1+c:c)):l?(l=!1,e.result+=$.repeat(`
+`,c+1)):c===0?a&&(e.result+=" "):e.result+=$.repeat(`
+`,c):e.result+=$.repeat(`
+`,a?1+c:c),a=!0,o=!0,c=0,t=e.position;!B(d)&&d!==0;)d=e.input.charCodeAt(++e.position);H(e,t,e.position,!1)}return!0}function hn(e,r){var t,i=e.tag,n=e.anchor,a=[],o,s=!1,c;for(e.anchor!==null&&(e.anchorMap[e.anchor]=a),c=e.input.charCodeAt(e.position);c!==0&&!(c!==45||(o=e.input.charCodeAt(e.position+1),!_(o)));){if(s=!0,e.position++,F(e,!0,-1)&&e.lineIndent<=r){a.push(null),c=e.input.charCodeAt(e.position);continue}if(t=e.line,ce(e,r,yn,!1,!0),a.push(e.result),F(e,!0,-1),c=e.input.charCodeAt(e.position),(e.line===t||e.lineIndent>r)&&c!==0)g(e,"bad indentation of a sequence entry");else if(e.lineIndent<r)break}return s?(e.tag=i,e.anchor=n,e.kind="sequence",e.result=a,!0):!1}function Ys(e,r,t){var i,n,a,o,s=e.tag,c=e.anchor,l={},u={},d=null,f=null,p=null,m=!1,x=!1,v;for(e.anchor!==null&&(e.anchorMap[e.anchor]=l),v=e.input.charCodeAt(e.position);v!==0;){if(i=e.input.charCodeAt(e.position+1),a=e.line,o=e.position,(v===63||v===58)&&_(i))v===63?(m&&(se(e,l,u,d,f,null),d=f=p=null),x=!0,m=!0,n=!0):m?(m=!1,n=!0):g(e,"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"),e.position+=1,v=i;else if(ce(e,t,vn,!1,!0))if(e.line===a){for(v=e.input.charCodeAt(e.position);Z(v);)v=e.input.charCodeAt(++e.position);if(v===58)v=e.input.charCodeAt(++e.position),_(v)||g(e,"a whitespace character is expected after the key-value separator within a block mapping"),m&&(se(e,l,u,d,f,null),d=f=p=null),x=!0,m=!1,n=!1,d=e.tag,f=e.result;else if(x)g(e,"can not read an implicit mapping pair; a colon is missed");else return e.tag=s,e.anchor=c,!0}else if(x)g(e,"can not read a block mapping entry; a multiline key may not be an implicit key");else return e.tag=s,e.anchor=c,!0;else break;if((e.line===a||e.lineIndent>r)&&(ce(e,r,Ge,!0,n)&&(m?f=e.result:p=e.result),m||(se(e,l,u,d,f,p,a,o),d=f=p=null),F(e,!0,-1),v=e.input.charCodeAt(e.position)),e.lineIndent>r&&v!==0)g(e,"bad indentation of a mapping entry");else if(e.lineIndent<r)break}return m&&se(e,l,u,d,f,null),x&&(e.tag=s,e.anchor=c,e.kind="mapping",e.result=l),x}function Vs(e){var r,t=!1,i=!1,n,a,o;if(o=e.input.charCodeAt(e.position),o!==33)return!1;if(e.tag!==null&&g(e,"duplication of a tag property"),o=e.input.charCodeAt(++e.position),o===60?(t=!0,o=e.input.charCodeAt(++e.position)):o===33?(i=!0,n="!!",o=e.input.charCodeAt(++e.position)):n="!",r=e.position,t){do o=e.input.charCodeAt(++e.position);while(o!==0&&o!==62);e.position<e.length?(a=e.input.slice(r,e.position),o=e.input.charCodeAt(++e.position)):g(e,"unexpected end of the stream within a verbatim tag")}else{for(;o!==0&&!_(o);)o===33&&(i?g(e,"tag suffix cannot contain exclamation marks"):(n=e.input.slice(r-1,e.position+1),wn.test(n)||g(e,"named tag handle cannot contain such characters"),i=!0,r=e.position+1)),o=e.input.charCodeAt(++e.position);a=e.input.slice(r,e.position),Is.test(a)&&g(e,"tag suffix cannot contain flow indicator characters")}return a&&!xn.test(a)&&g(e,"tag name cannot contain such characters: "+a),t?e.tag=a:Y.call(e.tagMap,n)?e.tag=e.tagMap[n]+a:n==="!"?e.tag="!"+a:n==="!!"?e.tag="tag:yaml.org,2002:"+a:g(e,'undeclared tag handle "'+n+'"'),!0}function Ws(e){var r,t;if(t=e.input.charCodeAt(e.position),t!==38)return!1;for(e.anchor!==null&&g(e,"duplication of an anchor property"),t=e.input.charCodeAt(++e.position),r=e.position;t!==0&&!_(t)&&!ae(t);)t=e.input.charCodeAt(++e.position);return e.position===r&&g(e,"name of an anchor node must contain at least one character"),e.anchor=e.input.slice(r,e.position),!0}function Gs(e){var r,t,i;if(i=e.input.charCodeAt(e.position),i!==42)return!1;for(i=e.input.charCodeAt(++e.position),r=e.position;i!==0&&!_(i)&&!ae(i);)i=e.input.charCodeAt(++e.position);return e.position===r&&g(e,"name of an alias node must contain at least one character"),t=e.input.slice(r,e.position),Y.call(e.anchorMap,t)||g(e,'unidentified alias "'+t+'"'),e.result=e.anchorMap[t],F(e,!0,-1),!0}function ce(e,r,t,i,n){var a,o,s,c=1,l=!1,u=!1,d,f,p,m,x;if(e.listener!==null&&e.listener("open",e),e.tag=null,e.anchor=null,e.kind=null,e.result=null,a=o=s=Ge===t||yn===t,i&&F(e,!0,-1)&&(l=!0,e.lineIndent>r?c=1:e.lineIndent===r?c=0:e.lineIndent<r&&(c=-1)),c===1)for(;Vs(e)||Ws(e);)F(e,!0,-1)?(l=!0,s=a,e.lineIndent>r?c=1:e.lineIndent===r?c=0:e.lineIndent<r&&(c=-1)):s=!1;if(s&&(s=l||n),(c===1||Ge===t)&&(We===t||vn===t?m=r:m=r+1,x=e.position-e.lineStart,c===1?s&&(hn(e,x)||Ys(e,x,m))||Us(e,m)?u=!0:(o&&Hs(e,m)||$s(e,m)||Rs(e,m)?u=!0:Gs(e)?(u=!0,(e.tag!==null||e.anchor!==null)&&g(e,"alias node should not have any properties")):Ns(e,m,We===t)&&(u=!0,e.tag===null&&(e.tag="?")),e.anchor!==null&&(e.anchorMap[e.anchor]=e.result)):c===0&&(u=s&&hn(e,x))),e.tag!==null&&e.tag!=="!")if(e.tag==="?"){for(e.result!==null&&e.kind!=="scalar"&&g(e,'unacceptable node kind for !<?> tag; it should be "scalar", not "'+e.kind+'"'),d=0,f=e.implicitTypes.length;d<f;d+=1)if(p=e.implicitTypes[d],p.resolve(e.result)){e.result=p.construct(e.result),e.tag=p.tag,e.anchor!==null&&(e.anchorMap[e.anchor]=e.result);break}}else Y.call(e.typeMap[e.kind||"fallback"],e.tag)?(p=e.typeMap[e.kind||"fallback"][e.tag],e.result!==null&&p.kind!==e.kind&&g(e,"unacceptable node kind for !<"+e.tag+'> tag; it should be "'+p.kind+'", not "'+e.kind+'"'),p.resolve(e.result)?(e.result=p.construct(e.result),e.anchor!==null&&(e.anchorMap[e.anchor]=e.result)):g(e,"cannot resolve a node with !<"+e.tag+"> explicit tag")):g(e,"unknown tag !<"+e.tag+">");return e.listener!==null&&e.listener("close",e),e.tag!==null||e.anchor!==null||u}function Ks(e){var r=e.position,t,i,n,a=!1,o;for(e.version=null,e.checkLineBreaks=e.legacy,e.tagMap={},e.anchorMap={};(o=e.input.charCodeAt(e.position))!==0&&(F(e,!0,-1),o=e.input.charCodeAt(e.position),!(e.lineIndent>0||o!==37));){for(a=!0,o=e.input.charCodeAt(++e.position),t=e.position;o!==0&&!_(o);)o=e.input.charCodeAt(++e.position);for(i=e.input.slice(t,e.position),n=[],i.length<1&&g(e,"directive name must not be less than one character in length");o!==0;){for(;Z(o);)o=e.input.charCodeAt(++e.position);if(o===35){do o=e.input.charCodeAt(++e.position);while(o!==0&&!B(o));break}if(B(o))break;for(t=e.position;o!==0&&!_(o);)o=e.input.charCodeAt(++e.position);n.push(e.input.slice(t,e.position))}o!==0&&br(e),Y.call(fn,i)?fn[i](e,i,n):Ke(e,'unknown document directive "'+i+'"')}if(F(e,!0,-1),e.lineIndent===0&&e.input.charCodeAt(e.position)===45&&e.input.charCodeAt(e.position+1)===45&&e.input.charCodeAt(e.position+2)===45?(e.position+=3,F(e,!0,-1)):a&&g(e,"directives end mark is expected"),ce(e,e.lineIndent-1,Ge,!1,!0),F(e,!0,-1),e.checkLineBreaks&&Ts.test(e.input.slice(r,e.position))&&Ke(e,"non-ASCII line breaks are interpreted as content"),e.documents.push(e.result),e.position===e.lineStart&&Qe(e)){e.input.charCodeAt(e.position)===46&&(e.position+=3,F(e,!0,-1));return}if(e.position<e.length-1)g(e,"end of the stream or a document separator is expected");else return}function Sn(e,r){e=String(e),r=r||{},e.length!==0&&(e.charCodeAt(e.length-1)!==10&&e.charCodeAt(e.length-1)!==13&&(e+=`
+`),e.charCodeAt(0)===65279&&(e=e.slice(1)));var t=new Bs(e,r),i=e.indexOf("\0");for(i!==-1&&(t.position=i,g(t,"null byte is not allowed in input")),t.input+="\0";t.input.charCodeAt(t.position)===32;)t.lineIndent+=1,t.position+=1;for(;t.position<t.length-1;)Ks(t);return t.documents}function An(e,r,t){r!==null&&typeof r=="object"&&typeof t>"u"&&(t=r,r=null);var i=Sn(e,t);if(typeof r!="function")return i;for(var n=0,a=i.length;n<a;n+=1)r(i[n])}function En(e,r){var t=Sn(e,r);if(t.length!==0){if(t.length===1)return t[0];throw new gn("expected a single document in the stream, but found more")}}function Qs(e,r,t){return typeof r=="object"&&r!==null&&typeof t>"u"&&(t=r,r=null),An(e,r,$.extend({schema:mn},t))}function Js(e,r){return En(e,$.extend({schema:mn},r))}we.exports.loadAll=An;we.exports.load=En;we.exports.safeLoadAll=Qs;we.exports.safeLoad=Js});var Jn=h((uu,Er)=>{"use strict";var be=Q(),Fe=ne(),zs=ye(),Xs=oe(),On=Object.prototype.toString,Ln=Object.prototype.hasOwnProperty,Zs=9,xe=10,ec=13,rc=32,tc=33,nc=34,qn=35,ic=37,oc=38,ac=39,sc=42,Bn=44,cc=45,Nn=58,lc=61,uc=62,dc=63,fc=64,$n=91,Rn=93,pc=96,Un=123,hc=124,Hn=125,j={};j[0]="\\0";j[7]="\\a";j[8]="\\b";j[9]="\\t";j[10]="\\n";j[11]="\\v";j[12]="\\f";j[13]="\\r";j[27]="\\e";j[34]='\\"';j[92]="\\\\";j[133]="\\N";j[160]="\\_";j[8232]="\\L";j[8233]="\\P";var gc=["y","Y","yes","Yes","YES","on","On","ON","n","N","no","No","NO","off","Off","OFF"];function mc(e,r){var t,i,n,a,o,s,c;if(r===null)return{};for(t={},i=Object.keys(r),n=0,a=i.length;n<a;n+=1)o=i[n],s=String(r[o]),o.slice(0,2)==="!!"&&(o="tag:yaml.org,2002:"+o.slice(2)),c=e.compiledTypeMap.fallback[o],c&&Ln.call(c.styleAliases,s)&&(s=c.styleAliases[s]),t[o]=s;return t}function jn(e){var r,t,i;if(r=e.toString(16).toUpperCase(),e<=255)t="x",i=2;else if(e<=65535)t="u",i=4;else if(e<=4294967295)t="U",i=8;else throw new Fe("code point within a string may not be greater than 0xFFFFFFFF");return"\\"+t+be.repeat("0",i-r.length)+r}function vc(e){this.schema=e.schema||zs,this.indent=Math.max(1,e.indent||2),this.noArrayIndent=e.noArrayIndent||!1,this.skipInvalid=e.skipInvalid||!1,this.flowLevel=be.isNothing(e.flowLevel)?-1:e.flowLevel,this.styleMap=mc(this.schema,e.styles||null),this.sortKeys=e.sortKeys||!1,this.lineWidth=e.lineWidth||80,this.noRefs=e.noRefs||!1,this.noCompatMode=e.noCompatMode||!1,this.condenseFlow=e.condenseFlow||!1,this.implicitTypes=this.schema.compiledImplicit,this.explicitTypes=this.schema.compiledExplicit,this.tag=null,this.result="",this.duplicates=[],this.usedDuplicates=null}function Dn(e,r){for(var t=be.repeat(" ",r),i=0,n=-1,a="",o,s=e.length;i<s;)n=e.indexOf(`
+`,i),n===-1?(o=e.slice(i),i=s):(o=e.slice(i,n+1),i=n+1),o.length&&o!==`
+`&&(a+=t),a+=o;return a}function Cr(e,r){return`
+`+be.repeat(" ",e.indent*r)}function yc(e,r){var t,i,n;for(t=0,i=e.implicitTypes.length;t<i;t+=1)if(n=e.implicitTypes[t],n.resolve(r))return!0;return!1}function Ar(e){return e===rc||e===Zs}function le(e){return 32<=e&&e<=126||161<=e&&e<=55295&&e!==8232&&e!==8233||57344<=e&&e<=65533&&e!==65279||65536<=e&&e<=1114111}function wc(e){return le(e)&&!Ar(e)&&e!==65279&&e!==ec&&e!==xe}function _n(e,r){return le(e)&&e!==65279&&e!==Bn&&e!==$n&&e!==Rn&&e!==Un&&e!==Hn&&e!==Nn&&(e!==qn||r&&wc(r))}function xc(e){return le(e)&&e!==65279&&!Ar(e)&&e!==cc&&e!==dc&&e!==Nn&&e!==Bn&&e!==$n&&e!==Rn&&e!==Un&&e!==Hn&&e!==qn&&e!==oc&&e!==sc&&e!==tc&&e!==hc&&e!==lc&&e!==uc&&e!==ac&&e!==nc&&e!==ic&&e!==fc&&e!==pc}function Yn(e){var r=/^\n* /;return r.test(e)}var Vn=1,Wn=2,Gn=3,Kn=4,Je=5;function bc(e,r,t,i,n){var a,o,s,c=!1,l=!1,u=i!==-1,d=-1,f=xc(e.charCodeAt(0))&&!Ar(e.charCodeAt(e.length-1));if(r)for(a=0;a<e.length;a++){if(o=e.charCodeAt(a),!le(o))return Je;s=a>0?e.charCodeAt(a-1):null,f=f&&_n(o,s)}else{for(a=0;a<e.length;a++){if(o=e.charCodeAt(a),o===xe)c=!0,u&&(l=l||a-d-1>i&&e[d+1]!==" ",d=a);else if(!le(o))return Je;s=a>0?e.charCodeAt(a-1):null,f=f&&_n(o,s)}l=l||u&&a-d-1>i&&e[d+1]!==" "}return!c&&!l?f&&!n(e)?Vn:Wn:t>9&&Yn(e)?Je:l?Kn:Gn}function Fc(e,r,t,i){e.dump=function(){if(r.length===0)return"''";if(!e.noCompatMode&&gc.indexOf(r)!==-1)return"'"+r+"'";var n=e.indent*Math.max(1,t),a=e.lineWidth===-1?-1:Math.max(Math.min(e.lineWidth,40),e.lineWidth-n),o=i||e.flowLevel>-1&&t>=e.flowLevel;function s(c){return yc(e,c)}switch(bc(r,o,e.indent,a,s)){case Vn:return r;case Wn:return"'"+r.replace(/'/g,"''")+"'";case Gn:return"|"+Pn(r,e.indent)+Tn(Dn(r,n));case Kn:return">"+Pn(r,e.indent)+Tn(Dn(Cc(r,a),n));case Je:return'"'+Sc(r,a)+'"';default:throw new Fe("impossible error: invalid scalar style")}}()}function Pn(e,r){var t=Yn(e)?String(r):"",i=e[e.length-1]===`
 `,n=i&&(e[e.length-2]===`
 `||e===`
-`),a=n?"+":i?"":"-";return r+a+`
-`}function _n(e){return e[e.length-1]===`
-`?e.slice(0,-1):e}function Ec(e,t){for(var r=/(\n+)([^\n]*)/g,i=function(){var s=e.indexOf(`
-`);return s=s!==-1?s:e.length,r.lastIndex=s,Pn(e.slice(0,s),t)}(),n=e[0]===`
-`||e[0]===" ",a,o;o=r.exec(e);){var l=o[1],c=o[2];a=c[0]===" ",i+=l+(!n&&!a&&c!==""?`
-`:"")+Pn(c,t),n=a}return i}function Pn(e,t){if(e===""||e[0]===" ")return e;for(var r=/ [^ ]/g,i,n=0,a,o=0,l=0,c="";i=r.exec(e);)l=i.index,l-n>t&&(a=o>n?o:l,c+=`
-`+e.slice(n,a),n=a+1),o=l;return c+=`
-`,e.length-n>t&&o>n?c+=e.slice(n,o)+`
-`+e.slice(o+1):c+=e.slice(n),c.slice(1)}function Sc(e){for(var t="",r,i,n,a=0;a<e.length;a++){if(r=e.charCodeAt(a),r>=55296&&r<=56319&&(i=e.charCodeAt(a+1),i>=56320&&i<=57343)){t+=In((r-55296)*1024+i-56320+65536),a++;continue}n=I[r],t+=!n&&se(r)?e[a]:n||In(r)}return t}function Fc(e,t,r){var i="",n=e.tag,a,o;for(a=0,o=r.length;a<o;a+=1)ee(e,t,r[a],!1,!1)&&(a!==0&&(i+=","+(e.condenseFlow?"":" ")),i+=e.dump);e.tag=n,e.dump="["+i+"]"}function Cc(e,t,r,i){var n="",a=e.tag,o,l;for(o=0,l=r.length;o<l;o+=1)ee(e,t+1,r[o],!0,!0)&&((!i||o!==0)&&(n+=Et(e,t)),e.dump&&we===e.dump.charCodeAt(0)?n+="-":n+="- ",n+=e.dump);e.tag=a,e.dump=n||"[]"}function Ac(e,t,r){var i="",n=e.tag,a=Object.keys(r),o,l,c,s,d;for(o=0,l=a.length;o<l;o+=1)d="",o!==0&&(d+=", "),e.condenseFlow&&(d+='"'),c=a[o],s=r[c],ee(e,t,c,!1,!1)&&(e.dump.length>1024&&(d+="? "),d+=e.dump+(e.condenseFlow?'"':"")+":"+(e.condenseFlow?"":" "),ee(e,t,s,!1,!1)&&(d+=e.dump,i+=d));e.tag=n,e.dump="{"+i+"}"}function Ic(e,t,r,i){var n="",a=e.tag,o=Object.keys(r),l,c,s,d,u,p;if(e.sortKeys===!0)o.sort();else if(typeof e.sortKeys=="function")o.sort(e.sortKeys);else if(e.sortKeys)throw new be("sortKeys must be a boolean or a function");for(l=0,c=o.length;l<c;l+=1)p="",(!i||l!==0)&&(p+=Et(e,t)),s=o[l],d=r[s],ee(e,t+1,s,!0,!0,!0)&&(u=e.tag!==null&&e.tag!=="?"||e.dump&&e.dump.length>1024,u&&(e.dump&&we===e.dump.charCodeAt(0)?p+="?":p+="? "),p+=e.dump,u&&(p+=Et(e,t)),ee(e,t+1,d,!0,u)&&(e.dump&&we===e.dump.charCodeAt(0)?p+=":":p+=": ",p+=e.dump,n+=p));e.tag=a,e.dump=n||"{}"}function Tn(e,t,r){var i,n,a,o,l,c;for(n=r?e.explicitTypes:e.implicitTypes,a=0,o=n.length;a<o;a+=1)if(l=n[a],(l.instanceOf||l.predicate)&&(!l.instanceOf||typeof t=="object"&&t instanceof l.instanceOf)&&(!l.predicate||l.predicate(t))){if(e.tag=r?l.tag:"?",l.represent){if(c=e.styleMap[l.tag]||l.defaultStyle,Bn.call(l.represent)==="[object Function]")i=l.represent(t,c);else if(On.call(l.represent,c))i=l.represent[c](t,c);else throw new be("!<"+l.tag+'> tag resolver accepts not "'+c+'" style');e.dump=i}return!0}return!1}function ee(e,t,r,i,n,a){e.tag=null,e.dump=r,Tn(e,r,!1)||Tn(e,r,!0);var o=Bn.call(e.dump);i&&(i=e.flowLevel<0||e.flowLevel>t);var l=o==="[object Object]"||o==="[object Array]",c,s;if(l&&(c=e.duplicates.indexOf(r),s=c!==-1),(e.tag!==null&&e.tag!=="?"||s||e.indent!==2&&t>0)&&(n=!1),s&&e.usedDuplicates[c])e.dump="*ref_"+c;else{if(l&&s&&!e.usedDuplicates[c]&&(e.usedDuplicates[c]=!0),o==="[object Object]")i&&Object.keys(e.dump).length!==0?(Ic(e,t,e.dump,n),s&&(e.dump="&ref_"+c+e.dump)):(Ac(e,t,e.dump),s&&(e.dump="&ref_"+c+" "+e.dump));else if(o==="[object Array]"){var d=e.noArrayIndent&&t>0?t-1:t;i&&e.dump.length!==0?(Cc(e,d,e.dump,n),s&&(e.dump="&ref_"+c+e.dump)):(Fc(e,d,e.dump),s&&(e.dump="&ref_"+c+" "+e.dump))}else if(o==="[object String]")e.tag!=="?"&&bc(e,e.dump,t,a);else{if(e.skipInvalid)return!1;throw new be("unacceptable kind of an object to dump "+o)}e.tag!==null&&e.tag!=="?"&&(e.dump="!<"+e.tag+"> "+e.dump)}return!0}function kc(e,t){var r=[],i=[],n,a;for(St(e,r,i),n=0,a=i.length;n<a;n+=1)t.duplicates.push(r[i[n]]);t.usedDuplicates=new Array(a)}function St(e,t,r){var i,n,a;if(e!==null&&typeof e=="object")if(n=t.indexOf(e),n!==-1)r.indexOf(n)===-1&&r.push(n);else if(t.push(e),Array.isArray(e))for(n=0,a=e.length;n<a;n+=1)St(e[n],t,r);else for(i=Object.keys(e),n=0,a=i.length;n<a;n+=1)St(e[i[n]],t,r)}function Wn(e,t){t=t||{};var r=new vc(t);return r.noRefs||kc(e,r),ee(r,0,e,!0,!0)?r.dump+`
-`:""}function Dc(e,t){return Wn(e,xe.extend({schema:zl},t))}Ct.exports.dump=Wn;Ct.exports.safeDump=Dc});var zn=f((dd,b)=>{"use strict";var Qe=An(),Qn=Jn();function ze(e){return function(){throw new Error("Function "+e+" is deprecated and cannot be used.")}}b.exports.Type=S();b.exports.Schema=Q();b.exports.FAILSAFE_SCHEMA=Ue();b.exports.JSON_SCHEMA=vt();b.exports.CORE_SCHEMA=gt();b.exports.DEFAULT_SAFE_SCHEMA=oe();b.exports.DEFAULT_FULL_SCHEMA=ge();b.exports.load=Qe.load;b.exports.loadAll=Qe.loadAll;b.exports.safeLoad=Qe.safeLoad;b.exports.safeLoadAll=Qe.safeLoadAll;b.exports.dump=Qn.dump;b.exports.safeDump=Qn.safeDump;b.exports.YAMLException=ne();b.exports.MINIMAL_SCHEMA=Ue();b.exports.SAFE_SCHEMA=oe();b.exports.DEFAULT_SCHEMA=ge();b.exports.scan=ze("scan");b.exports.parse=ze("parse");b.exports.compose=ze("compose");b.exports.addConstructor=ze("addConstructor")});var Zn=f((ud,Xn)=>{"use strict";var jc=zn();Xn.exports=jc});var At=f((exports,module)=>{"use strict";var yaml=Zn(),engines=exports=module.exports;engines.yaml={parse:yaml.safeLoad.bind(yaml),stringify:yaml.safeDump.bind(yaml)};engines.json={parse:JSON.parse.bind(JSON),stringify:function(e,t){let r=Object.assign({replacer:null,space:2},t);return JSON.stringify(e,r.replacer,r.space)}};engines.javascript={parse:function parse(str,options,wrap){try{return wrap!==!1&&(str=`(function() {
+`),a=n?"+":i?"":"-";return t+a+`
+`}function Tn(e){return e[e.length-1]===`
+`?e.slice(0,-1):e}function Cc(e,r){for(var t=/(\n+)([^\n]*)/g,i=function(){var l=e.indexOf(`
+`);return l=l!==-1?l:e.length,t.lastIndex=l,In(e.slice(0,l),r)}(),n=e[0]===`
+`||e[0]===" ",a,o;o=t.exec(e);){var s=o[1],c=o[2];a=c[0]===" ",i+=s+(!n&&!a&&c!==""?`
+`:"")+In(c,r),n=a}return i}function In(e,r){if(e===""||e[0]===" ")return e;for(var t=/ [^ ]/g,i,n=0,a,o=0,s=0,c="";i=t.exec(e);)s=i.index,s-n>r&&(a=o>n?o:s,c+=`
+`+e.slice(n,a),n=a+1),o=s;return c+=`
+`,e.length-n>r&&o>n?c+=e.slice(n,o)+`
+`+e.slice(o+1):c+=e.slice(n),c.slice(1)}function Sc(e){for(var r="",t,i,n,a=0;a<e.length;a++){if(t=e.charCodeAt(a),t>=55296&&t<=56319&&(i=e.charCodeAt(a+1),i>=56320&&i<=57343)){r+=jn((t-55296)*1024+i-56320+65536),a++;continue}n=j[t],r+=!n&&le(t)?e[a]:n||jn(t)}return r}function Ac(e,r,t){var i="",n=e.tag,a,o;for(a=0,o=t.length;a<o;a+=1)ee(e,r,t[a],!1,!1)&&(a!==0&&(i+=","+(e.condenseFlow?"":" ")),i+=e.dump);e.tag=n,e.dump="["+i+"]"}function Ec(e,r,t,i){var n="",a=e.tag,o,s;for(o=0,s=t.length;o<s;o+=1)ee(e,r+1,t[o],!0,!0)&&((!i||o!==0)&&(n+=Cr(e,r)),e.dump&&xe===e.dump.charCodeAt(0)?n+="-":n+="- ",n+=e.dump);e.tag=a,e.dump=n||"[]"}function kc(e,r,t){var i="",n=e.tag,a=Object.keys(t),o,s,c,l,u;for(o=0,s=a.length;o<s;o+=1)u="",o!==0&&(u+=", "),e.condenseFlow&&(u+='"'),c=a[o],l=t[c],ee(e,r,c,!1,!1)&&(e.dump.length>1024&&(u+="? "),u+=e.dump+(e.condenseFlow?'"':"")+":"+(e.condenseFlow?"":" "),ee(e,r,l,!1,!1)&&(u+=e.dump,i+=u));e.tag=n,e.dump="{"+i+"}"}function jc(e,r,t,i){var n="",a=e.tag,o=Object.keys(t),s,c,l,u,d,f;if(e.sortKeys===!0)o.sort();else if(typeof e.sortKeys=="function")o.sort(e.sortKeys);else if(e.sortKeys)throw new Fe("sortKeys must be a boolean or a function");for(s=0,c=o.length;s<c;s+=1)f="",(!i||s!==0)&&(f+=Cr(e,r)),l=o[s],u=t[l],ee(e,r+1,l,!0,!0,!0)&&(d=e.tag!==null&&e.tag!=="?"||e.dump&&e.dump.length>1024,d&&(e.dump&&xe===e.dump.charCodeAt(0)?f+="?":f+="? "),f+=e.dump,d&&(f+=Cr(e,r)),ee(e,r+1,u,!0,d)&&(e.dump&&xe===e.dump.charCodeAt(0)?f+=":":f+=": ",f+=e.dump,n+=f));e.tag=a,e.dump=n||"{}"}function Mn(e,r,t){var i,n,a,o,s,c;for(n=t?e.explicitTypes:e.implicitTypes,a=0,o=n.length;a<o;a+=1)if(s=n[a],(s.instanceOf||s.predicate)&&(!s.instanceOf||typeof r=="object"&&r instanceof s.instanceOf)&&(!s.predicate||s.predicate(r))){if(e.tag=t?s.tag:"?",s.represent){if(c=e.styleMap[s.tag]||s.defaultStyle,On.call(s.represent)==="[object Function]")i=s.represent(r,c);else if(Ln.call(s.represent,c))i=s.represent[c](r,c);else throw new Fe("!<"+s.tag+'> tag resolver accepts not "'+c+'" style');e.dump=i}return!0}return!1}function ee(e,r,t,i,n,a){e.tag=null,e.dump=t,Mn(e,t,!1)||Mn(e,t,!0);var o=On.call(e.dump);i&&(i=e.flowLevel<0||e.flowLevel>r);var s=o==="[object Object]"||o==="[object Array]",c,l;if(s&&(c=e.duplicates.indexOf(t),l=c!==-1),(e.tag!==null&&e.tag!=="?"||l||e.indent!==2&&r>0)&&(n=!1),l&&e.usedDuplicates[c])e.dump="*ref_"+c;else{if(s&&l&&!e.usedDuplicates[c]&&(e.usedDuplicates[c]=!0),o==="[object Object]")i&&Object.keys(e.dump).length!==0?(jc(e,r,e.dump,n),l&&(e.dump="&ref_"+c+e.dump)):(kc(e,r,e.dump),l&&(e.dump="&ref_"+c+" "+e.dump));else if(o==="[object Array]"){var u=e.noArrayIndent&&r>0?r-1:r;i&&e.dump.length!==0?(Ec(e,u,e.dump,n),l&&(e.dump="&ref_"+c+e.dump)):(Ac(e,u,e.dump),l&&(e.dump="&ref_"+c+" "+e.dump))}else if(o==="[object String]")e.tag!=="?"&&Fc(e,e.dump,r,a);else{if(e.skipInvalid)return!1;throw new Fe("unacceptable kind of an object to dump "+o)}e.tag!==null&&e.tag!=="?"&&(e.dump="!<"+e.tag+"> "+e.dump)}return!0}function Dc(e,r){var t=[],i=[],n,a;for(Sr(e,t,i),n=0,a=i.length;n<a;n+=1)r.duplicates.push(t[i[n]]);r.usedDuplicates=new Array(a)}function Sr(e,r,t){var i,n,a;if(e!==null&&typeof e=="object")if(n=r.indexOf(e),n!==-1)t.indexOf(n)===-1&&t.push(n);else if(r.push(e),Array.isArray(e))for(n=0,a=e.length;n<a;n+=1)Sr(e[n],r,t);else for(i=Object.keys(e),n=0,a=i.length;n<a;n+=1)Sr(e[i[n]],r,t)}function Qn(e,r){r=r||{};var t=new vc(r);return t.noRefs||Dc(e,t),ee(t,0,e,!0,!0)?t.dump+`
+`:""}function _c(e,r){return Qn(e,be.extend({schema:Xs},r))}Er.exports.dump=Qn;Er.exports.safeDump=_c});var Xn=h((du,b)=>{"use strict";var ze=kn(),zn=Jn();function Xe(e){return function(){throw new Error("Function "+e+" is deprecated and cannot be used.")}}b.exports.Type=C();b.exports.Schema=J();b.exports.FAILSAFE_SCHEMA=Ye();b.exports.JSON_SCHEMA=vr();b.exports.CORE_SCHEMA=yr();b.exports.DEFAULT_SAFE_SCHEMA=oe();b.exports.DEFAULT_FULL_SCHEMA=ye();b.exports.load=ze.load;b.exports.loadAll=ze.loadAll;b.exports.safeLoad=ze.safeLoad;b.exports.safeLoadAll=ze.safeLoadAll;b.exports.dump=zn.dump;b.exports.safeDump=zn.safeDump;b.exports.YAMLException=ne();b.exports.MINIMAL_SCHEMA=Ye();b.exports.SAFE_SCHEMA=oe();b.exports.DEFAULT_SCHEMA=ye();b.exports.scan=Xe("scan");b.exports.parse=Xe("parse");b.exports.compose=Xe("compose");b.exports.addConstructor=Xe("addConstructor")});var ei=h((fu,Zn)=>{"use strict";var Pc=Xn();Zn.exports=Pc});var kr=h((exports,module)=>{"use strict";var yaml=ei(),engines=exports=module.exports;engines.yaml={parse:yaml.safeLoad.bind(yaml),stringify:yaml.safeDump.bind(yaml)};engines.json={parse:JSON.parse.bind(JSON),stringify:function(e,r){let t=Object.assign({replacer:null,space:2},r);return JSON.stringify(e,t.replacer,t.space)}};engines.javascript={parse:function parse(str,options,wrap){try{return wrap!==!1&&(str=`(function() {
 return `+str.trim()+`;
-}());`),eval(str)||{}}catch(e){if(wrap!==!1&&/(unexpected|identifier)/i.test(e.message))return parse(str,options,!1);throw new SyntaxError(e)}},stringify:function(){throw new Error("stringifying JavaScript is not supported")}}});var ti=f((pd,ei)=>{"use strict";ei.exports=function(e){return typeof e=="string"&&e.charAt(0)==="\uFEFF"?e.slice(1):e}});var Xe=f($=>{"use strict";var ri=ti(),ni=me();$.define=function(e,t,r){Reflect.defineProperty(e,t,{enumerable:!1,configurable:!0,writable:!0,value:r})};$.isBuffer=function(e){return ni(e)==="buffer"};$.isObject=function(e){return ni(e)==="object"};$.toBuffer=function(e){return typeof e=="string"?Buffer.from(e):e};$.toString=function(e){if($.isBuffer(e))return ri(String(e));if(typeof e!="string")throw new TypeError("expected input to be a string or buffer");return ri(e)};$.arrayify=function(e){return e?Array.isArray(e)?e:[e]:[]};$.startsWith=function(e,t,r){return typeof r!="number"&&(r=t.length),e.slice(0,r)===t}});var Ee=f((hd,ii)=>{"use strict";var _c=At(),Pc=Xe();ii.exports=function(e){let t=Object.assign({},e);return t.delimiters=Pc.arrayify(t.delims||t.delimiters||"---"),t.delimiters.length===1&&t.delimiters.push(t.delimiters[0]),t.language=(t.language||t.lang||"yaml").toLowerCase(),t.engines=Object.assign({},_c,t.parsers,t.engines),t}});var It=f((md,oi)=>{"use strict";oi.exports=function(e,t){let r=t.engines[e]||t.engines[Tc(e)];if(typeof r>"u")throw new Error('gray-matter engine "'+e+'" is not registered');return typeof r=="function"&&(r={parse:r}),r};function Tc(e){switch(e.toLowerCase()){case"js":case"javascript":return"javascript";case"coffee":case"coffeescript":case"cson":return"coffee";case"yaml":case"yml":return"yaml";default:return e}}});var kt=f((vd,ai)=>{"use strict";var Bc=me(),Oc=It(),Mc=Ee();ai.exports=function(e,t,r){if(t==null&&r==null)switch(Bc(e)){case"object":t=e.data,r={};break;case"string":return e;default:throw new TypeError("expected file to be a string or object")}let i=e.content,n=Mc(r);if(t==null){if(!n.data)return e;t=n.data}let a=e.language||n.language,o=Oc(a,n);if(typeof o.stringify!="function")throw new TypeError('expected "'+a+'.stringify" to be a function');t=Object.assign({},e.data,t);let l=n.delimiters[0],c=n.delimiters[1],s=o.stringify(t,r).trim(),d="";return s!=="{}"&&(d=de(l)+de(s)+de(c)),typeof e.excerpt=="string"&&e.excerpt!==""&&i.indexOf(e.excerpt.trim())===-1&&(d+=de(e.excerpt)+de(c)),d+de(i)};function de(e){return e.slice(-1)!==`
+}());`),eval(str)||{}}catch(e){if(wrap!==!1&&/(unexpected|identifier)/i.test(e.message))return parse(str,options,!1);throw new SyntaxError(e)}},stringify:function(){throw new Error("stringifying JavaScript is not supported")}}});var ti=h((pu,ri)=>{"use strict";ri.exports=function(e){return typeof e=="string"&&e.charAt(0)==="\uFEFF"?e.slice(1):e}});var Ze=h(R=>{"use strict";var ni=ti(),ii=me();R.define=function(e,r,t){Reflect.defineProperty(e,r,{enumerable:!1,configurable:!0,writable:!0,value:t})};R.isBuffer=function(e){return ii(e)==="buffer"};R.isObject=function(e){return ii(e)==="object"};R.toBuffer=function(e){return typeof e=="string"?Buffer.from(e):e};R.toString=function(e){if(R.isBuffer(e))return ni(String(e));if(typeof e!="string")throw new TypeError("expected input to be a string or buffer");return ni(e)};R.arrayify=function(e){return e?Array.isArray(e)?e:[e]:[]};R.startsWith=function(e,r,t){return typeof t!="number"&&(t=r.length),e.slice(0,t)===r}});var Ce=h((gu,oi)=>{"use strict";var Tc=kr(),Ic=Ze();oi.exports=function(e){let r=Object.assign({},e);return r.delimiters=Ic.arrayify(r.delims||r.delimiters||"---"),r.delimiters.length===1&&r.delimiters.push(r.delimiters[0]),r.language=(r.language||r.lang||"yaml").toLowerCase(),r.engines=Object.assign({},Tc,r.parsers,r.engines),r}});var jr=h((mu,ai)=>{"use strict";ai.exports=function(e,r){let t=r.engines[e]||r.engines[Mc(e)];if(typeof t>"u")throw new Error('gray-matter engine "'+e+'" is not registered');return typeof t=="function"&&(t={parse:t}),t};function Mc(e){switch(e.toLowerCase()){case"js":case"javascript":return"javascript";case"coffee":case"coffeescript":case"cson":return"coffee";case"yaml":case"yml":return"yaml";default:return e}}});var Dr=h((vu,si)=>{"use strict";var Oc=me(),Lc=jr(),qc=Ce();si.exports=function(e,r,t){if(r==null&&t==null)switch(Oc(e)){case"object":r=e.data,t={};break;case"string":return e;default:throw new TypeError("expected file to be a string or object")}let i=e.content,n=qc(t);if(r==null){if(!n.data)return e;r=n.data}let a=e.language||n.language,o=Lc(a,n);if(typeof o.stringify!="function")throw new TypeError('expected "'+a+'.stringify" to be a function');r=Object.assign({},e.data,r);let s=n.delimiters[0],c=n.delimiters[1],l=o.stringify(r,t).trim(),u="";return l!=="{}"&&(u=ue(s)+ue(l)+ue(c)),typeof e.excerpt=="string"&&e.excerpt!==""&&i.indexOf(e.excerpt.trim())===-1&&(u+=ue(e.excerpt)+ue(c)),u+ue(i)};function ue(e){return e.slice(-1)!==`
 `?e+`
-`:e}});var ci=f((gd,li)=>{"use strict";var Nc=Ee();li.exports=function(e,t){let r=Nc(t);if(e.data==null&&(e.data={}),typeof r.excerpt=="function")return r.excerpt(e,r);let i=e.data.excerpt_separator||r.excerpt_separator;if(i==null&&(r.excerpt===!1||r.excerpt==null))return e;let n=typeof r.excerpt=="string"?r.excerpt:i||r.delimiters[0],a=e.content.indexOf(n);return a!==-1&&(e.excerpt=e.content.slice(0,a)),e}});var ui=f((yd,di)=>{"use strict";var si=me(),Lc=kt(),ue=Xe();di.exports=function(e){return si(e)!=="object"&&(e={content:e}),si(e.data)!=="object"&&(e.data={}),e.contents&&e.content==null&&(e.content=e.contents),ue.define(e,"orig",ue.toBuffer(e.content)),ue.define(e,"language",e.language||""),ue.define(e,"matter",e.matter||""),ue.define(e,"stringify",function(t,r){return r&&r.language&&(e.language=r.language),Lc(e,t,r)}),e.content=ue.toString(e.content),e.isEmpty=!1,e.excerpt="",e}});var fi=f((wd,pi)=>{"use strict";var qc=It(),Rc=Ee();pi.exports=function(e,t,r){let i=Rc(r),n=qc(e,i);if(typeof n.parse!="function")throw new TypeError('expected "'+e+'.parse" to be a function');return n.parse(t,i)}});var gi=f((xd,vi)=>{"use strict";var $c=require("fs"),Vc=cr(),Dt=Ee(),Uc=kt(),hi=ci(),Hc=At(),Yc=ui(),Kc=fi(),mi=Xe();function k(e,t){if(e==="")return{data:{},content:e,excerpt:"",orig:e};let r=Yc(e),i=k.cache[r.content];if(!t){if(i)return r=Object.assign({},i),r.orig=i.orig,r;k.cache[r.content]=r}return Gc(r,t)}function Gc(e,t){let r=Dt(t),i=r.delimiters[0],n=`
-`+r.delimiters[1],a=e.content;r.language&&(e.language=r.language);let o=i.length;if(!mi.startsWith(a,i,o))return hi(e,r),e;if(a.charAt(o)===i.slice(-1))return e;a=a.slice(o);let l=a.length,c=k.language(a,r);c.name&&(e.language=c.name,a=a.slice(c.raw.length));let s=a.indexOf(n);return s===-1&&(s=l),e.matter=a.slice(0,s),e.matter.replace(/^\s*#[^\n]+/gm,"").trim()===""?(e.isEmpty=!0,e.empty=e.content,e.data={}):e.data=Kc(e.language,e.matter,r),s===l?e.content="":(e.content=a.slice(s+n.length),e.content[0]==="\r"&&(e.content=e.content.slice(1)),e.content[0]===`
-`&&(e.content=e.content.slice(1))),hi(e,r),(r.sections===!0||typeof r.section=="function")&&Vc(e,r.section),e}k.engines=Hc;k.stringify=function(e,t,r){return typeof e=="string"&&(e=k(e,r)),Uc(e,t,r)};k.read=function(e,t){let r=$c.readFileSync(e,"utf8"),i=k(r,t);return i.path=e,i};k.test=function(e,t){return mi.startsWith(e,Dt(t).delimiters[0])};k.language=function(e,t){let i=Dt(t).delimiters[0];k.test(e)&&(e=e.slice(i.length));let n=e.slice(0,e.search(/\r?\n/));return{raw:n,name:n?n.trim():""}};k.cache={};k.clearCache=function(){k.cache={}};vi.exports=k});var ns={};ji(ns,{activate:()=>ts,deactivate:()=>rs});module.exports=_i(ns);var C=P(require("vscode"));var F=P(require("vscode")),_t=P(require("path"));var K=class extends F.TreeItem{constructor(r,i,n,a,o,l,c){super(r,n);this.label=r;this.type=i;this.collapsibleState=n;this.id=a;this.projectId=o;this.project=l;this.view=c;switch(this.contextValue=i===0?"project":i===1?"view":"archive",this.tooltip=i===0?`Project: ${r} (ID: ${a})`:i===1?`View: ${r} (Type: ${c?.type})`:"Archives",i){case 0:this.iconPath=new F.ThemeIcon("project");break;case 1:c?.type==="table"?this.iconPath=new F.ThemeIcon("list-tree"):c?.type==="board"?this.iconPath=new F.ThemeIcon("layout"):c?.type==="calendar"?this.iconPath=new F.ThemeIcon("calendar"):c?.type==="gallery"?this.iconPath=new F.ThemeIcon("multiple-windows"):this.iconPath=new F.ThemeIcon("preview");break;case 2:this.iconPath=new F.ThemeIcon("archive");break}i===0&&l?.dataSource&&(l.dataSource.kind==="folder"?this.description=`Folder: ${_t.basename(l.dataSource.config.path)}`:l.dataSource.kind==="tag"?this.description=`Tag: ${l.dataSource.config.tag}`:l.dataSource.kind==="query"&&(this.description="Query")),i===1&&o&&a?this.command={command:"vscode-projects.openView",title:"Open View",arguments:[o,a]}:i===0&&a&&(this.command={command:"vscode-projects.openProject",title:"Open Project",arguments:[a]})}},Fe=class{constructor(t){this.projectManager=t;this._onDidChangeTreeData=new F.EventEmitter;this.onDidChangeTreeData=this._onDidChangeTreeData.event;this.showArchives=!1;console.log("ProjectsProvider constructor called")}refresh(){this._onDidChangeTreeData.fire()}toggleArchives(){this.showArchives=!this.showArchives,this.refresh()}getTreeItem(t){return console.log(`getTreeItem called for: ${t.label}`),t}getChildren(t){console.log(`getChildren called with element: ${t?t.label:"root"}`);try{if(t){if(t.type===0&&t.projectId){let r=this.projectManager.getProject(t.projectId);return r?Promise.resolve(r.views.map(i=>new K(i.name,1,F.TreeItemCollapsibleState.None,i.id,r.id,r,i))):Promise.resolve([])}else if(t.type===2){let r=this.projectManager.getArchives();return Promise.resolve(r.map(i=>new K(i.name,0,F.TreeItemCollapsibleState.Collapsed,i.id,i.id,i)))}}else{let r=[],i=this.projectManager.getProjects();if(console.log(`Found ${i.length} projects`),i.length===0?r.push(new K("No projects found. Click the + button to create one.",0,F.TreeItemCollapsibleState.None)):i.forEach(n=>{r.push(new K(n.name,0,F.TreeItemCollapsibleState.Collapsed,n.id,n.id,n))}),this.showArchives){let n=this.projectManager.getArchives();console.log(`Found ${n.length} archived projects`),n.length>0&&r.push(new K("Archives",2,F.TreeItemCollapsibleState.Collapsed))}return Promise.resolve(r)}return Promise.resolve([])}catch(r){return console.error("Error getting children:",r),Promise.resolve([])}}};var N=P(require("vscode")),qe=P(Jt());var Qt={id:"",name:"Table",type:"table",filter:{conjunction:"and",conditions:[]},colors:{conditions:[]},sort:{criteria:[]}},zt={id:"",name:"",views:[],dataSource:{kind:"folder",config:{path:"",recursive:!1}},excludedFiles:[]},Xt={projects:[],archives:[],preferences:{}};var he=class extends Error{constructor(r,i){super(`Error processing record ${r}: ${i.message}`);this.id=r;this.error=i;this.name="RecordError"}};var $e=P(require("path")),Re=class{constructor(t,r){this.context=t;this.fileSystem=r;this.settings=this.loadSettings()}getProjects(){return this.settings.projects}getArchives(){return this.settings.archives}getProject(t){return this.settings.projects.find(r=>r.id===t)}async createProject(t,r){let i=(0,qe.v4)(),n={...zt,id:i,name:t,views:[{...Qt,id:(0,qe.v4)(),name:"Table",type:"table"}]};r&&(n={...n,dataSource:{kind:"folder",config:{path:r.fsPath,recursive:!1}}});let a=[...this.settings.projects,n];return this.settings={...this.settings,projects:a},await this.saveSettings(),n}async addViewToProject(t,r,i,n={}){let a=this.getProject(t);if(!a)throw new Error(`Project with ID ${t} not found`);let o={id:(0,qe.v4)(),name:r,type:i,config:n,filter:{conjunction:"and",conditions:[]},colors:{conditions:[]},sort:{criteria:[]}},l={...a,views:[...a.views,o]};await this.updateProject(l)}async updateProject(t){let r=this.settings.projects.map(i=>i.id===t.id?t:i);this.settings={...this.settings,projects:r},await this.saveSettings()}async deleteProject(t){let r=this.settings.projects.filter(i=>i.id!==t);this.settings={...this.settings,projects:r},await this.saveSettings()}async archiveProject(t){let r=this.settings.projects.find(i=>i.id===t);if(r){let i=this.settings.projects.filter(a=>a.id!==t),n=[...this.settings.archives,r];this.settings={...this.settings,projects:i,archives:n},await this.saveSettings()}}async createNote(t,r,i){let n="";if(t.newFilesFolder)n=t.newFilesFolder;else if(t.dataSource.kind==="folder")n=t.dataSource.config.path;else{let l=N.workspace.workspaceFolders;if(l&&l.length>0)n=l[0]?.uri.fsPath||"";else{let c=await N.window.showOpenDialog({canSelectFiles:!1,canSelectFolders:!0,canSelectMany:!1,title:"Select a folder to save the new note"});if(c&&c.length>0)n=c[0]?.fsPath||"";else throw new Error("No folder selected")}}let a=$e.join(n,`${r}.md`),o="";if(i)try{o=await this.fileSystem.readFile(i)}catch(l){console.error("Error reading template file:",l)}return await this.fileSystem.writeFile(a,o),a}async queryProject(t){let r=[],i=[];try{if(t.dataSource.kind==="folder"){let a=await this.fileSystem.getFilesInFolder(t.dataSource.config.path,t.dataSource.config.recursive);for(let o of a)try{if(o.endsWith(".md")){let l=o,c=await this.fileSystem.readFile(o),s=this.fileSystem.parseFrontMatter(c),d={id:l,values:{...s,path:o,name:$e.basename(o,".md")}};t.excludedFiles.includes(o)||r.push(d)}}catch(l){i.push(new he(o,l instanceof Error?l:new Error(`${l}`)))}}else t.dataSource.kind==="tag"||t.dataSource.kind}catch(a){i.push(new he("project",a instanceof Error?a:new Error(`Error querying project: ${a}`)))}let n=this.detectFields(r);return{records:r,fields:n,errors:i}}loadSettings(){let t=N.workspace.getConfiguration("vscode-projects"),r=t.get("projects",[]),i=t.get("archives",[]),n=t.get("preferences",Xt.preferences);return{projects:r,archives:i,preferences:n}}async saveSettings(){let t=N.workspace.getConfiguration("vscode-projects");await t.update("projects",this.settings.projects,N.ConfigurationTarget.Global),await t.update("archives",this.settings.archives,N.ConfigurationTarget.Global),await t.update("preferences",this.settings.preferences,N.ConfigurationTarget.Global)}detectFields(t){let r=new Map;for(let i of t)for(let[n,a]of Object.entries(i.values))if(!r.has(n)){let o=this.determineType(a),l=Array.isArray(a);r.set(n,{type:o,repeated:l})}return Array.from(r.entries()).map(([i,{type:n,repeated:a}])=>({name:i,type:n,repeated:a,identifier:i==="id",derived:i==="path"||i==="name"}))}determineType(t){return t==null?"unknown":Array.isArray(t)?t.length>0?this.determineType(t[0]):"string":t instanceof Date?"date":typeof t}};var T=P(require("vscode")),j=P(require("fs")),tt=P(require("path")),Y=require("util"),Ze=P(gi()),Wc=(0,Y.promisify)(j.readFile),Jc=(0,Y.promisify)(j.writeFile),Qc=(0,Y.promisify)(j.unlink),zc=(0,Y.promisify)(j.exists),Xc=(0,Y.promisify)(j.readdir),Zc=(0,Y.promisify)(j.stat),et=class{async readFile(t){try{try{let r=T.Uri.file(t),i=await T.workspace.fs.readFile(r);return Buffer.from(i).toString("utf8")}catch{return await Wc(t,"utf8")}}catch(r){throw new Error(`Failed to read file ${t}: ${r}`)}}async writeFile(t,r){try{await this.ensureDirectory(tt.dirname(t));try{let i=T.Uri.file(t),n=Buffer.from(r,"utf8");await T.workspace.fs.writeFile(i,n)}catch{await Jc(t,r,"utf8")}}catch(i){throw new Error(`Failed to write to file ${t}: ${i}`)}}async deleteFile(t){try{try{let r=T.Uri.file(t);await T.workspace.fs.delete(r)}catch{await Qc(t)}}catch(r){throw new Error(`Failed to delete file ${t}: ${r}`)}}async fileExists(t){try{try{let r=T.Uri.file(t);return await T.workspace.fs.stat(r),!0}catch{return zc(t)}}catch{return!1}}async getFilesInFolder(t,r){let i=[];try{let n=await Xc(t);for(let a of n){let o=tt.join(t,a),l=await Zc(o);if(l.isFile())i.push(o);else if(l.isDirectory()&&r){let c=await this.getFilesInFolder(o,r);i.push(...c)}}}catch(n){console.error(`Error reading directory ${t}:`,n)}return i}parseFrontMatter(t){try{let{data:r}=(0,Ze.default)(t);return r}catch(r){return console.error("Error parsing frontmatter:",r),{}}}addFrontMatter(t,r){try{let{content:i,data:n}=(0,Ze.default)(t),a={...n,...r};return Ze.default.stringify(i,a)}catch(i){return console.error("Error adding frontmatter:",i),t}}async ensureDirectory(t){try{await T.workspace.fs.createDirectory(T.Uri.file(t))}catch{try{await(0,Y.promisify)(j.mkdir)(t,{recursive:!0})}catch(i){if(i.code!=="EEXIST")throw i}}}};var y=P(require("vscode"));async function yi(e,t){let r=await y.window.showInputBox({prompt:"Enter a name for the new project",placeHolder:"My Project"});if(!r)return;let i=[{label:"Folder-based project",description:"Create a project based on a specific folder"},{label:"Tag-based project",description:"Create a project based on file tags"},{label:"Query-based project",description:"Create a project based on a search query"}],n=await y.window.showQuickPick(i,{placeHolder:"Select the type of project"});if(n)try{let a;if(n.label==="Folder-based project"){let o=await y.window.showOpenDialog({canSelectFiles:!1,canSelectFolders:!0,canSelectMany:!1,title:"Select a folder for the project"});if(o&&o.length>0)a=o[0];else return}await e.createProject(r,a),t.refresh(),y.window.showInformationMessage(`Project "${r}" created successfully.`)}catch(a){y.window.showErrorMessage(`Failed to create project: ${a}`)}}async function wi(e){let t=e.getProjects();if(t.length===0){y.window.showErrorMessage("No projects exist. Create a project first.");return}let r=t.map(a=>({label:a.name,description:rt(a),project:a})),i=await y.window.showQuickPick(r,{placeHolder:"Select a project to create a note in"});if(!i)return;let n=await y.window.showInputBox({prompt:"Enter a name for the new note",placeHolder:"My Note"});if(n)try{let a;if(i.project.templates&&i.project.templates.length>0){let c=i.project.templates.map(d=>({label:d.replace(/^.*[\\\/]/,""),description:d,template:d}));c.unshift({label:"No template",description:"Create a blank note",template:""});let s=await y.window.showQuickPick(c,{placeHolder:"Select a template (optional)"});s&&s.template&&(a=s.template)}let o=await e.createNote(i.project,n,a),l=y.Uri.file(o);await y.window.showTextDocument(l),y.window.showInformationMessage(`Note "${n}" created successfully.`)}catch(a){y.window.showErrorMessage(`Failed to create note: ${a}`)}}async function xi(e){let t=e.getProjects();if(t.length===0){y.window.showErrorMessage("No projects exist. Create a project first.");return}let r=t.map(l=>({label:l.name,description:rt(l),project:l})),i=await y.window.showQuickPick(r,{placeHolder:"Select a project to add a view to"});if(!i)return;let n=await y.window.showInputBox({prompt:"Enter a name for the new view",placeHolder:"New View"});if(!n)return;let a=[{label:"Table",description:"Display items in a table layout"},{label:"Board",description:"Display items in a kanban board layout"},{label:"Calendar",description:"Display items in a calendar"},{label:"Gallery",description:"Display items in a gallery grid"}],o=await y.window.showQuickPick(a,{placeHolder:"Select the type of view"});if(o)try{let l=o.label.toLowerCase(),c;if(l==="board"){let s=await e.queryProject(i.project);if(s.fields.length>0){let d=s.fields.map(p=>({label:p.name,description:`Type: ${p.type}`})),u=await y.window.showQuickPick(d,{placeHolder:"Select a field to group by in the board view"});u&&(c=u.label)}}await e.addViewToProject(i.project.id,n,l,c?{groupByField:c}:{}),y.window.showInformationMessage(`View "${n}" created successfully.`)}catch(l){y.window.showErrorMessage(`Failed to create view: ${l}`)}}async function bi(e,t){let r=e.getProjects();if(r.length===0){y.window.showErrorMessage("No projects exist to delete.");return}let i=r.map(o=>({label:o.name,description:rt(o),id:o.id})),n=await y.window.showQuickPick(i,{placeHolder:"Select a project to delete"});if(!(!n||await y.window.showWarningMessage(`Are you sure you want to delete the project "${n.label}"? This action cannot be undone.`,{modal:!0},"Delete")!=="Delete"))try{await e.deleteProject(n.id),t.refresh(),y.window.showInformationMessage(`Project "${n.label}" deleted successfully.`)}catch(o){y.window.showErrorMessage(`Failed to delete project: ${o}`)}}async function Ei(e,t){let r=e.getProjects();if(r.length===0){y.window.showErrorMessage("No projects exist.");return}let i=r.map(s=>({label:s.name,description:rt(s),project:s})),n=await y.window.showQuickPick(i,{placeHolder:"Select a project"});if(!n)return;let a=n.project.views;if(a.length===0){y.window.showErrorMessage(`Project "${n.label}" has no views.`);return}if(a.length===1){y.window.showErrorMessage("Cannot delete the only view in a project. A project must have at least one view.");return}let o=a.map(s=>({label:s.name,description:`Type: ${s.type}`,id:s.id})),l=await y.window.showQuickPick(o,{placeHolder:"Select a view to delete"});if(!(!l||await y.window.showWarningMessage(`Are you sure you want to delete the view "${l.label}" from project "${n.label}"? This action cannot be undone.`,{modal:!0},"Delete")!=="Delete"))try{let s={...n.project,views:n.project.views.filter(d=>d.id!==l.id)};await e.updateProject(s),t.refresh(),y.window.showInformationMessage(`View "${l.label}" deleted successfully.`)}catch(s){y.window.showErrorMessage(`Failed to delete view: ${s}`)}}function rt(e){let t=e.dataSource;return t.kind==="folder"?`Folder: ${t.config.path}`:t.kind==="tag"?`Tag: ${t.config.tag}`:t.kind==="query"?`Query: ${t.config.query}`:""}var _=P(require("vscode")),it=P(require("path")),nt=class{constructor(t,r){this.context=t;this.projectManager=r;this.webviewPanels=new Map}async openView(t,r){try{let i=this.projectManager.getProject(t);if(!i)throw new Error(`Project with ID ${t} not found`);let n=i.views.find(a=>a.id===r);if(!n)throw new Error(`View with ID ${r} not found in project ${i.name}`);await this.showView(i,n)}catch(i){_.window.showErrorMessage(`Failed to open view: ${i}`)}}async openProject(t){try{let r=this.projectManager.getProject(t);if(!r)throw new Error(`Project with ID ${t} not found`);if(r.views.length>0)await this.showView(r,r.views[0]);else throw new Error(`Project ${r.name} has no views`)}catch(r){_.window.showErrorMessage(`Failed to open project: ${r}`)}}async showView(t,r){let i=`${t.id}:${r.id}`,n=this.webviewPanels.get(i);if(n){n.reveal();return}let a=_.window.createWebviewPanel("projectsView",`${t.name} - ${r.name}`,_.ViewColumn.One,{enableScripts:!0,retainContextWhenHidden:!0,localResourceRoots:[_.Uri.file(it.join(this.context.extensionPath,"media"))]});this.webviewPanels.set(i,a),a.onDidDispose(()=>{this.webviewPanels.delete(i)});let o=await this.projectManager.queryProject(t);a.webview.html=this.getWebviewContent(a.webview,t,r,o),a.webview.onDidReceiveMessage(async l=>{switch(l.command){case"openFile":if(l.path){let s=await _.workspace.openTextDocument(l.path);await _.window.showTextDocument(s)}break;case"editItem":if(l.recordId&&l.recordData)try{let s=o.records.findIndex(u=>u.id===l.recordId);if(s===-1)throw new Error(`Record with ID ${l.recordId} not found`);let d={...o.records[s],values:l.recordData};o.records[s]=d,a.webview.html=this.getWebviewContent(a.webview,t,r,o),a.webview.postMessage({command:"itemUpdated",recordId:l.recordId,success:!0})}catch(s){console.error("Failed to update item:",s),a.webview.postMessage({command:"itemUpdated",recordId:l.recordId,success:!1,error:String(s)})}break;case"refreshData":let c=await this.projectManager.queryProject(t);a.webview.html=this.getWebviewContent(a.webview,t,r,c);break;case"updateCalendarConfig":if(r.type==="calendar"&&l.config){let s={...r};s.config={...s.config,...l.config};let d={...t,views:t.views.map(u=>u.id===r.id?s:u)};await this.projectManager.updateProject(d),r=s,a.webview.postMessage({command:"configUpdated",config:s.config})}break}})}findSuitableDateField(t){let r=t.find(i=>i.name.toLowerCase().includes("date")||i.name.toLowerCase().includes("time")||i.name.toLowerCase().includes("deadline")||i.name.toLowerCase().includes("due"));return r?r.name:"date"}findDateFields(t){return t.filter(r=>r.name.toLowerCase().includes("date")||r.name.toLowerCase().includes("time")||r.name.toLowerCase().includes("deadline")||r.name.toLowerCase().includes("due")||r.name.toLowerCase().includes("created")||r.name.toLowerCase().includes("modified"))}getWebviewContent(t,r,i,n){let a=_.window.activeColorTheme.kind===_.ColorThemeKind.Dark,o=`
-      :root {
-        --container-background: ${a?"#252526":"#f3f3f3"};
-        --item-background: ${a?"#2d2d2d":"#ffffff"};
-        --text-color: ${a?"#e7e7e7":"#333333"};
-        --border-color: ${a?"#3c3c3c":"#dddddd"};
-        --highlight-color: ${a?"#264f78":"#ddddff"};
-        --header-background: ${a?"#333333":"#eeeeee"};
-      }
-      
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        color: var(--text-color);
-        background-color: var(--container-background);
-        padding: 0;
-        margin: 0;
-      }
-      
-      .toolbar {
-        padding: 8px;
-        background-color: var(--header-background);
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-      }
-      
-      .toolbar button {
-        background-color: var(--item-background);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
-        padding: 4px 8px;
-        margin-right: 8px;
-        cursor: pointer;
-      }
-      
-      .toolbar button:hover {
-        background-color: var(--highlight-color);
-      }
-      
-      .container {
-        padding: 16px;
-      }
-      
-      .card {
-        background-color: var(--item-background);
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        padding: 12px;
-        margin-bottom: 8px;
-      }
-      
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      
-      th {
-        text-align: left;
-        background-color: var(--header-background);
-        padding: 8px;
-        border-bottom: 2px solid var(--border-color);
-      }
-      
-      td {
-        padding: 8px;
-        border-bottom: 1px solid var(--border-color);
-      }
-      
-      .file-link {
-        color: var(--text-color);
-        text-decoration: underline;
-        cursor: pointer;
-      }
-      
-      .file-link:hover {
-        text-decoration: none;
-      }
-      
-      .board-container {
-        display: flex;
-        overflow-x: auto;
-        padding: 16px;
-        gap: 16px;
-      }
-      
-      .board-column {
-        min-width: 250px;
-        background-color: var(--header-background);
-        border-radius: 4px;
-        padding: 8px;
-      }
-      
-      .column-header {
-        font-weight: bold;
-        padding: 8px;
-        border-bottom: 1px solid var(--border-color);
-        margin-bottom: 8px;
-      }
-      
-      .board-card {
-        background-color: var(--item-background);
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        padding: 8px;
-        margin-bottom: 8px;
-      }
-      
-      /* Filter and Sort Styles */
-      .filter-bar {
-        margin-bottom: 16px;
-        background-color: var(--item-background);
-        border-radius: 4px;
-        padding: 8px;
-        border: 1px solid var(--border-color);
-      }
-      
-      .filter-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      
-      .search-box {
-        flex-grow: 1;
-        padding: 4px 8px;
-        border: 1px solid var(--border-color);
-        background-color: var(--container-background);
-        color: var(--text-color);
-      }
-      
-      .filter-button {
-        padding: 4px 8px;
-        background-color: var(--header-background);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
-        cursor: pointer;
-      }
-      
-      .filter-panel {
-        margin-top: 8px;
-        padding: 8px;
-        border-top: 1px solid var(--border-color);
-      }
-      
-      .filter-builder {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      
-      .filter-condition {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px;
-        background-color: var(--container-background);
-        border-radius: 4px;
-        border: 1px solid var(--border-color);
-      }
-      
-      .filter-join, .filter-property, .filter-operator, .filter-value {
-        padding: 4px;
-        background-color: var(--container-background);
-        color: var(--text-color);
-        border: 1px solid var(--border-color);
-      }
-      
-      .filter-join {
-        min-width: 60px;
-      }
-      
-      .filter-property {
-        min-width: 120px;
-      }
-      
-      .filter-operator {
-        min-width: 120px;
-      }
-      
-      .filter-value {
-        flex-grow: 1;
-      }
-      
-      .filter-remove {
-        background: none;
-        border: none;
-        color: var(--text-color);
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 16px;
-        opacity: 0.7;
-      }
-      
-      .filter-remove:hover {
-        opacity: 1;
-      }
-      
-      .filter-add {
-        align-self: flex-start;
-        padding: 4px 8px;
-        background-color: var(--header-background);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
-        cursor: pointer;
-        margin-bottom: 8px;
-      }
-      
-      .filter-saved {
-        margin-top: 16px;
-        border-top: 1px solid var(--border-color);
-        padding-top: 16px;
-      }
-      
-      .saved-filter {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px;
-        margin-bottom: 8px;
-        background-color: var(--container-background);
-        border-radius: 4px;
-        border: 1px solid var(--border-color);
-      }
-      
-      .saved-filter-name {
-        font-weight: bold;
-      }
-      
-      .saved-filter-actions {
-        display: flex;
-        gap: 8px;
-      }
-      
-      .filter-actions {
-        margin-top: 12px;
-        display: flex;
-        justify-content: space-between;
-      }
-      
-      .th-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      .sort-controls {
-        display: flex;
-        gap: 4px;
-      }
-      
-      .sort-control {
-        cursor: pointer;
-        opacity: 0.6;
-      }
-      
-      .sort-control:hover {
-        opacity: 1;
-      }
-      
-      .sort-active {
-        opacity: 1;
-        color: var(--highlight-color);
-      }
-      
-      /* Calendar View Styles */
-      .calendar-container {
-        display: flex;
-        flex-direction: column;
-        background-color: var(--item-background);
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        overflow: hidden;
-      }
-      
-      .calendar-toolbar {
-        display: flex;
-        align-items: center;
-        padding: 8px;
-        background-color: var(--header-background);
-        border-bottom: 1px solid var(--border-color);
-      }
-      
-      .calendar-toolbar button {
-        background-color: var(--item-background);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
-        padding: 4px 8px;
-        margin-right: 8px;
-        cursor: pointer;
-      }
-      
-      .calendar-toolbar h2 {
-        margin: 0 auto 0 16px;
-        font-size: 1.2rem;
-      }
-      
-      .calendar-filter {
-        padding: 8px;
-        background-color: var(--container-background);
-        border-bottom: 1px solid var(--border-color);
-      }
-      
-      .calendar-filter select {
-        padding: 4px;
-        background-color: var(--item-background);
-        color: var(--text-color);
-        border: 1px solid var(--border-color);
-      }
-      
-      .calendar-grid {
-        display: flex;
-        flex-direction: column;
-        padding: 8px;
-      }
-      
-      .calendar-header {
-        display: flex;
-        border-bottom: 1px solid var(--border-color);
-      }
-      
-      .calendar-header .calendar-cell {
-        font-weight: bold;
-        text-align: center;
-        padding: 8px;
-      }
-      
-      .calendar-body {
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .calendar-row {
-        display: flex;
-        border-bottom: 1px solid var(--border-color);
-      }
-      
-      .calendar-row:last-child {
-        border-bottom: none;
-      }
-      
-      .calendar-cell {
-        flex: 1;
-        min-height: 100px;
-        padding: 4px;
-        border-right: 1px solid var(--border-color);
-        position: relative;
-      }
-      
-      .calendar-cell:last-child {
-        border-right: none;
-      }
-      
-      .calendar-cell.empty {
-        background-color: var(--container-background);
-      }
-      
-      .calendar-cell.today {
-        background-color: var(--highlight-color);
-      }
-      
-      .calendar-date {
-        font-weight: bold;
-        padding: 4px;
-        text-align: right;
-      }
-      
-      .calendar-events {
-        margin-top: 4px;
-        font-size: 0.9em;
-        overflow: hidden;
-      }
-      
-      .calendar-event {
-        padding: 2px 4px;
-        margin-bottom: 2px;
-        background-color: var(--header-background);
-        border-radius: 2px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        cursor: pointer;
-        border: 1px solid transparent;
-        transition: background-color 0.1s, border-color 0.1s;
-      }
-      
-      .calendar-event:hover {
-        background-color: var(--highlight-color);
-        border-color: var(--text-color);
-      }
-      
-      .more-events {
-        font-size: 0.8em;
-        text-align: center;
-        color: var(--text-color);
-        opacity: 0.8;
-      }
-      
-      .event-details {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: var(--item-background);
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        padding: 16px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        max-width: 80%;
-        max-height: 80vh;
-        overflow-y: auto;
-        z-index: 10;
-      }
-      
-      .event-details-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-      }
-      
-      .event-details-header h3 {
-        margin: 0;
-      }
-      
-      .event-details-header button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.2em;
-        color: var(--text-color);
-      }
-    `,l="";switch(i.type){case"table":l=this.renderTableView(n);break;case"board":l=this.renderBoardView(n,i);break;case"calendar":l=this.renderCalendarView(n,i);break;case"gallery":l=this.renderGalleryView(n);break;default:l=`<div class="container">
-          <div class="card">
-            <h2>Unsupported view type: ${i.type}</h2>
-            <p>This view type is not yet implemented.</p>
-          </div>
-        </div>`}return`<!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${r.name} - ${i.name}</title>
-        <style>${o}</style>
-      </head>
-      <body>
-        <div class="toolbar">
-          <button id="refreshBtn">Refresh</button>
-          <span>${r.name} - ${i.name}</span>
-        </div>
-        
-        ${l}
-        
-        <script>
-          (function() {
-            // Convert dataframe to a JavaScript object
-            const dataframe = ${JSON.stringify(n)};
-            
-            // Event listeners
-            document.getElementById('refreshBtn').addEventListener('click', () => {
-              vscode.postMessage({
-                command: 'refreshData'
-              });
-            });
-            
-            // Add click event listener to file links
-            document.querySelectorAll('.file-link').forEach(link => {
-              link.addEventListener('click', () => {
-                vscode.postMessage({
-                  command: 'openFile',
-                  path: link.dataset.path
-                });
-              });
-            });
-            
-            // Handle filter panel toggle
-            const showFiltersBtn = document.getElementById('showFiltersBtn');
-            const filterPanel = document.getElementById('filterPanel');
-            if (showFiltersBtn && filterPanel) {
-              showFiltersBtn.addEventListener('click', () => {
-                const isDisplayed = filterPanel.style.display !== 'none';
-                filterPanel.style.display = isDisplayed ? 'none' : 'block';
-                showFiltersBtn.textContent = isDisplayed ? 'Show Filters' : 'Hide Filters';
-              });
-            }
-            
-            // Clear filters
-            const clearFilterBtn = document.getElementById('clearFilterBtn');
-            if (clearFilterBtn) {
-              clearFilterBtn.addEventListener('click', () => {
-                // Reset all filter inputs
-                document.querySelectorAll('.filter-value').forEach(input => {
-                  input.value = '';
-                });
-                // Reset search box
-                const searchInput = document.getElementById('searchInput');
-                if (searchInput) {
-                  searchInput.value = '';
-                }
-                // Show all rows
-                document.querySelectorAll('tbody tr').forEach(row => {
-                  row.style.display = '';
-                });
-              });
-            }
-            
-            // Simple search functionality
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-              searchInput.addEventListener('input', () => {
-                const searchText = searchInput.value.toLowerCase();
-                document.querySelectorAll('tbody tr').forEach(row => {
-                  const rowText = row.textContent.toLowerCase();
-                  row.style.display = rowText.includes(searchText) ? '' : 'none';
-                });
-              });
-            }
-            
-            // Dynamic filter builder functionality
-            const filterBuilder = document.getElementById('filterBuilder');
-            const addFilterBtn = document.getElementById('addFilterBtn');
-            const saveFilterBtn = document.getElementById('saveFilterBtn');
-            const savedFiltersList = document.getElementById('savedFiltersList');
-            const savedFiltersContainer = document.getElementById('savedFilters');
-            
-            if (filterBuilder && addFilterBtn) {
-              // Function to create a new filter condition element
-              function createFilterCondition(isFirstCondition = false) {
-                const conditionId = 'filter-' + Date.now();
-                const condition = document.createElement('div');
-                condition.className = 'filter-condition';
-                condition.id = conditionId;
-                
-                // Logical join operator (AND/OR) for conditions after the first one
-                if (!isFirstCondition) {
-                  const joinSelect = document.createElement('select');
-                  joinSelect.className = 'filter-join';
-                  
-                  const andOption = document.createElement('option');
-                  andOption.value = 'and';
-                  andOption.textContent = 'AND';
-                  andOption.selected = true;
-                  
-                  const orOption = document.createElement('option');
-                  orOption.value = 'or';
-                  orOption.textContent = 'OR';
-                  
-                  joinSelect.appendChild(andOption);
-                  joinSelect.appendChild(orOption);
-                  condition.appendChild(joinSelect);
-                }
-                
-                // Property selector
-                const propertySelect = document.createElement('select');
-                propertySelect.className = 'filter-property';
-                
-                // Add default empty option
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = 'Select property...';
-                propertySelect.appendChild(defaultOption);
-                
-                // Add options for each field in the dataframe
-                dataframe.fields.forEach(field => {
-                  const option = document.createElement('option');
-                  option.value = field.name;
-                  option.textContent = field.name;
-                  propertySelect.appendChild(option);
-                });
-                
-                // Operator selector
-                const operatorSelect = document.createElement('select');
-                operatorSelect.className = 'filter-operator';
-                
-                const operators = [
-                  { value: 'isNotEmpty', text: 'is not empty' },
-                  { value: 'isEmpty', text: 'is empty' },
-                  { value: 'is', text: 'is' },
-                  { value: 'isNot', text: 'is not' },
-                  { value: 'contains', text: 'contains' },
-                  { value: 'doesNotContain', text: 'does not contain' }
-                ];
-                
-                operators.forEach(op => {
-                  const option = document.createElement('option');
-                  option.value = op.value;
-                  option.textContent = op.text;
-                  operatorSelect.appendChild(option);
-                });
-                
-                // Value input
-                const valueInput = document.createElement('input');
-                valueInput.type = 'text';
-                valueInput.className = 'filter-value';
-                valueInput.placeholder = 'Value...';
-                
-                // Remove button
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'filter-remove';
-                removeBtn.textContent = '\xD7';
-                removeBtn.title = 'Remove condition';
-                removeBtn.addEventListener('click', () => {
-                  condition.remove();
-                });
-                
-                // Add elements to condition
-                condition.appendChild(propertySelect);
-                condition.appendChild(operatorSelect);
-                condition.appendChild(valueInput);
-                condition.appendChild(removeBtn);
-                
-                // Handle operator change to show/hide value input
-                operatorSelect.addEventListener('change', () => {
-                  const operator = operatorSelect.value;
-                  if (operator === 'isEmpty' || operator === 'isNotEmpty') {
-                    valueInput.style.display = 'none';
-                    valueInput.value = '';
-                  } else {
-                    valueInput.style.display = 'block';
-                  }
-                });
-                
-                // Initialize with correct display state
-                if (operatorSelect.value === 'isEmpty' || operatorSelect.value === 'isNotEmpty') {
-                  valueInput.style.display = 'none';
-                }
-                
-                return condition;
-              }
-              
-              // Add a new condition when the "Add Condition" button is clicked
-              addFilterBtn.addEventListener('click', () => {
-                const isFirstCondition = filterBuilder.children.length === 0;
-                const condition = createFilterCondition(isFirstCondition);
-                filterBuilder.appendChild(condition);
-              });
-              
-              // Add an initial condition if the filter builder is empty
-              if (filterBuilder.children.length === 0) {
-                addFilterBtn.click();
-              }
-              
-              // Save filter functionality
-              if (saveFilterBtn) {
-                saveFilterBtn.addEventListener('click', () => {
-                  // Check if we have valid conditions to save
-                  const conditions = [];
-                  let hasValidConditions = false;
-                  
-                  document.querySelectorAll('.filter-condition').forEach(conditionEl => {
-                    const propertySelect = conditionEl.querySelector('.filter-property');
-                    const operatorSelect = conditionEl.querySelector('.filter-operator');
-                    const valueInput = conditionEl.querySelector('.filter-value');
-                    
-                    if (propertySelect.value) {
-                      hasValidConditions = true;
-                      conditions.push({
-                        property: propertySelect.value,
-                        operator: operatorSelect.value,
-                        value: valueInput.value
-                      });
-                    }
-                  });
-                  
-                  if (!hasValidConditions) {
-                    alert('Please add at least one valid filter condition');
-                    return;
-                  }
-                  
-                  // Prompt for filter name
-                  const filterName = prompt('Enter a name for this filter:');
-                  if (!filterName) return;
-                  
-                  // Save filter to localStorage
-                  const viewKey = 'project_filters_' + dataframe.id;
-                  let savedFilters = JSON.parse(localStorage.getItem(viewKey) || '[]');
-                  
-                  const filter = {
-                    id: 'filter_' + Date.now(),
-                    name: filterName,
-                    conditions: conditions
-                  };
-                  
-                  savedFilters.push(filter);
-                  localStorage.setItem(viewKey, JSON.stringify(savedFilters));
-                  
-                  // Add to UI
-                  addSavedFilterToUI(filter);
-                });
-              }
-              
-              // Function to add a saved filter to the UI
-              function addSavedFilterToUI(filter) {
-                if (!savedFiltersContainer || !savedFiltersList) return;
-                
-                // Show saved filters container if it was hidden
-                savedFiltersContainer.style.display = 'block';
-                
-                const filterItem = document.createElement('div');
-                filterItem.className = 'saved-filter';
-                filterItem.dataset.filterId = filter.id;
-                
-                const nameEl = document.createElement('div');
-                nameEl.className = 'saved-filter-name';
-                nameEl.textContent = filter.name;
-                
-                const actionsEl = document.createElement('div');
-                actionsEl.className = 'saved-filter-actions';
-                
-                const applyBtn = document.createElement('button');
-                applyBtn.className = 'filter-button';
-                applyBtn.textContent = 'Apply';
-                applyBtn.addEventListener('click', () => {
-                  // Clear existing filter conditions
-                  filterBuilder.innerHTML = '';
-                  
-                  // Add conditions from saved filter
-                  filter.conditions.forEach(condition => {
-                    const conditionEl = createFilterCondition();
-                    
-                    const propertySelect = conditionEl.querySelector('.filter-property');
-                    const operatorSelect = conditionEl.querySelector('.filter-operator');
-                    const valueInput = conditionEl.querySelector('.filter-value');
-                    
-                    propertySelect.value = condition.property;
-                    operatorSelect.value = condition.operator;
-                    valueInput.value = condition.value;
-                    
-                    // Update visibility of value input
-                    if (condition.operator === 'isEmpty' || condition.operator === 'isNotEmpty') {
-                      valueInput.style.display = 'none';
-                    }
-                    
-                    filterBuilder.appendChild(conditionEl);
-                  });
-                  
-                  // Apply the filter
-                  applyFiltersBtn.click();
-                });
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'filter-button';
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('click', () => {
-                  // Remove from UI
-                  filterItem.remove();
-                  
-                  // Remove from localStorage
-                  const viewKey = 'project_filters_' + dataframe.id;
-                  let savedFilters = JSON.parse(localStorage.getItem(viewKey) || '[]');
-                  savedFilters = savedFilters.filter(f => f.id !== filter.id);
-                  localStorage.setItem(viewKey, JSON.stringify(savedFilters));
-                  
-                  // Hide container if no saved filters left
-                  if (savedFilters.length === 0) {
-                    savedFiltersContainer.style.display = 'none';
-                  }
-                });
-                
-                actionsEl.appendChild(applyBtn);
-                actionsEl.appendChild(deleteBtn);
-                
-                filterItem.appendChild(nameEl);
-                filterItem.appendChild(actionsEl);
-                
-                savedFiltersList.appendChild(filterItem);
-              }
-              
-              // Load saved filters on page load
-              const viewKey = 'project_filters_' + dataframe.id;
-              const savedFilters = JSON.parse(localStorage.getItem(viewKey) || '[]');
-              
-              if (savedFilters.length > 0 && savedFiltersContainer && savedFiltersList) {
-                savedFiltersContainer.style.display = 'block';
-                savedFilters.forEach(filter => {
-                  addSavedFilterToUI(filter);
-                });
-              }
-            }
-            
-            // Apply filters
-            const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-            if (applyFiltersBtn) {
-              applyFiltersBtn.addEventListener('click', () => {
-                const filterConditions = [];
-                
-                // Get filters from the dynamic filter builder
-                document.querySelectorAll('.filter-condition').forEach((conditionEl, index) => {
-                  const propertySelect = conditionEl.querySelector('.filter-property');
-                  const operatorSelect = conditionEl.querySelector('.filter-operator');
-                  const valueInput = conditionEl.querySelector('.filter-value');
-                  const joinSelect = conditionEl.querySelector('.filter-join');
-                  
-                  if (propertySelect.value) {
-                    const property = propertySelect.value;
-                    const operator = operatorSelect.value;
-                    const value = valueInput.value;
-                    // Get the logical join (AND/OR) if not the first condition
-                    const join = index > 0 && joinSelect ? joinSelect.value : null;
-                    
-                    // Always include isEmpty/isNotEmpty operators even without value
-                    if (value || operator === 'isEmpty' || operator === 'isNotEmpty') {
-                      filterConditions.push({ 
-                        field: property, 
-                        operator, 
-                        value,
-                        join 
-                      });
-                    }
-                  }
-                });
-                
-                // Apply filters to rows
-                document.querySelectorAll('tbody tr').forEach(row => {
-                  let showRow = true;
-                  
-                  // If no filters, show all rows
-                  if (filterConditions.length === 0) {
-                    showRow = true;
-                  } else {
-                    // Process first condition
-                    if (filterConditions.length > 0) {
-                      showRow = evaluateFilterCondition(filterConditions[0], row);
-                      
-                      // Process additional conditions with AND/OR logic
-                      for (let i = 1; i < filterConditions.length; i++) {
-                        const condition = filterConditions[i];
-                        const result = evaluateFilterCondition(condition, row);
-                        
-                        if (condition.join === 'or') {
-                          showRow = showRow || result;
-                        } else { // 'and' is default
-                          showRow = showRow && result;
-                        }
-                      }
-                    }
-                  }
-                  
-                  row.style.display = showRow ? '' : 'none';
-                });
-                
-                // Store the applied filters in a data attribute on the table
-                const table = document.querySelector('table');
-                if (table) {
-                  table.dataset.appliedFilters = JSON.stringify(filterConditions);
-                }
-              });
-              
-              // Helper function to evaluate a single filter condition against a row
-              function evaluateFilterCondition(condition, row) {
-                const cellIndex = [...document.querySelectorAll('th')].findIndex(
-                  th => th.textContent.trim() === condition.field
-                );
-                
-                if (cellIndex >= 0) {
-                  const cell = row.cells[cellIndex];
-                  const cellText = cell.textContent.toLowerCase();
-                  const filterValue = condition.value.toLowerCase();
-                  
-                  switch (condition.operator) {
-                    case 'isNotEmpty':
-                      return cellText !== '';
-                    case 'isEmpty':
-                      return cellText === '';
-                    case 'is':
-                      return cellText === filterValue;
-                    case 'isNot':
-                      return cellText !== filterValue;
-                    case 'contains':
-                      return cellText.includes(filterValue);
-                    case 'doesNotContain':
-                      return !cellText.includes(filterValue);
-                    default:
-                      return true; // Unknown operator
-                  }
-                }
-                
-                return true; // Column not found
-              }
-            }
-            
-            // Sorting functionality
-            document.querySelectorAll('.sort-control').forEach(sortControl => {
-              sortControl.addEventListener('click', () => {
-                const field = sortControl.dataset.field;
-                const isAscending = sortControl.classList.contains('sort-asc');
-                
-                // Find the column index
-                const headers = document.querySelectorAll('th');
-                const columnIndex = [...headers].findIndex(
-                  header => header.textContent.includes(field)
-                );
-                
-                if (columnIndex >= 0) {
-                  const tbody = document.querySelector('tbody');
-                  const rows = [...tbody.querySelectorAll('tr')];
-                  
-                  const sortedRows = rows.sort((a, b) => {
-                    const aValue = a.cells[columnIndex].textContent;
-                    const bValue = b.cells[columnIndex].textContent;
-                    
-                    // Try to convert to numbers if possible
-                    const aNum = Number(aValue);
-                    const bNum = Number(bValue);
-                    
-                    if (!isNaN(aNum) && !isNaN(bNum)) {
-                      return isAscending ? aNum - bNum : bNum - aNum;
-                    }
-                    
-                    // Otherwise compare as strings
-                    return isAscending 
-                      ? aValue.localeCompare(bValue)
-                      : bValue.localeCompare(aValue);
-                  });
-                  
-                  // Remove existing rows
-                  rows.forEach(row => row.remove());
-                  
-                  // Add sorted rows
-                  sortedRows.forEach(row => tbody.appendChild(row));
-                  
-                  // Update active sort indicator
-                  document.querySelectorAll('.sort-control').forEach(sc => {
-                    sc.classList.remove('sort-active');
-                  });
-                  sortControl.classList.add('sort-active');
-                }
-              });
-            });
-            
-            // Handle messages from the extension
-            window.addEventListener('message', event => {
-              const message = event.data;
-              switch (message.command) {
-                case 'configUpdated':
-                  console.log('Configuration updated, triggering full view refresh');
-                  // Configuration was successfully updated, now refresh the entire view
-                  vscode.postMessage({
-                    command: 'refreshData'
-                  });
-                  break;
-              }
-            });
-            
-            // Initialize the view with data
-            // This would be implemented differently for each view type
-            
-            // Calendar specific functionality
-            const prevMonthBtn = document.getElementById('prevMonth');
-            const nextMonthBtn = document.getElementById('nextMonth');
-            const todayBtn = document.getElementById('todayBtn');
-            const dateFieldSelect = document.getElementById('dateFieldSelect');
-            const currentMonthDisplay = document.getElementById('currentMonthDisplay');
-            const eventDetails = document.getElementById('eventDetails');
-            const selectedDateEl = document.getElementById('selectedDate');
-            const closeEventDetailsBtn = document.getElementById('closeEventDetails');
-            const eventDetailsList = document.getElementById('eventDetailsList');
-            
-            if (prevMonthBtn && nextMonthBtn && todayBtn && dateFieldSelect) {
-              // Current view state
-              let currentViewDate = new Date();
-              
-              // Function to render a month
-              const renderMonth = (year, month) => {
-                currentViewDate = new Date(year, month, 1);
-                
-                // Update month display
-                if (currentMonthDisplay) {
-                  currentMonthDisplay.textContent = currentViewDate.toLocaleDateString('en-US', { 
-                    month: 'long', 
-                    year: 'numeric' 
-                  });
-                }
-                
-                // Don't refresh here - we'll refresh after config update confirmation
-                // in the message handler instead
-              };
-              
-              // Initialize the current view date from config if available
-              const configMonth = ${JSON.stringify(i.config?.month)};
-              const configYear = ${JSON.stringify(i.config?.year)};
-              
-              if (configMonth !== undefined && configYear !== undefined) {
-                currentViewDate = new Date(configYear, configMonth, 1);
-              }
-              
-              // Navigate to previous month
-              prevMonthBtn.addEventListener('click', () => {
-                const prevMonth = currentViewDate.getMonth() - 1;
-                const year = prevMonth < 0 ? currentViewDate.getFullYear() - 1 : currentViewDate.getFullYear();
-                const month = prevMonth < 0 ? 11 : prevMonth;
-                
-                // Save the new month state to configuration
-                vscode.postMessage({
-                  command: 'updateCalendarConfig',
-                  config: {
-                    year: year,
-                    month: month,
-                    dateField: dateFieldSelect.value
-                  }
-                });
-                
-                // Update the UI without a full refresh
-                renderMonth(year, month);
-              });
-              
-              // Navigate to next month
-              nextMonthBtn.addEventListener('click', () => {
-                const nextMonth = currentViewDate.getMonth() + 1;
-                const year = nextMonth > 11 ? currentViewDate.getFullYear() + 1 : currentViewDate.getFullYear();
-                const month = nextMonth > 11 ? 0 : nextMonth;
-                
-                // Save the new month state to configuration
-                vscode.postMessage({
-                  command: 'updateCalendarConfig',
-                  config: {
-                    year: year,
-                    month: month,
-                    dateField: dateFieldSelect.value
-                  }
-                });
-                
-                // Update the UI without a full refresh
-                renderMonth(year, month);
-              });
-              
-              // Navigate to today
-              todayBtn.addEventListener('click', () => {
-                const today = new Date();
-                const year = today.getFullYear();
-                const month = today.getMonth();
-                
-                // Save the new month state to configuration
-                vscode.postMessage({
-                  command: 'updateCalendarConfig',
-                  config: {
-                    year: year,
-                    month: month,
-                    dateField: dateFieldSelect.value
-                  }
-                });
-                
-                // Update the UI without a full refresh
-                renderMonth(year, month);
-              });
-              
-              // Change date field
-              dateFieldSelect.addEventListener('change', () => {
-                // Save the selected date field to the configuration
-                vscode.postMessage({
-                  command: 'updateCalendarConfig',
-                  config: {
-                    year: currentViewDate.getFullYear(),
-                    month: currentViewDate.getMonth(),
-                    dateField: dateFieldSelect.value
-                  }
-                });
-                // We'll wait for the configUpdated message to trigger the refresh
-              });
-              
-              // Add click handlers for calendar events
-              document.querySelectorAll('.calendar-event').forEach(eventEl => {
-                eventEl.addEventListener('click', (e) => {
-                  // Get the event details
-                  const recordId = eventEl.dataset.recordId;
-                  const filePath = eventEl.dataset.path;
-                  
-                  // Handle Ctrl+click to open file directly
-                  if (e.ctrlKey || e.metaKey) { // metaKey for Mac
-                    if (filePath) {
-                      vscode.postMessage({
-                        command: 'openFile',
-                        path: filePath
-                      });
-                    }
-                    return;
-                  }
-                  
-                  // Find the record in the dataframe
-                  const record = dataframe.records.find(r => r.id === recordId);
-                  if (!record) return;
-                  
-                  // Create and show the item editor modal
-                  const name = record.values.name || record.values.title || record.id;
-                  const editorModal = createEditModal(name, record.id, record.values, filePath);
-                  document.body.appendChild(editorModal);
-                });
-              });
-              
-              // Function to create an edit modal for a record
-              function createEditModal(itemName, recordId, values, filePath) {
-                // Create the modal container
-                const modal = document.createElement('div');
-                modal.className = 'event-details';
-                modal.id = 'itemEditorModal';
-                modal.style.display = 'block';
-                
-                // Create header
-                const header = document.createElement('div');
-                header.className = 'event-details-header';
-                
-                const title = document.createElement('h3');
-                title.textContent = 'Edit Item: ' + itemName;
-                
-                const closeBtn = document.createElement('button');
-                closeBtn.textContent = '\u2715';
-                closeBtn.addEventListener('click', () => {
-                  modal.remove();
-                });
-                
-                header.appendChild(title);
-                header.appendChild(closeBtn);
-                modal.appendChild(header);
-                
-                // Create form
-                const form = document.createElement('form');
-                form.id = 'itemEditorForm';
-                
-                // Add fields for editing, filtering out system fields
-                const editableFields = dataframe.fields.filter(f => 
-                  !f.derived && 
-                  f.name !== 'id' && 
-                  f.name !== 'date' && 
-                  f.name !== 'created' && 
-                  f.name !== 'modified'
-                );
-                
-                editableFields.forEach(field => {
-                  const fieldValue = values[field.name] || '';
-                  const fieldDiv = document.createElement('div');
-                  fieldDiv.style.marginBottom = '12px';
-                  
-                  const label = document.createElement('label');
-                  label.textContent = field.name + ':';
-                  label.style.display = 'block';
-                  label.style.marginBottom = '4px';
-                  
-                  const input = document.createElement('input');
-                  input.type = 'text';
-                  input.name = field.name;
-                  input.value = fieldValue;
-                  input.style.width = '100%';
-                  input.style.padding = '4px';
-                  input.style.backgroundColor = 'var(--container-background)';
-                  input.style.color = 'var(--text-color)';
-                  input.style.border = '1px solid var(--border-color)';
-                  
-                  fieldDiv.appendChild(label);
-                  fieldDiv.appendChild(input);
-                  form.appendChild(fieldDiv);
-                });
-                
-                // Add form buttons
-                const buttonDiv = document.createElement('div');
-                buttonDiv.style.marginTop = '16px';
-                buttonDiv.style.display = 'flex';
-                buttonDiv.style.justifyContent = 'space-between';
-                
-                // Open file button
-                const openFileBtn = document.createElement('button');
-                openFileBtn.type = 'button';
-                openFileBtn.textContent = 'Open File';
-                openFileBtn.style.padding = '8px 16px';
-                openFileBtn.addEventListener('click', () => {
-                  if (filePath) {
-                    vscode.postMessage({
-                      command: 'openFile',
-                      path: filePath
-                    });
-                  }
-                  modal.remove();
-                });
-                
-                const actionBtns = document.createElement('div');
-                
-                // Cancel button
-                const cancelBtn = document.createElement('button');
-                cancelBtn.type = 'button';
-                cancelBtn.textContent = 'Cancel';
-                cancelBtn.style.padding = '8px 16px';
-                cancelBtn.style.marginRight = '8px';
-                cancelBtn.addEventListener('click', () => {
-                  modal.remove();
-                });
-                
-                // Save button
-                const saveBtn = document.createElement('button');
-                saveBtn.type = 'submit';
-                saveBtn.textContent = 'Save';
-                saveBtn.style.padding = '8px 16px';
-                saveBtn.style.backgroundColor = 'var(--highlight-color)';
-                
-                actionBtns.appendChild(cancelBtn);
-                actionBtns.appendChild(saveBtn);
-                
-                buttonDiv.appendChild(openFileBtn);
-                buttonDiv.appendChild(actionBtns);
-                form.appendChild(buttonDiv);
-                
-                // Add form submission handler
-                form.addEventListener('submit', (e) => {
-                  e.preventDefault();
-                  
-                  // Get updated values from form
-                  const formData = new FormData(e.target);
-                  const updatedData = { ...values };
-                  
-                  // Update with form values
-                  editableFields.forEach(field => {
-                    updatedData[field.name] = formData.get(field.name);
-                  });
-                  
-                  // Send update message
-                  vscode.postMessage({
-                    command: 'editItem',
-                    recordId: recordId,
-                    recordData: updatedData
-                  });
-                  
-                  // Remove the modal - the view will refresh when update is confirmed
-                  modal.remove();
-                });
-                
-                modal.appendChild(form);
-                return modal;
-              }
-              
-              // Calendar dynamic filter builder functionality 
-              const calendarFilterBuilder = document.getElementById('calendarFilterBuilder');
-              const calendarAddFilterBtn = document.getElementById('calendarAddFilterBtn');
-              const calendarSaveFilterBtn = document.getElementById('calendarSaveFilterBtn');
-              const calendarSavedFiltersList = document.getElementById('calendarSavedFiltersList');
-              const calendarSavedFiltersContainer = document.getElementById('calendarSavedFilters');
-              const calendarShowFiltersBtn = document.getElementById('calendarShowFiltersBtn');
-              const calendarFilterPanel = document.getElementById('calendarFilterPanel');
-              const calendarClearFilterBtn = document.getElementById('calendarClearFilterBtn');
-              const calendarApplyFiltersBtn = document.getElementById('calendarApplyFiltersBtn');
-              
-              // Show/hide filter panel
-              if (calendarShowFiltersBtn && calendarFilterPanel) {
-                calendarShowFiltersBtn.addEventListener('click', () => {
-                  const isDisplayed = calendarFilterPanel.style.display !== 'none';
-                  calendarFilterPanel.style.display = isDisplayed ? 'none' : 'block';
-                  calendarShowFiltersBtn.textContent = isDisplayed ? 'Show Filters' : 'Hide Filters';
-                });
-              }
-              
-              if (calendarFilterBuilder && calendarAddFilterBtn) {
-                // Function to create a new filter condition element (similar to the table view function)
-                function createCalendarFilterCondition(isFirstCondition = false) {
-                  const conditionId = 'calendar-filter-' + Date.now();
-                  const condition = document.createElement('div');
-                  condition.className = 'filter-condition';
-                  condition.id = conditionId;
-                  
-                  // Logical join operator (AND/OR) for conditions after the first one
-                  if (!isFirstCondition) {
-                    const joinSelect = document.createElement('select');
-                    joinSelect.className = 'filter-join';
-                    
-                    const andOption = document.createElement('option');
-                    andOption.value = 'and';
-                    andOption.textContent = 'AND';
-                    andOption.selected = true;
-                    
-                    const orOption = document.createElement('option');
-                    orOption.value = 'or';
-                    orOption.textContent = 'OR';
-                    
-                    joinSelect.appendChild(andOption);
-                    joinSelect.appendChild(orOption);
-                    condition.appendChild(joinSelect);
-                  }
-                  
-                  // Property selector
-                  const propertySelect = document.createElement('select');
-                  propertySelect.className = 'filter-property';
-                  
-                  // Add default empty option
-                  const defaultOption = document.createElement('option');
-                  defaultOption.value = '';
-                  defaultOption.textContent = 'Select property...';
-                  propertySelect.appendChild(defaultOption);
-                  
-                  // Add options for each field in the dataframe
-                  dataframe.fields.forEach(field => {
-                    const option = document.createElement('option');
-                    option.value = field.name;
-                    option.textContent = field.name;
-                    propertySelect.appendChild(option);
-                  });
-                  
-                  // Operator selector
-                  const operatorSelect = document.createElement('select');
-                  operatorSelect.className = 'filter-operator';
-                  
-                  const operators = [
-                    { value: 'isNotEmpty', text: 'is not empty' },
-                    { value: 'isEmpty', text: 'is empty' },
-                    { value: 'is', text: 'is' },
-                    { value: 'isNot', text: 'is not' },
-                    { value: 'contains', text: 'contains' },
-                    { value: 'doesNotContain', text: 'does not contain' }
-                  ];
-                  
-                  operators.forEach(op => {
-                    const option = document.createElement('option');
-                    option.value = op.value;
-                    option.textContent = op.text;
-                    operatorSelect.appendChild(option);
-                  });
-                  
-                  // Value input
-                  const valueInput = document.createElement('input');
-                  valueInput.type = 'text';
-                  valueInput.className = 'filter-value';
-                  valueInput.placeholder = 'Value...';
-                  
-                  // Remove button
-                  const removeBtn = document.createElement('button');
-                  removeBtn.type = 'button';
-                  removeBtn.className = 'filter-remove';
-                  removeBtn.textContent = '\xD7';
-                  removeBtn.title = 'Remove condition';
-                  removeBtn.addEventListener('click', () => {
-                    condition.remove();
-                  });
-                  
-                  // Add elements to condition
-                  condition.appendChild(propertySelect);
-                  condition.appendChild(operatorSelect);
-                  condition.appendChild(valueInput);
-                  condition.appendChild(removeBtn);
-                  
-                  // Handle operator change to show/hide value input
-                  operatorSelect.addEventListener('change', () => {
-                    const operator = operatorSelect.value;
-                    if (operator === 'isEmpty' || operator === 'isNotEmpty') {
-                      valueInput.style.display = 'none';
-                      valueInput.value = '';
-                    } else {
-                      valueInput.style.display = 'block';
-                    }
-                  });
-                  
-                  // Initialize with correct display state
-                  if (operatorSelect.value === 'isEmpty' || operatorSelect.value === 'isNotEmpty') {
-                    valueInput.style.display = 'none';
-                  }
-                  
-                  return condition;
-                }
-                
-                // Add a new condition when the "Add Condition" button is clicked
-                calendarAddFilterBtn.addEventListener('click', () => {
-                  const isFirstCondition = calendarFilterBuilder.children.length === 0;
-                  const condition = createCalendarFilterCondition(isFirstCondition);
-                  calendarFilterBuilder.appendChild(condition);
-                });
-                
-                // Add an initial condition if the filter builder is empty
-                if (calendarFilterBuilder.children.length === 0) {
-                  calendarAddFilterBtn.click();
-                }
-                
-                // Save filter functionality
-                if (calendarSaveFilterBtn) {
-                  calendarSaveFilterBtn.addEventListener('click', () => {
-                    // Check if we have valid conditions to save
-                    const conditions = [];
-                    let hasValidConditions = false;
-                    
-                    calendarFilterPanel.querySelectorAll('.filter-condition').forEach(conditionEl => {
-                      const propertySelect = conditionEl.querySelector('.filter-property');
-                      const operatorSelect = conditionEl.querySelector('.filter-operator');
-                      const valueInput = conditionEl.querySelector('.filter-value');
-                      
-                      if (propertySelect.value) {
-                        hasValidConditions = true;
-                        conditions.push({
-                          property: propertySelect.value,
-                          operator: operatorSelect.value,
-                          value: valueInput.value
-                        });
-                      }
-                    });
-                    
-                    if (!hasValidConditions) {
-                      alert('Please add at least one valid filter condition');
-                      return;
-                    }
-                    
-                    // Prompt for filter name
-                    const filterName = prompt('Enter a name for this filter:');
-                    if (!filterName) return;
-                    
-                    // Save filter to localStorage with a different key for calendar
-                    const viewKey = 'calendar_filters_' + dataframe.id;
-                    let savedFilters = JSON.parse(localStorage.getItem(viewKey) || '[]');
-                    
-                    const filter = {
-                      id: 'calendar_filter_' + Date.now(),
-                      name: filterName,
-                      conditions: conditions
-                    };
-                    
-                    savedFilters.push(filter);
-                    localStorage.setItem(viewKey, JSON.stringify(savedFilters));
-                    
-                    // Add to UI
-                    addCalendarSavedFilterToUI(filter);
-                  });
-                }
-                
-                // Function to add a saved filter to the UI
-                function addCalendarSavedFilterToUI(filter) {
-                  if (!calendarSavedFiltersContainer || !calendarSavedFiltersList) return;
-                  
-                  // Show saved filters container if it was hidden
-                  calendarSavedFiltersContainer.style.display = 'block';
-                  
-                  const filterItem = document.createElement('div');
-                  filterItem.className = 'saved-filter';
-                  filterItem.dataset.filterId = filter.id;
-                  
-                  const nameEl = document.createElement('div');
-                  nameEl.className = 'saved-filter-name';
-                  nameEl.textContent = filter.name;
-                  
-                  const actionsEl = document.createElement('div');
-                  actionsEl.className = 'saved-filter-actions';
-                  
-                  const applyBtn = document.createElement('button');
-                  applyBtn.className = 'filter-button';
-                  applyBtn.textContent = 'Apply';
-                  applyBtn.addEventListener('click', () => {
-                    // Clear existing filter conditions
-                    calendarFilterBuilder.innerHTML = '';
-                    
-                    // Add conditions from saved filter
-                    filter.conditions.forEach(condition => {
-                      const conditionEl = createCalendarFilterCondition();
-                      
-                      const propertySelect = conditionEl.querySelector('.filter-property');
-                      const operatorSelect = conditionEl.querySelector('.filter-operator');
-                      const valueInput = conditionEl.querySelector('.filter-value');
-                      
-                      propertySelect.value = condition.property;
-                      operatorSelect.value = condition.operator;
-                      valueInput.value = condition.value;
-                      
-                      // Update visibility of value input
-                      if (condition.operator === 'isEmpty' || condition.operator === 'isNotEmpty') {
-                        valueInput.style.display = 'none';
-                      }
-                      
-                      calendarFilterBuilder.appendChild(conditionEl);
-                    });
-                    
-                    // Apply the filter
-                    calendarApplyFiltersBtn.click();
-                  });
-                  
-                  const deleteBtn = document.createElement('button');
-                  deleteBtn.className = 'filter-button';
-                  deleteBtn.textContent = 'Delete';
-                  deleteBtn.addEventListener('click', () => {
-                    // Remove from UI
-                    filterItem.remove();
-                    
-                    // Remove from localStorage
-                    const viewKey = 'calendar_filters_' + dataframe.id;
-                    let savedFilters = JSON.parse(localStorage.getItem(viewKey) || '[]');
-                    savedFilters = savedFilters.filter(f => f.id !== filter.id);
-                    localStorage.setItem(viewKey, JSON.stringify(savedFilters));
-                    
-                    // Hide container if no saved filters left
-                    if (savedFilters.length === 0) {
-                      calendarSavedFiltersContainer.style.display = 'none';
-                    }
-                  });
-                  
-                  actionsEl.appendChild(applyBtn);
-                  actionsEl.appendChild(deleteBtn);
-                  
-                  filterItem.appendChild(nameEl);
-                  filterItem.appendChild(actionsEl);
-                  
-                  calendarSavedFiltersList.appendChild(filterItem);
-                }
-                
-                // Load saved filters on page load
-                const calendarViewKey = 'calendar_filters_' + dataframe.id;
-                const calendarSavedFilters = JSON.parse(localStorage.getItem(calendarViewKey) || '[]');
-                
-                if (calendarSavedFilters.length > 0 && calendarSavedFiltersContainer && calendarSavedFiltersList) {
-                  calendarSavedFiltersContainer.style.display = 'block';
-                  calendarSavedFilters.forEach(filter => {
-                    addCalendarSavedFilterToUI(filter);
-                  });
-                }
-              }
-              
-              // Apply calendar filters
-              if (calendarApplyFiltersBtn) {
-                calendarApplyFiltersBtn.addEventListener('click', () => {
-                  // Get filters from the calendar filter builder
-                  const filterConditions = [];
-                  
-                  // Get filters from the dynamic filter builder
-                  calendarFilterPanel.querySelectorAll('.filter-condition').forEach((conditionEl, index) => {
-                    const propertySelect = conditionEl.querySelector('.filter-property');
-                    const operatorSelect = conditionEl.querySelector('.filter-operator');
-                    const valueInput = conditionEl.querySelector('.filter-value');
-                    const joinSelect = conditionEl.querySelector('.filter-join');
-                    
-                    if (propertySelect.value) {
-                      const property = propertySelect.value;
-                      const operator = operatorSelect.value;
-                      const value = valueInput.value;
-                      // Get the logical join (AND/OR) if not the first condition
-                      const join = index > 0 && joinSelect ? joinSelect.value : null;
-                      
-                      // Always include isEmpty/isNotEmpty operators even without value
-                      if (value || operator === 'isEmpty' || operator === 'isNotEmpty') {
-                        filterConditions.push({ 
-                          field: property, 
-                          operator, 
-                          value,
-                          join 
-                        });
-                      }
-                    }
-                  });
-                  
-                  // Store the filter conditions in the DOM for reference
-                  if (calendarFilterPanel) {
-                    calendarFilterPanel.dataset.appliedFilters = JSON.stringify(filterConditions);
-                  }
-                  
-                  // For calendar view, we need to refresh the data to apply the filters
-                  // In a more sophisticated implementation, we would filter client-side
-                  vscode.postMessage({
-                    command: 'refreshData'
-                  });
-                });
-              }
-              
-              // Clear calendar filters
-              if (calendarClearFilterBtn) {
-                calendarClearFilterBtn.addEventListener('click', () => {
-                  // Clear all filter conditions
-                  if (calendarFilterBuilder) {
-                    calendarFilterBuilder.innerHTML = '';
-                  }
-                  
-                  // Add a blank filter condition
-                  if (calendarAddFilterBtn) {
-                    calendarAddFilterBtn.click();
-                  }
-                  
-                  // Refresh the view
-                  vscode.postMessage({
-                    command: 'refreshData'
-                  });
-                });
-              }
-              
-              // Close event details modal
-              if (closeEventDetailsBtn && eventDetails) {
-                closeEventDetailsBtn.addEventListener('click', () => {
-                  eventDetails.style.display = 'none';
-                });
-              }
-            }
-            
-            // Add event listener to show/hide value input based on operator
-            document.querySelectorAll('.filter-operator').forEach(selectEl => {
-              // Initial setup - hide value inputs for operators that don't need them
-              const operator = selectEl.value;
-              const valueInput = selectEl.closest('.filter-field-inputs').querySelector('.filter-value');
-              if (operator === 'isEmpty' || operator === 'isNotEmpty') {
-                valueInput.style.display = 'none';
-              } else {
-                valueInput.style.display = 'block';
-              }
-              
-              // Handle change events
-              selectEl.addEventListener('change', () => {
-                const operator = selectEl.value;
-                const valueInput = selectEl.closest('.filter-field-inputs').querySelector('.filter-value');
-                
-                if (operator === 'isEmpty' || operator === 'isNotEmpty') {
-                  valueInput.style.display = 'none';
-                  valueInput.value = ''; // Clear the value since it's not needed
-                } else {
-                  valueInput.style.display = 'block';
-                }
-              });
-            });
-            
-            const vscode = acquireVsCodeApi();
-          })();
-        </script>
-      </body>
-      </html>`}renderTableView(t){if(t.records.length===0)return`<div class="container">
+`:e}});var li=h((yu,ci)=>{"use strict";var Bc=Ce();ci.exports=function(e,r){let t=Bc(r);if(e.data==null&&(e.data={}),typeof t.excerpt=="function")return t.excerpt(e,t);let i=e.data.excerpt_separator||t.excerpt_separator;if(i==null&&(t.excerpt===!1||t.excerpt==null))return e;let n=typeof t.excerpt=="string"?t.excerpt:i||t.delimiters[0],a=e.content.indexOf(n);return a!==-1&&(e.excerpt=e.content.slice(0,a)),e}});var fi=h((wu,di)=>{"use strict";var ui=me(),Nc=Dr(),de=Ze();di.exports=function(e){return ui(e)!=="object"&&(e={content:e}),ui(e.data)!=="object"&&(e.data={}),e.contents&&e.content==null&&(e.content=e.contents),de.define(e,"orig",de.toBuffer(e.content)),de.define(e,"language",e.language||""),de.define(e,"matter",e.matter||""),de.define(e,"stringify",function(r,t){return t&&t.language&&(e.language=t.language),Nc(e,r,t)}),e.content=de.toString(e.content),e.isEmpty=!1,e.excerpt="",e}});var hi=h((xu,pi)=>{"use strict";var $c=jr(),Rc=Ce();pi.exports=function(e,r,t){let i=Rc(t),n=$c(e,i);if(typeof n.parse!="function")throw new TypeError('expected "'+e+'.parse" to be a function');return n.parse(r,i)}});var yi=h((bu,vi)=>{"use strict";var Uc=require("fs"),Hc=lt(),_r=Ce(),Yc=Dr(),gi=li(),Vc=kr(),Wc=fi(),Gc=hi(),mi=Ze();function D(e,r){if(e==="")return{data:{},content:e,excerpt:"",orig:e};let t=Wc(e),i=D.cache[t.content];if(!r){if(i)return t=Object.assign({},i),t.orig=i.orig,t;D.cache[t.content]=t}return Kc(t,r)}function Kc(e,r){let t=_r(r),i=t.delimiters[0],n=`
+`+t.delimiters[1],a=e.content;t.language&&(e.language=t.language);let o=i.length;if(!mi.startsWith(a,i,o))return gi(e,t),e;if(a.charAt(o)===i.slice(-1))return e;a=a.slice(o);let s=a.length,c=D.language(a,t);c.name&&(e.language=c.name,a=a.slice(c.raw.length));let l=a.indexOf(n);return l===-1&&(l=s),e.matter=a.slice(0,l),e.matter.replace(/^\s*#[^\n]+/gm,"").trim()===""?(e.isEmpty=!0,e.empty=e.content,e.data={}):e.data=Gc(e.language,e.matter,t),l===s?e.content="":(e.content=a.slice(l+n.length),e.content[0]==="\r"&&(e.content=e.content.slice(1)),e.content[0]===`
+`&&(e.content=e.content.slice(1))),gi(e,t),(t.sections===!0||typeof t.section=="function")&&Hc(e,t.section),e}D.engines=Vc;D.stringify=function(e,r,t){return typeof e=="string"&&(e=D(e,t)),Yc(e,r,t)};D.read=function(e,r){let t=Uc.readFileSync(e,"utf8"),i=D(t,r);return i.path=e,i};D.test=function(e,r){return mi.startsWith(e,_r(r).delimiters[0])};D.language=function(e,r){let i=_r(r).delimiters[0];D.test(e)&&(e=e.slice(i.length));let n=e.slice(0,e.search(/\r?\n/));return{raw:n,name:n?n.trim():""}};D.cache={};D.clearCache=function(){D.cache={}};vi.exports=D});var il={};Pi(il,{activate:()=>tl,deactivate:()=>nl});module.exports=Ti(il);var E=T(require("vscode"));var A=T(require("vscode")),Tr=T(require("path"));var W=class extends A.TreeItem{constructor(t,i,n,a,o,s,c){super(t,n);this.label=t;this.type=i;this.collapsibleState=n;this.id=a;this.projectId=o;this.project=s;this.view=c;switch(this.contextValue=i===0?"project":i===1?"view":"archive",this.tooltip=i===0?`Project: ${t} (ID: ${a})`:i===1?`View: ${t} (Type: ${c?.type})`:"Archives",i){case 0:this.iconPath=new A.ThemeIcon("project");break;case 1:c?.type==="table"?this.iconPath=new A.ThemeIcon("list-tree"):c?.type==="board"?this.iconPath=new A.ThemeIcon("layout"):c?.type==="calendar"?this.iconPath=new A.ThemeIcon("calendar"):c?.type==="gallery"?this.iconPath=new A.ThemeIcon("multiple-windows"):this.iconPath=new A.ThemeIcon("preview");break;case 2:this.iconPath=new A.ThemeIcon("archive");break}i===0&&s?.dataSource&&(s.dataSource.kind==="folder"?this.description=`Folder: ${Tr.basename(s.dataSource.config.path)}`:s.dataSource.kind==="tag"?this.description=`Tag: ${s.dataSource.config.tag}`:s.dataSource.kind==="query"&&(this.description="Query")),i===1&&o&&a?this.command={command:"vscode-projects.openView",title:"Open View",arguments:[o,a]}:i===0&&a&&(this.command={command:"vscode-projects.openProject",title:"Open Project",arguments:[a]})}},Ae=class{constructor(r){this.projectManager=r;this._onDidChangeTreeData=new A.EventEmitter;this.onDidChangeTreeData=this._onDidChangeTreeData.event;this.showArchives=!1;console.log("ProjectsProvider constructor called")}refresh(){this._onDidChangeTreeData.fire()}toggleArchives(){this.showArchives=!this.showArchives,this.refresh()}getTreeItem(r){return console.log(`getTreeItem called for: ${r.label}`),r}getChildren(r){console.log(`getChildren called with element: ${r?r.label:"root"}`);try{if(r){if(r.type===0&&r.projectId){let t=this.projectManager.getProject(r.projectId);return t?Promise.resolve(t.views.map(i=>new W(i.name,1,A.TreeItemCollapsibleState.None,i.id,t.id,t,i))):Promise.resolve([])}else if(r.type===2){let t=this.projectManager.getArchives();return Promise.resolve(t.map(i=>new W(i.name,0,A.TreeItemCollapsibleState.Collapsed,i.id,i.id,i)))}}else{let t=[],i=this.projectManager.getProjects();if(console.log(`Found ${i.length} projects`),i.length===0?t.push(new W("No projects found. Click the + button to create one.",0,A.TreeItemCollapsibleState.None)):i.forEach(n=>{t.push(new W(n.name,0,A.TreeItemCollapsibleState.Collapsed,n.id,n.id,n))}),this.showArchives){let n=this.projectManager.getArchives();console.log(`Found ${n.length} archived projects`),n.length>0&&t.push(new W("Archives",2,A.TreeItemCollapsibleState.Collapsed))}return Promise.resolve(t)}return Promise.resolve([])}catch(t){return console.error("Error getting children:",t),Promise.resolve([])}}};var q=T(require("vscode")),$e=T(Jr());var zr={id:"",name:"Table",type:"table",filter:{conjunction:"and",conditions:[]},colors:{conditions:[]},sort:{criteria:[]}},Xr={id:"",name:"",views:[],dataSource:{kind:"folder",config:{path:"",recursive:!1}},excludedFiles:[]},Zr={projects:[],archives:[],preferences:{}};var ge=class extends Error{constructor(t,i){super(`Error processing record ${t}: ${i.message}`);this.id=t;this.error=i;this.name="RecordError"}};var Ue=T(require("path")),Re=class{constructor(r,t){this.context=r;this.fileSystem=t;this.settings=this.loadSettings()}getProjects(){return this.settings.projects}getArchives(){return this.settings.archives}getProject(r){return this.settings.projects.find(t=>t.id===r)}async createProject(r,t){let i=(0,$e.v4)(),n={...Xr,id:i,name:r,views:[{...zr,id:(0,$e.v4)(),name:"Table",type:"table"}]};t&&(n={...n,dataSource:{kind:"folder",config:{path:t.fsPath,recursive:!1}}});let a=[...this.settings.projects,n];return this.settings={...this.settings,projects:a},await this.saveSettings(),n}async addViewToProject(r,t,i,n={}){let a=this.getProject(r);if(!a)throw new Error(`Project with ID ${r} not found`);let o={id:(0,$e.v4)(),name:t,type:i,config:n,filter:{conjunction:"and",conditions:[]},colors:{conditions:[]},sort:{criteria:[]}},s={...a,views:[...a.views,o]};await this.updateProject(s)}async updateProject(r){let t=this.settings.projects.map(i=>i.id===r.id?r:i);this.settings={...this.settings,projects:t},await this.saveSettings()}async deleteProject(r){let t=this.settings.projects.filter(i=>i.id!==r);this.settings={...this.settings,projects:t},await this.saveSettings()}async archiveProject(r){let t=this.settings.projects.find(i=>i.id===r);if(t){let i=this.settings.projects.filter(a=>a.id!==r),n=[...this.settings.archives,t];this.settings={...this.settings,projects:i,archives:n},await this.saveSettings()}}async createNote(r,t,i){let n="";if(r.newFilesFolder)n=r.newFilesFolder;else if(r.dataSource.kind==="folder")n=r.dataSource.config.path;else{let s=q.workspace.workspaceFolders;if(s&&s.length>0)n=s[0]?.uri.fsPath||"";else{let c=await q.window.showOpenDialog({canSelectFiles:!1,canSelectFolders:!0,canSelectMany:!1,title:"Select a folder to save the new note"});if(c&&c.length>0)n=c[0]?.fsPath||"";else throw new Error("No folder selected")}}let a=Ue.join(n,`${t}.md`),o="";if(i)try{o=await this.fileSystem.readFile(i)}catch(s){console.error("Error reading template file:",s)}return await this.fileSystem.writeFile(a,o),a}async queryProject(r){let t=[],i=[];try{if(r.dataSource.kind==="folder"){let a=await this.fileSystem.getFilesInFolder(r.dataSource.config.path,r.dataSource.config.recursive);for(let o of a)try{if(o.endsWith(".md")){let s=o,c=await this.fileSystem.readFile(o),l=this.fileSystem.parseFrontMatter(c),u={id:s,values:{...l,path:o,name:Ue.basename(o,".md")}};r.excludedFiles.includes(o)||t.push(u)}}catch(s){i.push(new ge(o,s instanceof Error?s:new Error(`${s}`)))}}else r.dataSource.kind==="tag"||r.dataSource.kind}catch(a){i.push(new ge("project",a instanceof Error?a:new Error(`Error querying project: ${a}`)))}let n=this.detectFields(t);return{records:t,fields:n,errors:i}}loadSettings(){let r=q.workspace.getConfiguration("vscode-projects"),t=r.get("projects",[]),i=r.get("archives",[]),n=r.get("preferences",Zr.preferences);return{projects:t,archives:i,preferences:n}}async saveSettings(){let r=q.workspace.getConfiguration("vscode-projects");await r.update("projects",this.settings.projects,q.ConfigurationTarget.Global),await r.update("archives",this.settings.archives,q.ConfigurationTarget.Global),await r.update("preferences",this.settings.preferences,q.ConfigurationTarget.Global)}detectFields(r){let t=new Map;for(let i of r)for(let[n,a]of Object.entries(i.values))if(!t.has(n)){let o=this.determineType(a),s=Array.isArray(a);t.set(n,{type:o,repeated:s})}return Array.from(t.entries()).map(([i,{type:n,repeated:a}])=>({name:i,type:n,repeated:a,identifier:i==="id",derived:i==="path"||i==="name"}))}determineType(r){return r==null?"unknown":Array.isArray(r)?r.length>0?this.determineType(r[0]):"string":r instanceof Date?"date":typeof r}};var I=T(require("vscode")),P=T(require("fs")),tr=T(require("path")),V=require("util"),er=T(yi()),Qc=(0,V.promisify)(P.readFile),Jc=(0,V.promisify)(P.writeFile),zc=(0,V.promisify)(P.unlink),Xc=(0,V.promisify)(P.exists),Zc=(0,V.promisify)(P.readdir),el=(0,V.promisify)(P.stat),rr=class{async readFile(r){try{try{let t=I.Uri.file(r),i=await I.workspace.fs.readFile(t);return Buffer.from(i).toString("utf8")}catch{return await Qc(r,"utf8")}}catch(t){throw new Error(`Failed to read file ${r}: ${t}`)}}async writeFile(r,t){try{await this.ensureDirectory(tr.dirname(r));try{let i=I.Uri.file(r),n=Buffer.from(t,"utf8");await I.workspace.fs.writeFile(i,n)}catch{await Jc(r,t,"utf8")}}catch(i){throw new Error(`Failed to write to file ${r}: ${i}`)}}async deleteFile(r){try{try{let t=I.Uri.file(r);await I.workspace.fs.delete(t)}catch{await zc(r)}}catch(t){throw new Error(`Failed to delete file ${r}: ${t}`)}}async fileExists(r){try{try{let t=I.Uri.file(r);return await I.workspace.fs.stat(t),!0}catch{return Xc(r)}}catch{return!1}}async getFilesInFolder(r,t){let i=[];try{let n=await Zc(r);for(let a of n){let o=tr.join(r,a),s=await el(o);if(s.isFile())i.push(o);else if(s.isDirectory()&&t){let c=await this.getFilesInFolder(o,t);i.push(...c)}}}catch(n){console.error(`Error reading directory ${r}:`,n)}return i}parseFrontMatter(r){try{let{data:t}=(0,er.default)(r);return t}catch(t){return console.error("Error parsing frontmatter:",t),{}}}addFrontMatter(r,t){try{let{content:i,data:n}=(0,er.default)(r),a={...n,...t};return er.default.stringify(i,a)}catch(i){return console.error("Error adding frontmatter:",i),r}}async ensureDirectory(r){try{await I.workspace.fs.createDirectory(I.Uri.file(r))}catch{try{await(0,V.promisify)(P.mkdir)(r,{recursive:!0})}catch(i){if(i.code!=="EEXIST")throw i}}}};var y=T(require("vscode"));async function wi(e,r){let t=await y.window.showInputBox({prompt:"Enter a name for the new project",placeHolder:"My Project"});if(!t)return;let i=[{label:"Folder-based project",description:"Create a project based on a specific folder"},{label:"Tag-based project",description:"Create a project based on file tags"},{label:"Query-based project",description:"Create a project based on a search query"}],n=await y.window.showQuickPick(i,{placeHolder:"Select the type of project"});if(n)try{let a;if(n.label==="Folder-based project"){let o=await y.window.showOpenDialog({canSelectFiles:!1,canSelectFolders:!0,canSelectMany:!1,title:"Select a folder for the project"});if(o&&o.length>0)a=o[0];else return}await e.createProject(t,a),r.refresh(),y.window.showInformationMessage(`Project "${t}" created successfully.`)}catch(a){y.window.showErrorMessage(`Failed to create project: ${a}`)}}async function xi(e){let r=e.getProjects();if(r.length===0){y.window.showErrorMessage("No projects exist. Create a project first.");return}let t=r.map(a=>({label:a.name,description:nr(a),project:a})),i=await y.window.showQuickPick(t,{placeHolder:"Select a project to create a note in"});if(!i)return;let n=await y.window.showInputBox({prompt:"Enter a name for the new note",placeHolder:"My Note"});if(n)try{let a;if(i.project.templates&&i.project.templates.length>0){let c=i.project.templates.map(u=>({label:u.replace(/^.*[\\\/]/,""),description:u,template:u}));c.unshift({label:"No template",description:"Create a blank note",template:""});let l=await y.window.showQuickPick(c,{placeHolder:"Select a template (optional)"});l&&l.template&&(a=l.template)}let o=await e.createNote(i.project,n,a),s=y.Uri.file(o);await y.window.showTextDocument(s),y.window.showInformationMessage(`Note "${n}" created successfully.`)}catch(a){y.window.showErrorMessage(`Failed to create note: ${a}`)}}async function bi(e){let r=e.getProjects();if(r.length===0){y.window.showErrorMessage("No projects exist. Create a project first.");return}let t=r.map(s=>({label:s.name,description:nr(s),project:s})),i=await y.window.showQuickPick(t,{placeHolder:"Select a project to add a view to"});if(!i)return;let n=await y.window.showInputBox({prompt:"Enter a name for the new view",placeHolder:"New View"});if(!n)return;let a=[{label:"Table",description:"Display items in a table layout"},{label:"Board",description:"Display items in a kanban board layout"},{label:"Calendar",description:"Display items in a calendar"},{label:"Gallery",description:"Display items in a gallery grid"}],o=await y.window.showQuickPick(a,{placeHolder:"Select the type of view"});if(o)try{let s=o.label.toLowerCase(),c;if(s==="board"){let l=await e.queryProject(i.project);if(l.fields.length>0){let u=l.fields.map(f=>({label:f.name,description:`Type: ${f.type}`})),d=await y.window.showQuickPick(u,{placeHolder:"Select a field to group by in the board view"});d&&(c=d.label)}}await e.addViewToProject(i.project.id,n,s,c?{groupByField:c}:{}),y.window.showInformationMessage(`View "${n}" created successfully.`)}catch(s){y.window.showErrorMessage(`Failed to create view: ${s}`)}}async function Fi(e,r){let t=e.getProjects();if(t.length===0){y.window.showErrorMessage("No projects exist to delete.");return}let i=t.map(o=>({label:o.name,description:nr(o),id:o.id})),n=await y.window.showQuickPick(i,{placeHolder:"Select a project to delete"});if(!(!n||await y.window.showWarningMessage(`Are you sure you want to delete the project "${n.label}"? This action cannot be undone.`,{modal:!0},"Delete")!=="Delete"))try{await e.deleteProject(n.id),r.refresh(),y.window.showInformationMessage(`Project "${n.label}" deleted successfully.`)}catch(o){y.window.showErrorMessage(`Failed to delete project: ${o}`)}}async function Ci(e,r){let t=e.getProjects();if(t.length===0){y.window.showErrorMessage("No projects exist.");return}let i=t.map(l=>({label:l.name,description:nr(l),project:l})),n=await y.window.showQuickPick(i,{placeHolder:"Select a project"});if(!n)return;let a=n.project.views;if(a.length===0){y.window.showErrorMessage(`Project "${n.label}" has no views.`);return}if(a.length===1){y.window.showErrorMessage("Cannot delete the only view in a project. A project must have at least one view.");return}let o=a.map(l=>({label:l.name,description:`Type: ${l.type}`,id:l.id})),s=await y.window.showQuickPick(o,{placeHolder:"Select a view to delete"});if(!(!s||await y.window.showWarningMessage(`Are you sure you want to delete the view "${s.label}" from project "${n.label}"? This action cannot be undone.`,{modal:!0},"Delete")!=="Delete"))try{let l={...n.project,views:n.project.views.filter(u=>u.id!==s.id)};await e.updateProject(l),r.refresh(),y.window.showInformationMessage(`View "${s.label}" deleted successfully.`)}catch(l){y.window.showErrorMessage(`Failed to delete view: ${l}`)}}function nr(e){let r=e.dataSource;return r.kind==="folder"?`Folder: ${r.config.path}`:r.kind==="tag"?`Tag: ${r.config.tag}`:r.kind==="query"?`Query: ${r.config.query}`:""}var S=T(require("vscode")),fe=T(require("path"));var ir=class{applyFilters(r,t){if(!t||!t.conditions||t.conditions.length===0)return r;let i=r.records.filter(n=>this.evaluateRecord(n,t.conjunction,t.conditions));return{...r,records:i}}evaluateRecord(r,t,i){if(i.length===0)return!0;let n=this.evaluateCondition(r,i[0]);for(let a=1;a<i.length;a++){let o=this.evaluateCondition(r,i[a]);t==="and"?n=n&&o:n=n||o}return n}evaluateCondition(r,t){let{field:i,operator:n,value:a}=t,o=r.values[i];return o==null?n==="isEmpty"?!0:n==="isNotEmpty"?!1:this.evaluateStringCondition("",n,a):Array.isArray(o)?this.evaluateArrayCondition(o,n,a):typeof o=="boolean"?this.evaluateBooleanCondition(o,n,a):o instanceof Date?this.evaluateDateCondition(o,n,a):typeof o=="number"?this.evaluateNumberCondition(o,n,a):this.evaluateStringCondition(String(o),n,a)}evaluateStringCondition(r,t,i){switch(t){case"isNotEmpty":return r!=="";case"isEmpty":return r==="";case"is":return r.toLowerCase()===String(i).toLowerCase();case"isNot":return r.toLowerCase()!==String(i).toLowerCase();case"contains":return r.toLowerCase().includes(String(i).toLowerCase());case"doesNotContain":return!r.toLowerCase().includes(String(i).toLowerCase());case"startsWith":return r.toLowerCase().startsWith(String(i).toLowerCase());case"endsWith":return r.toLowerCase().endsWith(String(i).toLowerCase());default:return!0}}evaluateNumberCondition(r,t,i){let n=parseFloat(i);if(isNaN(n)&&t!=="isNotEmpty"&&t!=="isEmpty")return!1;switch(t){case"isNotEmpty":return!0;case"isEmpty":return!1;case"is":return r===n;case"isNot":return r!==n;case"greaterThan":return r>n;case"lessThan":return r<n;case"greaterThanOrEqual":return r>=n;case"lessThanOrEqual":return r<=n;default:return this.evaluateStringCondition(String(r),t,i)}}evaluateDateCondition(r,t,i){let n=new Date(i);if(isNaN(n.getTime())&&t!=="isNotEmpty"&&t!=="isEmpty")return!1;switch(t){case"isNotEmpty":return!0;case"isEmpty":return!1;case"is":return r.getTime()===n.getTime();case"isNot":return r.getTime()!==n.getTime();case"after":case"greaterThan":return r.getTime()>n.getTime();case"before":case"lessThan":return r.getTime()<n.getTime();case"onOrAfter":case"greaterThanOrEqual":return r.getTime()>=n.getTime();case"onOrBefore":case"lessThanOrEqual":return r.getTime()<=n.getTime();default:return this.evaluateStringCondition(r.toISOString(),t,i)}}evaluateBooleanCondition(r,t,i){let n=typeof i=="string"?i.toLowerCase()==="true":!!i;switch(t){case"isNotEmpty":return!0;case"isEmpty":return!1;case"is":return r===n;case"isNot":return r!==n;default:return this.evaluateStringCondition(String(r),t,i)}}evaluateArrayCondition(r,t,i){switch(t){case"isNotEmpty":return r.length>0;case"isEmpty":return r.length===0;case"contains":return r.some(n=>String(n).toLowerCase().includes(String(i).toLowerCase()));case"doesNotContain":return!r.some(n=>String(n).toLowerCase().includes(String(i).toLowerCase()));case"is":return r.some(n=>String(n).toLowerCase()===String(i).toLowerCase());case"isNot":return!r.some(n=>String(n).toLowerCase()===String(i).toLowerCase());default:return r.some(n=>typeof n=="string"?this.evaluateStringCondition(n,t,i):typeof n=="number"?this.evaluateNumberCondition(n,t,i):n instanceof Date?this.evaluateDateCondition(n,t,i):typeof n=="boolean"?this.evaluateBooleanCondition(n,t,i):this.evaluateStringCondition(String(n),t,i))}}};var or=class{constructor(r,t){this.context=r;this.projectManager=t;this.webviewPanels=new Map}async openView(r,t){try{let i=this.projectManager.getProject(r);if(!i)throw new Error(`Project with ID ${r} not found`);let n=i.views.find(a=>a.id===t);if(!n)throw new Error(`View with ID ${t} not found in project ${i.name}`);await this.showView(i,n)}catch(i){S.window.showErrorMessage(`Failed to open view: ${i}`)}}async openProject(r){try{let t=this.projectManager.getProject(r);if(!t)throw new Error(`Project with ID ${r} not found`);if(t.views.length>0)await this.showView(t,t.views[0]);else throw new Error(`Project ${t.name} has no views`)}catch(t){S.window.showErrorMessage(`Failed to open project: ${t}`)}}async showView(r,t){let i=`${r.id}:${t.id}`,n=this.webviewPanels.get(i);if(n){n.reveal();return}let a=S.window.createWebviewPanel("projectsView",`${r.name} - ${t.name}`,S.ViewColumn.One,{enableScripts:!0,retainContextWhenHidden:!0,localResourceRoots:[S.Uri.file(fe.join(this.context.extensionPath,"media"))]});this.webviewPanels.set(i,a),a.onDidDispose(()=>{this.webviewPanels.delete(i)});let o=new ir,s=await this.projectManager.queryProject(r),c=s;t.filter&&t.filter.conditions&&t.filter.conditions.length>0&&(c=o.applyFilters(s,t.filter));let l=await this.getFilterBuilderScript(),u=await this.getFilterHandlerScript();a.webview.html=this.getWebviewContent(a.webview,r,t,c,l,u),a.webview.onDidReceiveMessage(async d=>{switch(d.command){case"openFile":if(d.path){let f=await S.workspace.openTextDocument(d.path);await S.window.showTextDocument(f)}break;case"editItem":if(d.recordId&&d.recordData)try{let f=c.records.findIndex(m=>m.id===d.recordId);if(f===-1)throw new Error(`Record with ID ${d.recordId} not found`);let p={...c.records[f],values:d.recordData};c.records[f]=p,a.webview.html=this.getWebviewContent(a.webview,r,t,c,l,u),a.webview.postMessage({command:"itemUpdated",recordId:d.recordId,success:!0})}catch(f){console.error("Failed to update item:",f),a.webview.postMessage({command:"itemUpdated",recordId:d.recordId,success:!1,error:String(f)})}break;case"refreshData":try{let f=await this.projectManager.queryProject(r),p=f;d.filterConditions?(t.filter={conjunction:d.conjunction||"and",conditions:d.filterConditions},await this.projectManager.updateProject({...r,views:r.views.map(m=>m.id===t.id?t:m)}),p=o.applyFilters(f,t.filter)):t.filter&&t.filter.conditions&&t.filter.conditions.length>0&&(p=o.applyFilters(f,t.filter)),c=p,a.webview.html=this.getWebviewContent(a.webview,r,t,c,l,u)}catch(f){console.error("Failed to refresh data:",f),S.window.showErrorMessage(`Failed to refresh data: ${f}`)}break;case"updateCalendarConfig":if(t.type==="calendar"&&d.config){let f={...t};f.config={...f.config,...d.config};let p={...r,views:r.views.map(m=>m.id===t.id?f:m)};await this.projectManager.updateProject(p),t=f,a.webview.postMessage({command:"configUpdated",config:f.config})}break}})}findSuitableDateField(r){let t=r.find(i=>i.name.toLowerCase().includes("date")||i.name.toLowerCase().includes("time")||i.name.toLowerCase().includes("deadline")||i.name.toLowerCase().includes("due"));return t?t.name:"date"}findDateFields(r){return r.filter(t=>t.name.toLowerCase().includes("date")||t.name.toLowerCase().includes("time")||t.name.toLowerCase().includes("deadline")||t.name.toLowerCase().includes("due")||t.name.toLowerCase().includes("created")||t.name.toLowerCase().includes("modified"))}async getFilterBuilderScript(){try{let r=S.Uri.file(fe.join(this.context.extensionPath,"media","js","common-filter-builder.js")),t=await S.workspace.fs.readFile(r);return Buffer.from(t).toString()}catch(r){return console.error("Failed to load filter builder script:",r),""}}async getFilterHandlerScript(){try{let r=S.Uri.file(fe.join(this.context.extensionPath,"media","js","filter-handler.js")),t=await S.workspace.fs.readFile(r);return Buffer.from(t).toString()}catch(r){return console.error("Failed to load filter handler script:",r),""}}renderTableView(r){if(r.records.length===0)return`<div class="container">
         <div class="card">
           <h2>No data</h2>
           <p>This project has no data records.</p>
         </div>
-      </div>`;let r=t.fields;return`
+      </div>`;let t=r.fields;return`
     <div class="container">
       <div class="filter-bar">
         <div class="filter-controls">
@@ -1686,7 +81,7 @@ return `+str.trim()+`;
       <table>
         <thead>
           <tr>
-            ${r.map(n=>`
+            ${t.map(n=>`
               <th>
                 <div class="th-content">
                   <span>${n.name}</span>
@@ -1700,37 +95,37 @@ return `+str.trim()+`;
           </tr>
         </thead>
         <tbody>
-        ${t.records.map(n=>`
+        ${r.records.map(n=>`
           <tr>
-            ${r.map(a=>{let o=n.values[a.name];if(a.name==="path"&&typeof o=="string")return`<td>
-                  <span class="file-link" data-path="${o}">${it.basename(o)}</span>
-                </td>`;{let l="";return o==null?l="":o instanceof Date?l=o.toLocaleDateString():Array.isArray(o)?l=o.filter(c=>c!=null).join(", "):l=String(o),`<td>${l}</td>`}}).join("")}
+            ${t.map(a=>{let o=n.values[a.name];if(a.name==="path"&&typeof o=="string")return`<td>
+                  <span class="file-link" data-path="${o}">${fe.basename(o)}</span>
+                </td>`;{let s="";return o==null?s="":o instanceof Date?s=o.toLocaleDateString():Array.isArray(o)?s=o.filter(c=>c!=null).join(", "):s=String(o),`<td>${s}</td>`}}).join("")}
           </tr>
         `).join("")}
         </tbody>
       </table>
-    </div>`}renderBoardView(t,r){if(t.records.length===0)return`<div class="container">
+    </div>`}renderBoardView(r,t){if(r.records.length===0)return`<div class="container">
         <div class="card">
           <h2>No data</h2>
           <p>This project has no data records.</p>
         </div>
-      </div>`;let i=r.config?.groupByField||"status",n=new Map;n.set("No Status",[]),t.records.forEach(o=>{let l=o.values[i],c="No Status";l!=null&&(c=String(l)),n.has(c)||n.set(c,[]);let s=n.get(c);s&&s.push(o)});let a='<div class="board-container">';return n.forEach((o,l)=>{a+=`
+      </div>`;let i=t.config?.groupByField||"status",n=new Map;n.set("No Status",[]),r.records.forEach(o=>{let s=o.values[i],c="No Status";s!=null&&(c=String(s)),n.has(c)||n.set(c,[]);let l=n.get(c);l&&l.push(o)});let a='<div class="board-container">';return n.forEach((o,s)=>{a+=`
         <div class="board-column">
-          <div class="column-header">${String(l)} (${o.length})</div>`,o.forEach(c=>{let s="";c.values.name!==void 0?s=String(c.values.name):c.values.title!==void 0?s=String(c.values.title):s=c.id;let d=c.values.description!==void 0?String(c.values.description):"",u=c.values.path!==void 0?String(c.values.path):"";a+=`
+          <div class="column-header">${String(s)} (${o.length})</div>`,o.forEach(c=>{let l="";c.values.name!==void 0?l=String(c.values.name):c.values.title!==void 0?l=String(c.values.title):l=c.id;let u=c.values.description!==void 0?String(c.values.description):"",d=c.values.path!==void 0?String(c.values.path):"";a+=`
           <div class="board-card">
-            <div class="file-link" data-path="${u}">${s}</div>
-            <div>${d}</div>
-          </div>`}),a+="</div>"}),a+="</div>",a}renderCalendarView(t,r){if(t.records.length===0)return`<div class="container">
+            <div class="file-link" data-path="${d}">${l}</div>
+            <div>${u}</div>
+          </div>`}),a+="</div>"}),a+="</div>",a}renderCalendarView(r,t){if(r.records.length===0)return`<div class="container">
         <div class="card">
           <h2>No data</h2>
           <p>This project has no data records.</p>
         </div>
-      </div>`;let i=new Date,n=r.config?.dateField||this.findSuitableDateField(t.fields),a=r.config?.year||i.getFullYear(),o=r.config?.month!==void 0?r.config.month:i.getMonth(),l=new Date(a,o,1),c=new Date(a,o+1,0),s=l.getDay(),d=`
+      </div>`;let i=new Date,n=t.config?.dateField||this.findSuitableDateField(r.fields),a=t.config?.year||i.getFullYear(),o=t.config?.month!==void 0?t.config.month:i.getMonth(),s=new Date(a,o,1),c=new Date(a,o+1,0),l=s.getDay(),u=`
     <div class="container">
       <div class="calendar-container">
         <div class="calendar-toolbar">
           <button id="prevMonth">\u2190</button>
-          <h2 id="currentMonthDisplay">${l.toLocaleDateString("en-US",{month:"long",year:"numeric"})}</h2>
+          <h2 id="currentMonthDisplay">${s.toLocaleDateString("en-US",{month:"long",year:"numeric"})}</h2>
           <button id="nextMonth">\u2192</button>
           <button id="todayBtn">Today</button>
         </div>
@@ -1740,7 +135,7 @@ return `+str.trim()+`;
             <div>
               <label>Date field: 
                 <select id="dateFieldSelect">
-                  ${this.findDateFields(t.fields).map(g=>`<option value="${g.name}" ${g.name===n?"selected":""}>${g.name}</option>`).join("")}
+                  ${this.findDateFields(r.fields).map(m=>`<option value="${m.name}" ${m.name===n?"selected":""}>${m.name}</option>`).join("")}
                 </select>
               </label>
             </div>
@@ -1788,13 +183,13 @@ return `+str.trim()+`;
             <div class="calendar-cell">Sat</div>
           </div>
           
-          <div class="calendar-body">`,u=new Map;t.records.forEach(g=>{let x=g.values[n];if(x==null)return;let v;if(x instanceof Date)v=x;else if(typeof x=="string"){if(v=new Date(x),isNaN(v.getTime()))return}else if(typeof x=="number")v=new Date(x);else return;let M=v.toISOString().split("T")[0];u.has(M)||u.set(M,[]);let V=u.get(M);V&&V.push(g)});let p=1,h=c.getDate();for(let g=0;g<6;g++){d+='<div class="calendar-row">';for(let x=0;x<7;x++)if(g===0&&x<s||p>h)d+='<div class="calendar-cell empty"></div>';else{let M=new Date(a,o,p).toISOString().split("T")[0],V=u.get(M)||[],Si=p===i.getDate()&&o===i.getMonth()&&a===i.getFullYear();if(d+=`
-            <div class="calendar-cell ${Si?"today":""}" data-date="${M}">
-              <div class="calendar-date">${p}</div>
-              <div class="calendar-events">`,V.length>0){V.sort((B,re)=>{let at=B.values.name||B.values.title||B.id,Fi=re.values.name||re.values.title||re.id;return String(at).localeCompare(String(Fi))});let ot=3;if(V.slice(0,ot).forEach(B=>{let re=B.values.name||B.values.title||B.id,at=B.values.path||"";d+=`
-                <div class="calendar-event" data-record-id="${B.id}" data-path="${at}">
-                  <span title="${re}">${re}</span>
-                </div>`}),V.length>ot){let B=V.length-ot;d+=`<div class="more-events">+${B} more</div>`}}d+="</div></div>",p++}if(d+="</div>",p>h)break}return d+=`
+          <div class="calendar-body">`,d=new Map;r.records.forEach(m=>{let x=m.values[n];if(x==null)return;let v;if(x instanceof Date)v=x;else if(typeof x=="string"){if(v=new Date(x),isNaN(v.getTime()))return}else if(typeof x=="number")v=new Date(x);else return;let L=v.toISOString().split("T")[0];d.has(L)||d.set(L,[]);let U=d.get(L);U&&U.push(m)});let f=1,p=c.getDate();for(let m=0;m<6;m++){u+='<div class="calendar-row">';for(let x=0;x<7;x++)if(m===0&&x<l||f>p)u+='<div class="calendar-cell empty"></div>';else{let L=new Date(a,o,f).toISOString().split("T")[0],U=d.get(L)||[],Si=f===i.getDate()&&o===i.getMonth()&&a===i.getFullYear();if(u+=`
+            <div class="calendar-cell ${Si?"today":""}" data-date="${L}">
+              <div class="calendar-date">${f}</div>
+              <div class="calendar-events">`,U.length>0){U.sort((M,te)=>{let sr=M.values.name||M.values.title||M.id,Ai=te.values.name||te.values.title||te.id;return String(sr).localeCompare(String(Ai))});let ar=3;if(U.slice(0,ar).forEach(M=>{let te=M.values.name||M.values.title||M.id,sr=M.values.path||"";u+=`
+                <div class="calendar-event" data-record-id="${M.id}" data-path="${sr}">
+                  <span title="${te}">${te}</span>
+                </div>`}),U.length>ar){let M=U.length-ar;u+=`<div class="more-events">+${M} more</div>`}}u+="</div></div>",f++}if(u+="</div>",f>p)break}return u+=`
           </div>
         </div>
         
@@ -1806,18 +201,595 @@ return `+str.trim()+`;
           <div id="eventDetailsList"></div>
         </div>
       </div>
-    </div>`,d}renderGalleryView(t){if(t.records.length===0)return`<div class="container">
+    </div>`,u}renderGalleryView(r){if(r.records.length===0)return`<div class="container">
         <div class="card">
           <h2>No data</h2>
           <p>This project has no data records.</p>
         </div>
-      </div>`;let r=`<div class="container">
+      </div>`;let t=`<div class="container">
       <h2>Gallery View</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px;">`;return t.records.forEach(i=>{let n="";i.values.name!==void 0?n=String(i.values.name):i.values.title!==void 0?n=String(i.values.title):n=i.id;let a=i.values.description!==void 0?String(i.values.description):"",o=i.values.path!==void 0?String(i.values.path):"";r+=`
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px;">`;return r.records.forEach(i=>{let n="";i.values.name!==void 0?n=String(i.values.name):i.values.title!==void 0?n=String(i.values.title):n=i.id;let a=i.values.description!==void 0?String(i.values.description):"",o=i.values.path!==void 0?String(i.values.path):"";t+=`
         <div class="card" style="height: 200px; overflow: hidden;">
           <h3><span class="file-link" data-path="${o}">${n}</span></h3>
           <p>${a}</p>
-        </div>`}),r+="</div></div>",r}};var te;function w(e,t="info"){if(!te)return;let i=`[${new Date().toISOString().replace("T"," ").substr(0,19)}] ${e}`;switch(t){case"error":console.error(i),te.appendLine(`ERROR: ${e}`);break;case"warn":console.warn(i),te.appendLine(`WARNING: ${e}`);break;default:console.log(i),te.appendLine(`INFO: ${e}`)}}function es(e,t,r,i,n){w("Registering commands...");let a={"vscode-projects.showProjects":()=>{w("Show projects command executed"),n.reveal(null,{focus:!0,select:!1})},"vscode-projects.createProject":async()=>{w("Create project command executed");try{await yi(t,r)}catch(o){w(`Error creating project: ${o}`,"error"),C.window.showErrorMessage(`Failed to create project: ${o}`)}},"vscode-projects.createNote":async()=>{w("Create note command executed");try{await wi(t)}catch(o){w(`Error creating note: ${o}`,"error"),C.window.showErrorMessage(`Failed to create note: ${o}`)}},"vscode-projects.openProject":async o=>{w(`Open project command executed with projectId: ${o}`);try{if(!o){let l=t.getProjects();if(l.length===0)throw new Error("No projects exist. Create a project first.");let c=l.map(d=>({label:d.name,id:d.id})),s=await C.window.showQuickPick(c,{placeHolder:"Select a project to open"});if(!s)return;o=s.id,w(`User selected project: ${s.label} (${o})`)}await i.openProject(o)}catch(l){w(`Error opening project: ${l}`,"error"),C.window.showErrorMessage(`Failed to open project: ${l}`)}},"vscode-projects.openView":async(o,l)=>{w(`Open view command executed with projectId: ${o}, viewId: ${l}`);try{if(!o){let c=t.getProjects();if(c.length===0)throw new Error("No projects exist. Create a project first.");let s=c.map(u=>({label:u.name,id:u.id})),d=await C.window.showQuickPick(s,{placeHolder:"Select a project"});if(!d)return;o=d.id,w(`User selected project: ${d.label} (${o})`)}if(!l){let c=t.getProject(o);if(!c)throw new Error(`Project with ID ${o} not found`);if(c.views.length===0)throw new Error(`Project ${c.name} has no views`);let s=c.views.map(u=>({label:u.name,description:`Type: ${u.type}`,id:u.id})),d=await C.window.showQuickPick(s,{placeHolder:"Select a view"});if(!d)return;l=d.id,w(`User selected view: ${d.label} (${l})`)}await i.openView(o,l)}catch(c){w(`Error opening view: ${c}`,"error"),C.window.showErrorMessage(`Failed to open view: ${c}`)}},"vscode-projects.refreshView":()=>{w("Refresh view command executed"),r.refresh()},"vscode-projects.toggleArchives":()=>{w("Toggle archives command executed"),r.toggleArchives()},"vscode-projects.createView":async()=>{w("Create view command executed");try{await xi(t),r.refresh()}catch(o){w(`Error creating view: ${o}`,"error"),C.window.showErrorMessage(`Failed to create view: ${o}`)}},"vscode-projects.deleteProject":async()=>{w("Delete project command executed");try{await bi(t,r)}catch(o){w(`Error deleting project: ${o}`,"error"),C.window.showErrorMessage(`Failed to delete project: ${o}`)}},"vscode-projects.deleteView":async()=>{w("Delete view command executed");try{await Ei(t,r)}catch(o){w(`Error deleting view: ${o}`,"error"),C.window.showErrorMessage(`Failed to delete view: ${o}`)}}};Object.keys(a).forEach(o=>{try{w(`Registering command: ${o}`);let l=C.commands.registerCommand(o,a[o]);e.subscriptions.push(l),w(`Command registered successfully: ${o}`)}catch(l){w(`Error registering command ${o}: ${l}`,"error"),C.window.showErrorMessage(`Failed to register command ${o}: ${l}`)}}),w("All commands registered successfully")}function ts(e){te=C.window.createOutputChannel("VSCode Projects"),e.subscriptions.push(te),w("Activating VSCode Projects extension"),w(`Extension path: ${e.extensionPath}`);try{let t=new et;w("File system adapter initialized");let r=new Re(e,t);w("Project manager initialized");let i=new nt(e,r);w("View provider initialized");let n=new Fe(r);w("Projects tree data provider initialized");let a=C.window.createTreeView("vscode-projects-sidebar",{treeDataProvider:n,showCollapseAll:!0});w("Tree view registered with ID: vscode-projects-sidebar"),es(e,r,n,i,a),e.subscriptions.push(te,a),w("VSCode Projects extension activated successfully"),C.window.showInformationMessage("VSCode Projects extension activated!")}catch(t){w(`Error during extension activation: ${t}`,"error"),C.window.showErrorMessage(`Failed to activate VSCode Projects extension: ${t}`)}}function rs(){w("Deactivating VSCode Projects extension")}0&&(module.exports={activate,deactivate});
+        </div>`}),t+="</div></div>",t}getWebviewContent(r,t,i,n,a="",o=""){let s=S.window.activeColorTheme.kind===S.ColorThemeKind.Dark,c=`
+      :root {
+        --container-background: ${s?"#252526":"#f3f3f3"};
+        --item-background: ${s?"#2d2d2d":"#ffffff"};
+        --text-color: ${s?"#e7e7e7":"#333333"};
+        --border-color: ${s?"#3c3c3c":"#dddddd"};
+        --highlight-color: ${s?"#264f78":"#ddddff"};
+        --header-background: ${s?"#333333":"#eeeeee"};
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        color: var(--text-color);
+        background-color: var(--container-background);
+        padding: 0;
+        margin: 0;
+      }
+      
+      .toolbar {
+        padding: 8px;
+        background-color: var(--header-background);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+      }
+      
+      .toolbar button {
+        background-color: var(--item-background);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 8px;
+        margin-right: 8px;
+        cursor: pointer;
+      }
+      
+      .toolbar button:hover {
+        background-color: var(--highlight-color);
+      }
+      
+      .container {
+        padding: 16px;
+      }
+      
+      .card {
+        background-color: var(--item-background);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--item-background);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      th {
+        text-align: left;
+        padding: 8px;
+        background-color: var(--header-background);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      
+      td {
+        padding: 8px;
+        border-top: 1px solid var(--border-color);
+      }
+      
+      tr:hover {
+        background-color: var(--highlight-color);
+      }
+      
+      .th-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .sort-controls {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .sort-control {
+        cursor: pointer;
+        padding: 0 4px;
+        font-size: 10px;
+      }
+      
+      .sort-control:hover {
+        background-color: var(--highlight-color);
+      }
+      
+      .file-link {
+        color: var(--text-color);
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      
+      .filter-bar {
+        margin-bottom: 16px;
+      }
+      
+      .filter-controls {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      
+      .search-box {
+        flex: 1;
+        padding: 4px 8px;
+        border: 1px solid var(--border-color);
+        background-color: var(--item-background);
+        color: var(--text-color);
+      }
+      
+      .filter-button {
+        background-color: var(--item-background);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 8px;
+        cursor: pointer;
+      }
+      
+      .filter-panel {
+        background-color: var(--item-background);
+        border: 1px solid var(--border-color);
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+      }
+      
+      .filter-builder {
+        margin-bottom: 16px;
+      }
+      
+      .filter-condition {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        gap: 8px;
+      }
+      
+      .filter-add {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        text-decoration: underline;
+        padding: 0;
+        margin-bottom: 16px;
+      }
+      
+      .filter-actions {
+        display: flex;
+        justify-content: space-between;
+      }
+      
+      .board-container {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding-bottom: 16px;
+      }
+      
+      .board-column {
+        min-width: 250px;
+        background-color: var(--item-background);
+        border-radius: 4px;
+        padding: 8px;
+      }
+      
+      .column-header {
+        padding: 8px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        background-color: var(--header-background);
+        border-radius: 4px;
+      }
+      
+      .board-card {
+        background-color: var(--container-background);
+        padding: 8px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+      }
+      
+      .calendar-container {
+        background-color: var(--item-background);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      .calendar-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 16px;
+        background-color: var(--header-background);
+      }
+      
+      .calendar-filter {
+        padding: 8px 16px;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+      }
+      
+      .calendar-grid {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .calendar-header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
+      
+      .calendar-cell {
+        padding: 8px;
+        height: 120px;
+        border-right: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        overflow: hidden;
+      }
+      
+      .calendar-header .calendar-cell {
+        height: auto;
+        text-align: center;
+        font-weight: bold;
+        background-color: var(--header-background);
+      }
+      
+      .calendar-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
+      
+      .calendar-date {
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+      
+      .calendar-cell.empty {
+        background-color: var(--container-background);
+      }
+      
+      .calendar-cell.today {
+        background-color: var(--highlight-color);
+      }
+      
+      .calendar-event {
+        background-color: var(--container-background);
+        padding: 2px 4px;
+        margin-bottom: 2px;
+        border-radius: 2px;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+      }
+      
+      .event-details {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--item-background);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 16px;
+        min-width: 300px;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        z-index: 100;
+      }
+      
+      .event-details-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      
+      .more-events {
+        font-size: 12px;
+        color: var(--text-color);
+        opacity: 0.8;
+        text-align: center;
+      }
+    `,l="";switch(i.type){case"board":l=`
+          body {
+            overflow-x: auto;
+          }
+          
+          .board-container {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            min-height: calc(100vh - 32px);
+          }
+        `;break;case"calendar":l=`
+          .calendar-container {
+            height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+          }
+          
+          .calendar-grid {
+            flex: 1;
+            overflow-y: auto;
+          }
+        `;break}let u="";switch(i.type){case"table":u=this.renderTableView(n);break;case"board":u=this.renderBoardView(n,i);break;case"calendar":u=this.renderCalendarView(n,i);break;case"gallery":u=this.renderGalleryView(n);break;default:u=this.renderTableView(n)}let d=n.fields.map(p=>({name:p.name,type:p.type})),f=JSON.stringify(d);return`<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${t.name} - ${i.name}</title>
+        <style>
+          ${c}
+          ${l}
+        </style>
+      </head>
+      <body>
+        <div class="toolbar">
+          <button id="backButton">\u2190 Back to Projects</button>
+          <span>${t.name} - ${i.name}</span>
+        </div>
+        
+        ${u}
+        
+        <script>
+          // Client-side code for interactivity
+          (function() {
+            // Store a reference to the VS Code API
+            const vscode = acquireVsCodeApi();
+            
+            // Initialize event listeners
+            document.addEventListener('DOMContentLoaded', () => {
+              // Back button to return to projects tree view
+              const backButton = document.getElementById('backButton');
+              if (backButton) {
+                backButton.addEventListener('click', () => {
+                  vscode.postMessage({ command: 'showProjects' });
+                });
+              }
+              
+              // Make file links clickable
+              document.querySelectorAll('.file-link').forEach(link => {
+                link.addEventListener('click', () => {
+                  const path = link.getAttribute('data-path');
+                  if (path) {
+                    vscode.postMessage({
+                      command: 'openFile',
+                      path: path
+                    });
+                  }
+                });
+              });
+              
+              // Table view related event listeners
+              if (document.querySelector('table')) {
+                // Handle sort controls
+                document.querySelectorAll('.sort-control').forEach(sortControl => {
+                  sortControl.addEventListener('click', () => {
+                    const field = sortControl.getAttribute('data-field');
+                    const direction = sortControl.classList.contains('sort-asc') ? 'asc' : 'desc';
+                    
+                    vscode.postMessage({
+                      command: 'sortData',
+                      field: field,
+                      direction: direction
+                    });
+                  });
+                });
+                
+                // Handle filter panel toggle
+                const showFiltersBtn = document.getElementById('showFiltersBtn');
+                const filterPanel = document.getElementById('filterPanel');
+                
+                if (showFiltersBtn && filterPanel) {
+                  showFiltersBtn.addEventListener('click', () => {
+                    filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+                  });
+                }
+                
+                // Clear filter button
+                const clearFilterBtn = document.getElementById('clearFilterBtn');
+                if (clearFilterBtn) {
+                  clearFilterBtn.addEventListener('click', () => {
+                    if (window.projectsFilter && typeof window.projectsFilter.clearFilters === 'function') {
+                      window.projectsFilter.clearFilters();
+                    }
+                  });
+                }
+              }
+              
+              // Calendar view related event listeners
+              if (document.querySelector('.calendar-container')) {
+                // Date field selector
+                const dateFieldSelect = document.getElementById('dateFieldSelect');
+                if (dateFieldSelect) {
+                  dateFieldSelect.addEventListener('change', () => {
+                    vscode.postMessage({
+                      command: 'updateCalendarConfig',
+                      config: {
+                        dateField: dateFieldSelect.value
+                      }
+                    });
+                  });
+                }
+                
+                // Month navigation
+                const prevMonthBtn = document.getElementById('prevMonth');
+                const nextMonthBtn = document.getElementById('nextMonth');
+                const todayBtn = document.getElementById('todayBtn');
+                
+                if (prevMonthBtn) {
+                  prevMonthBtn.addEventListener('click', () => {
+                    vscode.postMessage({
+                      command: 'updateCalendarConfig',
+                      config: {
+                        month: ${i.config?.month!==void 0?i.config.month:"new Date().getMonth()"} - 1
+                      }
+                    });
+                  });
+                }
+                
+                if (nextMonthBtn) {
+                  nextMonthBtn.addEventListener('click', () => {
+                    vscode.postMessage({
+                      command: 'updateCalendarConfig',
+                      config: {
+                        month: ${i.config?.month!==void 0?i.config.month:"new Date().getMonth()"} + 1
+                      }
+                    });
+                  });
+                }
+                
+                if (todayBtn) {
+                  todayBtn.addEventListener('click', () => {
+                    const today = new Date();
+                    vscode.postMessage({
+                      command: 'updateCalendarConfig',
+                      config: {
+                        year: today.getFullYear(),
+                        month: today.getMonth()
+                      }
+                    });
+                  });
+                }
+                
+                // Calendar filters
+                const calendarShowFiltersBtn = document.getElementById('calendarShowFiltersBtn');
+                const calendarFilterPanel = document.getElementById('calendarFilterPanel');
+                
+                if (calendarShowFiltersBtn && calendarFilterPanel) {
+                  calendarShowFiltersBtn.addEventListener('click', () => {
+                    calendarFilterPanel.style.display = calendarFilterPanel.style.display === 'none' ? 'block' : 'none';
+                  });
+                }
+                
+                // Calendar clear filter button
+                const calendarClearFilterBtn = document.getElementById('calendarClearFilterBtn');
+                if (calendarClearFilterBtn) {
+                  calendarClearFilterBtn.addEventListener('click', () => {
+                    if (window.projectsFilter && typeof window.projectsFilter.clearFilters === 'function') {
+                      window.projectsFilter.clearFilters();
+                    }
+                  });
+                }
+                
+                // Calendar event details
+                const eventDetails = document.getElementById('eventDetails');
+                const closeEventDetails = document.getElementById('closeEventDetails');
+                const selectedDate = document.getElementById('selectedDate');
+                const eventDetailsList = document.getElementById('eventDetailsList');
+                
+                // Add click event to calendar cells to show events for that day
+                document.querySelectorAll('.calendar-cell:not(.empty)').forEach(cell => {
+                  cell.addEventListener('click', () => {
+                    const date = cell.getAttribute('data-date');
+                    if (date && eventDetails && selectedDate && eventDetailsList) {
+                      // Format date for display
+                      const displayDate = new Date(date).toLocaleDateString();
+                      selectedDate.textContent = displayDate;
+                      
+                      // Get all events for this date
+                      const events = cell.querySelectorAll('.calendar-event');
+                      let eventDetailsHtml = '';
+                      
+                      if (events.length === 0) {
+                        eventDetailsHtml = '<p>No events for this date.</p>';
+                      } else {
+                        events.forEach(event => {
+                          const title = event.querySelector('span').getAttribute('title');
+                          const recordId = event.getAttribute('data-record-id');
+                          const path = event.getAttribute('data-path');
+                          
+                          eventDetailsHtml += \`
+                            <div class="event-detail">
+                              <h4><span class="file-link" data-path="\${path}">\${title}</span></h4>
+                            </div>
+                          \`;
+                        });
+                      }
+                      
+                      eventDetailsList.innerHTML = eventDetailsHtml;
+                      eventDetails.style.display = 'block';
+                      
+                      // Make file links in event details clickable
+                      eventDetailsList.querySelectorAll('.file-link').forEach(link => {
+                        link.addEventListener('click', () => {
+                          const path = link.getAttribute('data-path');
+                          if (path) {
+                            vscode.postMessage({
+                              command: 'openFile',
+                              path: path
+                            });
+                          }
+                        });
+                      });
+                    }
+                  });
+                });
+                
+                // Close event details
+                if (closeEventDetails && eventDetails) {
+                  closeEventDetails.addEventListener('click', () => {
+                    eventDetails.style.display = 'none';
+                  });
+                }
+              }
+            });
+            
+            // Initialize filter builder if script is loaded
+            if (typeof createFilterBuilder === 'function') {
+              // Pass the available fields to the filter builder
+              const fields = ${f};
+              
+              // Create the filter builder instance
+              if (document.getElementById('filterBuilder')) {
+                window.filterBuilderComponent = createFilterBuilder({
+                  container: document.getElementById('filterBuilder'),
+                  fields: fields,
+                  addButton: document.getElementById('addFilterBtn'),
+                  conjunction: ${i.filter?.conjunction?`"${i.filter.conjunction}"`:'"and"'},
+                  conditions: ${i.filter?.conditions?JSON.stringify(i.filter.conditions):"[]"}
+                });
+              }
+              
+              if (document.getElementById('calendarFilterBuilder')) {
+                window.calendarFilterBuilderComponent = createFilterBuilder({
+                  container: document.getElementById('calendarFilterBuilder'),
+                  fields: fields,
+                  addButton: document.getElementById('calendarAddFilterBtn'),
+                  conjunction: ${i.filter?.conjunction?`"${i.filter.conjunction}"`:'"and"'},
+                  conditions: ${i.filter?.conditions?JSON.stringify(i.filter.conditions):"[]"}
+                });
+              }
+            }
+          })();
+        </script>
+        
+        <!-- Custom Filter Builder Script -->
+        <script>${a}</script>
+        
+        <!-- Filter Handler Script -->
+        <script>${o}</script>
+      </body>
+    </html>`}};var re;function w(e,r="info"){if(!re)return;let i=`[${new Date().toISOString().replace("T"," ").substr(0,19)}] ${e}`;switch(r){case"error":console.error(i),re.appendLine(`ERROR: ${e}`);break;case"warn":console.warn(i),re.appendLine(`WARNING: ${e}`);break;default:console.log(i),re.appendLine(`INFO: ${e}`)}}function rl(e,r,t,i,n){w("Registering commands...");let a={"vscode-projects.showProjects":()=>{w("Show projects command executed"),n.reveal(null,{focus:!0,select:!1})},"vscode-projects.createProject":async()=>{w("Create project command executed");try{await wi(r,t)}catch(o){w(`Error creating project: ${o}`,"error"),E.window.showErrorMessage(`Failed to create project: ${o}`)}},"vscode-projects.createNote":async()=>{w("Create note command executed");try{await xi(r)}catch(o){w(`Error creating note: ${o}`,"error"),E.window.showErrorMessage(`Failed to create note: ${o}`)}},"vscode-projects.openProject":async o=>{w(`Open project command executed with projectId: ${o}`);try{if(!o){let s=r.getProjects();if(s.length===0)throw new Error("No projects exist. Create a project first.");let c=s.map(u=>({label:u.name,id:u.id})),l=await E.window.showQuickPick(c,{placeHolder:"Select a project to open"});if(!l)return;o=l.id,w(`User selected project: ${l.label} (${o})`)}await i.openProject(o)}catch(s){w(`Error opening project: ${s}`,"error"),E.window.showErrorMessage(`Failed to open project: ${s}`)}},"vscode-projects.openView":async(o,s)=>{w(`Open view command executed with projectId: ${o}, viewId: ${s}`);try{if(!o){let c=r.getProjects();if(c.length===0)throw new Error("No projects exist. Create a project first.");let l=c.map(d=>({label:d.name,id:d.id})),u=await E.window.showQuickPick(l,{placeHolder:"Select a project"});if(!u)return;o=u.id,w(`User selected project: ${u.label} (${o})`)}if(!s){let c=r.getProject(o);if(!c)throw new Error(`Project with ID ${o} not found`);if(c.views.length===0)throw new Error(`Project ${c.name} has no views`);let l=c.views.map(d=>({label:d.name,description:`Type: ${d.type}`,id:d.id})),u=await E.window.showQuickPick(l,{placeHolder:"Select a view"});if(!u)return;s=u.id,w(`User selected view: ${u.label} (${s})`)}await i.openView(o,s)}catch(c){w(`Error opening view: ${c}`,"error"),E.window.showErrorMessage(`Failed to open view: ${c}`)}},"vscode-projects.refreshView":()=>{w("Refresh view command executed"),t.refresh()},"vscode-projects.toggleArchives":()=>{w("Toggle archives command executed"),t.toggleArchives()},"vscode-projects.createView":async()=>{w("Create view command executed");try{await bi(r),t.refresh()}catch(o){w(`Error creating view: ${o}`,"error"),E.window.showErrorMessage(`Failed to create view: ${o}`)}},"vscode-projects.deleteProject":async()=>{w("Delete project command executed");try{await Fi(r,t)}catch(o){w(`Error deleting project: ${o}`,"error"),E.window.showErrorMessage(`Failed to delete project: ${o}`)}},"vscode-projects.deleteView":async()=>{w("Delete view command executed");try{await Ci(r,t)}catch(o){w(`Error deleting view: ${o}`,"error"),E.window.showErrorMessage(`Failed to delete view: ${o}`)}}};Object.keys(a).forEach(o=>{try{w(`Registering command: ${o}`);let s=E.commands.registerCommand(o,a[o]);e.subscriptions.push(s),w(`Command registered successfully: ${o}`)}catch(s){w(`Error registering command ${o}: ${s}`,"error"),E.window.showErrorMessage(`Failed to register command ${o}: ${s}`)}}),w("All commands registered successfully")}function tl(e){re=E.window.createOutputChannel("VSCode Projects"),e.subscriptions.push(re),w("Activating VSCode Projects extension"),w(`Extension path: ${e.extensionPath}`);try{let r=new rr;w("File system adapter initialized");let t=new Re(e,r);w("Project manager initialized");let i=new or(e,t);w("View provider initialized");let n=new Ae(t);w("Projects tree data provider initialized");let a=E.window.createTreeView("vscode-projects-sidebar",{treeDataProvider:n,showCollapseAll:!0});w("Tree view registered with ID: vscode-projects-sidebar"),rl(e,t,n,i,a),e.subscriptions.push(re,a),w("VSCode Projects extension activated successfully"),E.window.showInformationMessage("VSCode Projects extension activated!")}catch(r){w(`Error during extension activation: ${r}`,"error"),E.window.showErrorMessage(`Failed to activate VSCode Projects extension: ${r}`)}}function nl(){w("Deactivating VSCode Projects extension")}0&&(module.exports={activate,deactivate});
 /*! Bundled license information:
 
 is-extendable/index.js:

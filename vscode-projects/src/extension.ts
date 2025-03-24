@@ -3,7 +3,7 @@ import { ProjectsProvider } from './providers/projectsProvider';
 import { ProjectManager } from './models/projectManager';
 import { VSCodeFileSystem } from './utils/vsCodeFileSystem';
 import { createProject, createNote, createView, deleteProject, deleteView } from './utils/commands';
-import { ViewProvider } from './views/viewProvider';
+import { ViewProvider } from './views/viewProviderFilter';
 
 // Output channel for extension logs
 let outputChannel: vscode.OutputChannel;
