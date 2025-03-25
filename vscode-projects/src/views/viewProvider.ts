@@ -1432,14 +1432,26 @@ export class ViewProvider {
               }
             });
             
-            // Initialize filter builder if script is loaded
-            if (typeof createFilterBuilder === 'function') {
+          // Expose dataframe fields globally for potential use
+          window.dataframeFields = ${fieldsJson};
+          
+          // Initialize filter builder if script is loaded
+          function initializeFilterBuilder() {
+            try {
+              console.log('Initializing filter builder...');
+              
+              if (typeof createFilterBuilder !== 'function') {
+                console.error('createFilterBuilder function not found - filter builder script may not be loaded yet');
+                return false;
+              }
+              
               // Pass the available fields to the filter builder
-              const fields = ${fieldsJson};
+              const fields = window.dataframeFields || ${fieldsJson};
               
               // Create the main filter builder instance
               const filterBuilder = document.getElementById('filterBuilder');
               if (filterBuilder) {
+                // Create filter builder and store reference
                 window.filterBuilderComponent = createFilterBuilder({
                   container: filterBuilder,
                   fields: fields,
@@ -1448,8 +1460,54 @@ export class ViewProvider {
                   conditions: ${view.filter?.conditions ? JSON.stringify(view.filter.conditions) : '[]'}
                 });
                 
+                // Ensure filterState is created before setting activeBuilder
+                window.filterState = window.filterState || {
+                  builders: {},
+                  activeBuilder: null,
+                  conditions: [],
+                  conjunction: 'and'
+                };
+                
                 // Store reference in global state
                 window.filterState.activeBuilder = window.filterBuilderComponent;
+                console.log('Filter builder initialized successfully');
+                return true;
+              } else {
+                console.error('Filter builder container element not found');
+                return false;
+              }
+            } catch (error) {
+              console.error('Error initializing filter builder:', error);
+              return false;
+            }
+          }
+          
+          // Try to initialize immediately
+          const initialized = initializeFilterBuilder();
+          
+          // If not successful, retry on load and with a delay
+          if (!initialized) {
+            window.addEventListener('load', function() {
+              console.log('Window loaded, trying to initialize filter builder again');
+              if (!window.filterState?.activeBuilder) {
+                initializeFilterBuilder();
+              }
+            });
+            
+            // Also try after a short delay as a fallback
+            setTimeout(function() {
+              console.log('Delayed initialization check');
+              if (!window.filterState?.activeBuilder) {
+                initializeFilterBuilder();
+              }
+            }, 500);
+          }
+              
+          // Initialize calendar filter builder
+          function initializeCalendarFilterBuilder() {
+            try {
+              if (typeof createFilterBuilder !== 'function') {
+                return false;
               }
               
               // Create a separate filter builder for calendar view if needed
@@ -1457,15 +1515,37 @@ export class ViewProvider {
               if (calendarFilterBuilder) {
                 window.calendarFilterBuilderComponent = createFilterBuilder({
                   container: calendarFilterBuilder,
-                  fields: fields,
+                  fields: window.dataframeFields || ${fieldsJson},
                   addButton: document.getElementById('calendarAddFilterBtn'),
                   conjunction: ${view.filter?.conjunction ? `"${view.filter.conjunction}"` : '"and"'},
                   conditions: ${view.filter?.conditions ? JSON.stringify(view.filter.conditions) : '[]'}
                 });
                 
+                // Ensure filterState exists
+                window.filterState = window.filterState || {
+                  builders: {},
+                  activeBuilder: null,
+                  conditions: [],
+                  conjunction: 'and'
+                };
+                
                 // Store reference for the calendar filter builder
                 window.filterState.calendarBuilder = window.calendarFilterBuilderComponent;
+                return true;
               }
+              return false;
+            } catch (error) {
+              console.error('Error initializing calendar filter builder:', error);
+              return false;
+            }
+          }
+          
+          // Try to initialize calendar builder
+          setTimeout(function() {
+            if (document.getElementById('calendarFilterBuilder')) {
+              initializeCalendarFilterBuilder();
+            }
+          }, 300);
             }
             
             // Handle messages from extension

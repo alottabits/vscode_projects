@@ -190,6 +190,21 @@ class FilterBuilder {
     
     // Add the button AFTER creating the condition to match Obsidian behavior
     this.container.appendChild(this.addFilterBtn);
+    
+    // Ensure that the addFilterBtn click handler is properly working
+    if (this.addFilterBtn) {
+      // Remove any existing handlers and recreate
+      const newBtn = this.addFilterBtn.cloneNode(true);
+      this.addFilterBtn.parentNode.replaceChild(newBtn, this.addFilterBtn);
+      this.addFilterBtn = newBtn;
+      
+      // Add the click handler
+      this.addFilterBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Add condition button clicked');
+        this.addCondition();
+      });
+    }
   }
   
   /**
@@ -379,17 +394,22 @@ class FilterBuilder {
   getConditions() {
     const conditions = [];
     
+    // If filterBuilder is empty, add an initial condition first
+    if (this.filterBuilder.children.length === 0) {
+      this.addCondition(null, true);
+    }
+    
     this.filterBuilder.querySelectorAll('.filter-condition').forEach((conditionEl, index) => {
       const propertySelect = conditionEl.querySelector('.filter-property');
       const operatorSelect = conditionEl.querySelector('.filter-operator');
       const valueInput = conditionEl.querySelector('.filter-value');
       const joinSelect = conditionEl.querySelector('.filter-join');
       
-      if (propertySelect.value) {
+      if (propertySelect && propertySelect.value) {
         const condition = {
           field: propertySelect.value,
-          operator: operatorSelect.value,
-          value: valueInput.value
+          operator: operatorSelect ? operatorSelect.value : 'contains',
+          value: valueInput ? valueInput.value : ''
         };
         
         // Add the join operator for conditions after the first one
@@ -422,6 +442,7 @@ class FilterBuilder {
    */
   clear() {
     this.filterBuilder.innerHTML = '';
+    // Always add a blank initial condition
     this.addCondition(null, true);
   }
   
@@ -437,7 +458,17 @@ class FilterBuilder {
         this.addCondition(condition, index === 0);
       });
     } else {
+      // Always add an initial blank condition
       this.addCondition(null, true);
     }
+    
+    // Force a redraw to ensure all UI elements are correctly rendered
+    setTimeout(() => {
+      const currentDisplay = this.filterBuilder.style.display;
+      this.filterBuilder.style.display = 'none';
+      setTimeout(() => {
+        this.filterBuilder.style.display = currentDisplay;
+      }, 0);
+    }, 50);
   }
 }

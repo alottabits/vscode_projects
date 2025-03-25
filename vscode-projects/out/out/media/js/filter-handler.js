@@ -6,7 +6,31 @@
 // Debug logging function
 function debugLog(message, obj) {
     console.log(`[FilterHandler] ${message}`, obj);
+    
+    // Try to log to an element in the DOM if it exists
+    try {
+        var logPanel = document.getElementById('logPanel');
+        if (logPanel) {
+            var logEntry = document.createElement('div');
+            logEntry.className = 'log-entry info';
+            logEntry.textContent = `[FilterHandler] ${message}`;
+            logPanel.appendChild(logEntry);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+    } catch (e) {
+        // Silently fail if DOM manipulation fails
+    }
 }
+
+// Ensure the filter state object is created
+window.filterState = window.filterState || {
+    builders: {}, // Filter builder instances
+    activeBuilder: null, // Currently active builder
+    conditions: [], // Current filter conditions
+    conjunction: 'and', // AND/OR conjunction
+    version: '1.0.0', // Version to track script loaded
+    loadTime: new Date().toISOString() // When script was loaded
+};
 
 // This script expects the VS Code API to be provided globally as 'vscode'
 (function() {
@@ -31,6 +55,15 @@ function debugLog(message, obj) {
         // DOM is already loaded, call the function directly
         initializeFilterHandlers();
     }
+    
+    // Also set up a delayed initialization as a backup
+    setTimeout(function() {
+        debugLog('Running delayed initialization check');
+        if (!window.filterState.activeBuilder) {
+            debugLog('Filter builder not found in delayed check, trying to initialize again');
+            initializeFilterHandlers();
+        }
+    }, 1000); // 1 second delay as backup
     
     // Also add a mutation observer to handle dynamically added elements
     const observer = new MutationObserver(function(mutations) {
@@ -207,6 +240,80 @@ function debugLog(message, obj) {
             debugLog('filterState found:', window.filterState);
         } else {
             debugLog('WARNING: filterState not found in window object!');
+            // Initialize filter state if it doesn't exist
+            window.filterState = {
+                builders: {},
+                activeBuilder: null,
+                conditions: [],
+                conjunction: 'and',
+                version: '1.0.0',
+                loadTime: new Date().toISOString()
+            };
+        }
+
+        // Try to initialize the filter builder if it's missing
+        if (!window.filterState.activeBuilder && typeof createFilterBuilder === 'function') {
+            debugLog('Attempting to create missing filter builder');
+            try {
+                const filterBuilder = document.getElementById('filterBuilder');
+                if (filterBuilder) {
+                    // Get fields from any visible fields on the page
+                    const fields = [];
+                    
+                    // Try to find fields in various ways
+                    try {
+                        // First try to get fields from a data attribute
+                        const fieldsData = document.querySelector('[data-fields]');
+                        if (fieldsData && fieldsData.dataset.fields) {
+                            fields.push(...JSON.parse(fieldsData.dataset.fields));
+                        }
+                        // Then check if fields are defined in a script variable
+                        else if (window.dataframeFields) {
+                            fields.push(...window.dataframeFields);
+                        }
+                        // If no fields found, add comprehensive defaults
+                        else {
+                            fields.push(
+                                { name: 'name', type: 'string' },
+                                { name: 'status', type: 'string' },
+                                { name: 'priority', type: 'number' },
+                                { name: 'creation_date', type: 'date' },
+                                { name: 'modification_date', type: 'date' },
+                                { name: 'Due', type: 'date' },
+                                { name: 'tags', type: 'array' },
+                                { name: 'Completed', type: 'boolean' }
+                            );
+                        }
+                    } catch (e) {
+                        debugLog('Error getting fields:', e);
+                        // Add comprehensive default fields
+                        fields.push(
+                            { name: 'name', type: 'string' },
+                            { name: 'status', type: 'string' },
+                            { name: 'priority', type: 'number' },
+                            { name: 'creation_date', type: 'date' },
+                            { name: 'modification_date', type: 'date' },
+                            { name: 'Due', type: 'date' },
+                            { name: 'tags', type: 'array' },
+                            { name: 'Completed', type: 'boolean' }
+                        );
+                    }
+                    
+                    // Create a new filter builder
+                    const addFilterBtn = document.getElementById('addFilterBtn');
+                    window.filterState.activeBuilder = createFilterBuilder({
+                        container: filterBuilder,
+                        fields: fields,
+                        addButton: addFilterBtn,
+                        conditions: [],
+                        conjunction: 'and'
+                    });
+                    
+                    debugLog('Successfully created missing filter builder', window.filterState.activeBuilder);
+                }
+            } catch (e) {
+                debugLog('Error creating filter builder:', e);
+            }
         }
 
         // Check if we can access the active builder
@@ -360,7 +467,10 @@ function debugLog(message, obj) {
      */
     function clearFilters() {
         // Clear UI filter builder if it exists
-        if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
+        if (window.filterState && window.filterState.activeBuilder) {
+            window.filterState.activeBuilder.clear();
+        }
+        else if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
             filterBuilderComponent.clear();
         }
         
