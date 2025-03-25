@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Initialization Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #252526;
+            color: #e7e7e7;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .panel {
+            background-color: #333333;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .log-panel {
+            background-color: #1e1e1e;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        .timestamp {
+            color: #569cd6;
+        }
+        .filter-button {
+            background-color: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-right: 8px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        .filter-panel {
+            background-color: #2d2d2d;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 3px;
+            border: 1px solid #3c3c3c;
+        }
+        .filter-error {
+            background-color: #5a1d1d;
+            color: #e9614e;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            border-left: 3px solid #f14c4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Filter Initialization Test</h1>
+        
+        <div class="panel">
+            <h2>Test Controls</h2>
+            <button id="initTest" class="filter-button">Initialize Filter Builder</button>
+            <button id="showFilterPanel" class="filter-button">Show Filter Panel</button>
+            <button id="clearFilters" class="filter-button">Clear Filters</button>
+            <button id="applyFilters" class="filter-button">Apply Filters</button>
+        </div>
+        
+        <div id="filterPanel" class="filter-panel" style="display: none;">
+            <h3>Filters</h3>
+            <div id="filterBuilder" class="filter-builder">
+                <!-- Filter conditions will be added here dynamically -->
+            </div>
+            <button id="addFilterBtn" class="filter-add">+ Add Condition</button>
+        </div>
+        
+        <div class="panel">
+            <h2>Filter State</h2>
+            <pre id="stateDisplay"></pre>
+        </div>
+        
+        <div class="panel">
+            <h2>Log</h2>
+            <div id="logPanel" class="log-panel"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Mock data fields for testing
+        window.dataframeFields = [
+            { name: 'name', type: 'string' },
+            { name: 'status', type: 'string' },
+            { name: 'priority', type: 'string' },
+            { name: 'date', type: 'date' },
+            { name: 'completed', type: 'boolean' }
+        ];
+        
+        // Mock VSCode API
+        window.vscode = {
+            postMessage: function(message) {
+                log('Message posted to VSCode: ' + JSON.stringify(message));
+            }
+        };
+        
+        // Global variables
+        let scriptLoadStatus = {
+            filterBuilder: false,
+            filterHandler: false
+        };
+        
+        // Logging function
+        function log(message, type = 'info') {
+            const logPanel = document.getElementById('logPanel');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            const now = new Date();
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0')}`;
+            
+            entry.innerHTML = `<span class="timestamp">[${timeStr}]</span> ${message}`;
+            
+            if (type === 'error') {
+                entry.style.color = '#f14c4c';
+            } else if (type === 'success') {
+                entry.style.color = '#6a9955';
+            }
+            
+            logPanel.appendChild(entry);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+        
+        // Load scripts dynamically
+        function loadScript(url, callback) {
+            log(`Loading script: ${url}`);
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = function() {
+                log(`Script loaded: ${url}`, 'success');
+                callback();
+            };
+            script.onerror = function() {
+                log(`Failed to load script: ${url}`, 'error');
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Update state display
+        function updateStateDisplay() {
+            const stateDisplay = document.getElementById('stateDisplay');
+            stateDisplay.textContent = JSON.stringify(window.filterState || {}, null, 2);
+        }
+        
+        // Initialize the test
+        function initializeTest() {
+            log('Test initialization started');
+            
+            // Load scripts sequentially
+            loadScript('js/common-filter-builder.js', function() {
+                scriptLoadStatus.filterBuilder = true;
+                log('Filter builder script loaded', 'success');
+                
+                loadScript('js/filter-handler.js', function() {
+                    scriptLoadStatus.filterHandler = true;
+                    log('Filter handler script loaded', 'success');
+                    
+                    // Initialize filter state for tracking
+                    if (!window.filterState) {
+                        window.filterState = {
+                            version: '1.1.0',
+                            activeBuilder: null,
+                            conditions: [],
+                            conjunction: 'and'
+                        };
+                        log('Filter state initialized', 'success');
+                    }
+                    
+                    // Regular check for FilterHandler initialization
+                    const checkInterval = setInterval(() => {
+                        if (window.FilterHandler && window.FilterHandler.initialized) {
+                            log('FilterHandler detected and initialized', 'success');
+                            clearInterval(checkInterval);
+                            updateStateDisplay();
+                        } else if (window.FilterHandler) {
+                            log('FilterHandler detected but not yet initialized');
+                        } else {
+                            log('Waiting for FilterHandler to initialize...');
+                        }
+                    }, 500);
+                    
+                    log('Setup complete, ready for testing');
+                });
+            });
+        }
+        
+        // Test filter operation
+        function testFilterOperation(operation) {
+            log(`Testing filter operation: ${operation}`);
+            
+            try {
+                // Check if FilterHandler is available
+                if (!window.FilterHandler) {
+                    throw new Error('FilterHandler not available');
+                }
+                
+                // Check initialization state
+                if (!window.FilterHandler.initialized) {
+                    log('FilterHandler not initialized, initializing now');
+                    window.FilterHandler.initialize();
+                }
+                
+                // Check if we have a filter builder now
+                if (!window.filterState || !window.filterState.activeBuilder) {
+                    log('Creating filter builder manually', 'info');
+                    if (!window.FilterHandler.createFilterBuilderIfMissing()) {
+                        throw new Error('Failed to create filter builder');
+                    }
+                }
+                
+                // Perform the operation
+                switch (operation) {
+                    case 'show':
+                        log('Showing filter panel');
+                        document.getElementById('filterPanel').style.display = 'block';
+                        break;
+                    case 'clear':
+                        log('Clearing filters');
+                        window.FilterHandler.handleClearFilter();
+                        break;
+                    case 'apply':
+                        log('Applying filters');
+                        window.FilterHandler.handleApplyFilter();
+                        break;
+                }
+                
+                // Update display
+                updateStateDisplay();
+                
+                log(`Operation complete: ${operation}`, 'success');
+            } catch (error) {
+                log(`Error during operation ${operation}: ${error}`, 'error');
+                
+                // Create error display
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'filter-error';
+                errorDiv.textContent = `${error}`;
+                document.body.appendChild(errorDiv);
+                
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 5000);
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up button listeners
+            document.getElementById('initTest').addEventListener('click', initializeTest);
+            
+            document.getElementById('showFilterPanel').addEventListener('click', function() {
+                testFilterOperation('show');
+            });
+            
+            document.getElementById('clearFilters').addEventListener('click', function() {
+                testFilterOperation('clear');
+            });
+            
+            document.getElementById('applyFilters').addEventListener('click', function() {
+                testFilterOperation('apply');
+            });
+            
+            log('Page loaded, click "Initialize Filter Builder" to start the test');
+        });
+        
+        // Global error handler
+        window.onerror = function(message, source, lineno, colno, error) {
+            log(`Global error: ${message} (${source}:${lineno}:${colno})`, 'error');
+            return false;
+        };
+    </script>
+</body>
+</html>

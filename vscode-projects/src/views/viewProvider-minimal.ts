@@ -231,43 +231,14 @@ export class ViewProvider {
               text-align: left;
               border-bottom: 1px solid #ddd;
             }
-            .filter-panel {
-              margin-bottom: 20px;
-              padding: 10px;
-              border: 1px solid #ddd;
-              border-radius: 4px;
-            }
-            .filter-button {
-              background-color: #0e639c;
-              color: white;
-              border: none;
-              padding: 8px 12px;
-              border-radius: 2px;
-              cursor: pointer;
-              margin-right: 5px;
-            }
-            .filter-error {
-              background-color: #5a1d1d;
-              color: #e9614e;
-              padding: 10px;
-              margin: 10px 0;
-              border-radius: 3px;
-              border-left: 3px solid #f14c4c;
-            }
           </style>
         </head>
         <body>
           <div class="container">
             <h1>${project.name} - ${view.name}</h1>
-            <div id="filterPanel" class="filter-panel">
-              <h3>Filters</h3>
+            <div id="filterPanel" style="margin-bottom: 20px;">
               <div id="filterBuilder"></div>
-              <button id="addFilterBtn" class="filter-add">+ Add Condition</button>
-              <div style="margin-top: 10px; display: flex; justify-content: space-between;">
-                <button id="clearFilterBtn" class="filter-button">Clear Filters</button>
-                <button id="applyFiltersBtn" class="filter-button">Apply Filters</button>
-                <button id="saveFilterBtn" class="filter-button">Save Filter</button>
-              </div>
+              <button id="applyFiltersBtn">Apply Filters</button>
             </div>
             
             <div id="contentArea">
@@ -279,16 +250,9 @@ export class ViewProvider {
                 </thead>
                 <tbody>
                   ${dataframe.records.map(record => 
-                    `<tr>${dataframe.fields.map(field => {
-                      const value = record.values[field.name];
-                      if (value === null || value === undefined) {
-                        return '<td></td>';
-                      } else if (Array.isArray(value)) {
-                        return '<td>' + value.join(', ') + '</td>';
-                      } else {
-                        return '<td>' + value + '</td>';
-                      }
-                    }).join('')}</tr>`
+                    `<tr>${dataframe.fields.map(field => 
+                      `<td>${record.values[field.name] || ''}</td>`
+                    ).join('')}</tr>`
                   ).join('')}
                 </tbody>
               </table>
@@ -302,13 +266,12 @@ export class ViewProvider {
             // Establish connection to VSCode extension
             const vscode = acquireVsCodeApi();
             
-            // Initialize global filter state
-            window.filterState = {
-              version: '1.3.0',
-              activeBuilder: null,
-              conditions: [],
-              conjunction: 'and'
-            };
+            // Handle filter apply button
+            document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+              vscode.postMessage({
+                command: 'refreshData'
+              });
+            });
           </script>
           
           <!-- Load Filter Scripts -->

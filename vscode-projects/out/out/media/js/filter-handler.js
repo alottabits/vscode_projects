@@ -1,500 +1,473 @@
 /**
- * Filter handler script for VSCode Projects extension
- * Handles the communication between filter UI components and the extension
+ * Filter handler for VSCode Projects extension
+ * This script manages the filter UI components and handles the communication with the extension.
  */
 
-// Debug logging function
-function debugLog(message, obj) {
-    console.log(`[FilterHandler] ${message}`, obj);
-    
-    // Try to log to an element in the DOM if it exists
-    try {
-        var logPanel = document.getElementById('logPanel');
-        if (logPanel) {
-            var logEntry = document.createElement('div');
-            logEntry.className = 'log-entry info';
-            logEntry.textContent = `[FilterHandler] ${message}`;
-            logPanel.appendChild(logEntry);
-            logPanel.scrollTop = logPanel.scrollHeight;
-        }
-    } catch (e) {
-        // Silently fail if DOM manipulation fails
-    }
-}
+// Immediately log that the script is loading for debugging
+console.log("[FILTER-BUILDER] Script loading - Timestamp: " + new Date().toISOString());
 
-// Ensure the filter state object is created
-window.filterState = window.filterState || {
-    builders: {}, // Filter builder instances
-    activeBuilder: null, // Currently active builder
-    conditions: [], // Current filter conditions
-    conjunction: 'and', // AND/OR conjunction
-    version: '1.0.0', // Version to track script loaded
-    loadTime: new Date().toISOString() // When script was loaded
-};
-
-// This script expects the VS Code API to be provided globally as 'vscode'
-(function() {
-    // Use the globally provided VS Code API instead of acquiring it again
-    const vscode = window.vscode || acquireVsCodeApi();
-    
-    // Make the VS Code API available globally
-    window.vscode = vscode;
-    
-    // Store current filter state
-    let currentFilters = {
-        conjunction: 'and',
-        conditions: []
-    };
-    
-    debugLog('Filter handler script loaded. Adding event listeners...');
-    
-    // Initialize filter handlers when document is loaded or immediately if DOM is already loaded
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeFilterHandlers);
-    } else {
-        // DOM is already loaded, call the function directly
-        initializeFilterHandlers();
+// Namespace to avoid global pollution
+window.FilterHandler = {
+  initialized: false,
+  filterState: null,
+  filterPanel: null,
+  filterBuilder: null,
+  showFiltersButton: null,
+  hideFiltersButton: null,
+  clearFilterButton: null,
+  applyFilterButton: null,
+  saveFilterButton: null,
+  addFilterButton: null,
+  
+  // Log function with identifier
+  log(message, data) {
+    console.log(`[FilterHandler] ${message}`, data);
+  },
+  
+  /**
+   * Initialize filter handler
+   */
+  initialize() {
+    if (this.initialized) {
+      return;
     }
     
-    // Also set up a delayed initialization as a backup
-    setTimeout(function() {
-        debugLog('Running delayed initialization check');
-        if (!window.filterState.activeBuilder) {
-            debugLog('Filter builder not found in delayed check, trying to initialize again');
-            initializeFilterHandlers();
-        }
-    }, 1000); // 1 second delay as backup
+    this.log('Initializing filter handlers');
     
-    // Also add a mutation observer to handle dynamically added elements
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-                // Check if our buttons have been added
-                const applyBtn = document.getElementById('applyFiltersBtn');
-                const calendarApplyBtn = document.getElementById('calendarApplyFiltersBtn');
-                
-                if ((applyBtn && !applyBtn.hasAttribute('data-handler-attached')) || 
-                    (calendarApplyBtn && !calendarApplyBtn.hasAttribute('data-handler-attached'))) {
-                    debugLog('New filter elements detected, attaching handlers');
-                    initializeFilterHandlers();
-                }
-            }
+    // Find filter UI elements
+    this.filterPanel = document.getElementById('filterPanel');
+    this.filterBuilder = document.getElementById('filterBuilder');
+    this.showFiltersButton = document.getElementById('showFiltersBtn');
+    this.clearFilterButton = document.getElementById('clearFilterBtn');
+    this.applyFilterButton = document.getElementById('applyFiltersBtn');
+    this.saveFilterButton = document.getElementById('saveFilterBtn');
+    this.addFilterButton = document.getElementById('addFilterBtn');
+    
+    // Attach event handlers to filter controls
+    this.attachFilterHandlers();
+    
+    // Force immediate initialization of filter builder
+    this.initFilterBuilder();
+    
+    // Mark as initialized
+    this.initialized = true;
+    
+    // Schedule a delayed check to ensure filter builder was created
+    setTimeout(() => this.checkFilterBuilder(), 500);
+  },
+  
+  /**
+   * Check if filter builder was properly initialized and retry if not
+   */
+  checkFilterBuilder() {
+    this.log('Running delayed initialization check');
+    
+    // Access the filter builder from the global window object
+    const activeBuilder = window.filterState?.activeBuilder;
+    
+    if (!activeBuilder) {
+      this.log('Filter builder not found in delayed check, trying to initialize again');
+      this.initFilterBuilder();
+    }
+  },
+  
+  /**
+   * Initialize the filter builder component
+   */
+  initFilterBuilder() {
+    this.log('Initializing filter handlers');
+    
+    // Ensure the filter builder is created
+    if (this.filterBuilder && typeof createFilterBuilder === 'function') {
+      // If we already have a filter state reference, use it
+      if (window.filterState && window.filterState.activeBuilder) {
+        this.filterState = window.filterState;
+        return;
+      }
+      
+      // Create a filter builder with an empty condition to start
+      const fields = window.dataframeFields || [];
+      
+      try {
+        // Create initial empty condition
+        const defaultConditions = [{
+          property: fields.length > 0 ? fields[0].name : 'name',
+          operator: 'contains',
+          value: ''
+        }];
+        
+        // Create the filter builder
+        const filterBuilder = createFilterBuilder({
+          container: this.filterBuilder,
+          fields: fields,
+          addButton: this.addFilterButton,
+          conjunction: 'and',
+          conditions: defaultConditions
         });
-    });
-    
-    // Start observing the document with the configured parameters
-    observer.observe(document.body, { childList: true, subtree: true });
-    
-    /**
-     * Initialize filter-related event handlers
-     */
-    function initializeFilterHandlers() {
-        debugLog('Initializing filter handlers');
         
-        // Apply Filter button handler
-        const applyFilterBtn = document.getElementById('applyFiltersBtn');
-        if (applyFilterBtn && !applyFilterBtn.hasAttribute('data-handler-attached')) {
-            debugLog('Attaching click handler to Apply Filter button');
-            
-            // Remove existing handlers by cloning the button
-            const newApplyBtn = applyFilterBtn.cloneNode(true);
-            applyFilterBtn.parentNode.replaceChild(newApplyBtn, applyFilterBtn);
-            
-            // Add new handler and mark as attached
-            newApplyBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                debugLog('Apply Filter button clicked');
-                handleApplyFilter();
-            });
-            newApplyBtn.setAttribute('data-handler-attached', 'true');
-        }
-        
-        // Calendar filter application
-        const calendarApplyFiltersBtn = document.getElementById('calendarApplyFiltersBtn');
-        if (calendarApplyFiltersBtn && !calendarApplyFiltersBtn.hasAttribute('data-handler-attached')) {
-            debugLog('Attaching click handler to Calendar Apply Filter button');
-            
-            // Remove existing handlers by cloning the button
-            const newCalendarBtn = calendarApplyFiltersBtn.cloneNode(true);
-            calendarApplyFiltersBtn.parentNode.replaceChild(newCalendarBtn, calendarApplyFiltersBtn);
-            
-            // Add new handler and mark as attached
-            newCalendarBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                debugLog('Calendar Apply Filter button clicked');
-                handleCalendarApplyFilter();
-            });
-            newCalendarBtn.setAttribute('data-handler-attached', 'true');
-        }
-        
-        // Save Filter button
-        const saveFilterBtn = document.getElementById('saveFilterBtn');
-        if (saveFilterBtn && !saveFilterBtn.hasAttribute('data-handler-attached')) {
-            debugLog('Attaching click handler to Save Filter button');
-            
-            // Remove existing handlers by cloning the button
-            const newSaveBtn = saveFilterBtn.cloneNode(true);
-            saveFilterBtn.parentNode.replaceChild(newSaveBtn, saveFilterBtn);
-            
-            // Add new handler and mark as attached
-            newSaveBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                debugLog('Save Filter button clicked');
-                
-                // Get filter conditions from the UI
-                const conditions = window.filterState.activeBuilder ? 
-                    window.filterState.activeBuilder.getConditions() : [];
-                const conjunction = window.filterState.activeBuilder ? 
-                    window.filterState.activeBuilder.getConjunction() : 'and';
-                
-                // Update current filters
-                currentFilters = {
-                    conjunction: conjunction,
-                    conditions: conditions
-                };
-                
-                // Store filter state
-                vscode.setState({ filters: currentFilters });
-                
-                // Send save command to extension
-                vscode.postMessage({
-                    command: 'saveFilter',
-                    filterConditions: conditions,
-                    conjunction: conjunction
-                });
-                
-                debugLog('Filter saved', conditions);
-            });
-            newSaveBtn.setAttribute('data-handler-attached', 'true');
-        }
-        
-        // Clear Filters button
-        const clearFilterBtn = document.getElementById('clearFilterBtn');
-        if (clearFilterBtn && !clearFilterBtn.hasAttribute('data-handler-attached')) {
-            debugLog('Attaching click handler to Clear Filter button');
-            
-            // Remove existing handlers by cloning the button
-            const newClearBtn = clearFilterBtn.cloneNode(true);
-            clearFilterBtn.parentNode.replaceChild(newClearBtn, clearFilterBtn);
-            
-            // Add new handler and mark as attached
-            newClearBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                debugLog('Clear Filter button clicked');
-                clearFilters();
-            });
-            newClearBtn.setAttribute('data-handler-attached', 'true');
-        }
-        
-        // Show filter panel toggle
-        const showFiltersBtn = document.getElementById('showFiltersBtn');
-        if (showFiltersBtn && !showFiltersBtn.hasAttribute('data-handler-attached')) {
-            const filterPanel = document.getElementById('filterPanel');
-            
-            if (showFiltersBtn && filterPanel) {
-                debugLog('Attaching click handler to Show Filters button');
-                
-                // Remove existing handlers by cloning the button
-                const newShowBtn = showFiltersBtn.cloneNode(true);
-                showFiltersBtn.parentNode.replaceChild(newShowBtn, showFiltersBtn);
-                
-                // Add new handler and mark as attached
-                newShowBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const isVisible = filterPanel.style.display !== 'none';
-                    filterPanel.style.display = isVisible ? 'none' : 'block';
-                    debugLog(`Filter panel ${isVisible ? 'hidden' : 'shown'}`);
-                });
-                newShowBtn.setAttribute('data-handler-attached', 'true');
-            }
-        }
-        
-        // Apply existing filter state if available
-        applyStoredFilterState();
-    }
-    
-    /**
-     * Apply any stored filter state from VSCode storage
-     */
-    function applyStoredFilterState() {
-        // Get the stored filter state if any
-        const storedState = vscode.getState();
-        if (storedState && storedState.filters) {
-            currentFilters = storedState.filters;
-            
-            // If we have a FilterBuilder instance, load the conditions
-            if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
-                filterBuilderComponent.loadConditions(currentFilters.conditions);
-            }
-        }
-    }
-    
-    /**
-     * Handle Apply Filter button click
-     */
-    function handleApplyFilter() {
-        debugLog('handleApplyFilter() called');
-
-        // Check if we can access filterState
-        if (window.filterState) {
-            debugLog('filterState found:', window.filterState);
+        // Store reference to the builder
+        if (!window.filterState) {
+          window.filterState = {
+            activeBuilder: filterBuilder,
+            conditions: defaultConditions,
+            conjunction: 'and'
+          };
         } else {
-            debugLog('WARNING: filterState not found in window object!');
-            // Initialize filter state if it doesn't exist
-            window.filterState = {
-                builders: {},
-                activeBuilder: null,
-                conditions: [],
-                conjunction: 'and',
-                version: '1.0.0',
-                loadTime: new Date().toISOString()
-            };
-        }
-
-        // Try to initialize the filter builder if it's missing
-        if (!window.filterState.activeBuilder && typeof createFilterBuilder === 'function') {
-            debugLog('Attempting to create missing filter builder');
-            try {
-                const filterBuilder = document.getElementById('filterBuilder');
-                if (filterBuilder) {
-                    // Get fields from any visible fields on the page
-                    const fields = [];
-                    
-                    // Try to find fields in various ways
-                    try {
-                        // First try to get fields from a data attribute
-                        const fieldsData = document.querySelector('[data-fields]');
-                        if (fieldsData && fieldsData.dataset.fields) {
-                            fields.push(...JSON.parse(fieldsData.dataset.fields));
-                        }
-                        // Then check if fields are defined in a script variable
-                        else if (window.dataframeFields) {
-                            fields.push(...window.dataframeFields);
-                        }
-                        // If no fields found, add comprehensive defaults
-                        else {
-                            fields.push(
-                                { name: 'name', type: 'string' },
-                                { name: 'status', type: 'string' },
-                                { name: 'priority', type: 'number' },
-                                { name: 'creation_date', type: 'date' },
-                                { name: 'modification_date', type: 'date' },
-                                { name: 'Due', type: 'date' },
-                                { name: 'tags', type: 'array' },
-                                { name: 'Completed', type: 'boolean' }
-                            );
-                        }
-                    } catch (e) {
-                        debugLog('Error getting fields:', e);
-                        // Add comprehensive default fields
-                        fields.push(
-                            { name: 'name', type: 'string' },
-                            { name: 'status', type: 'string' },
-                            { name: 'priority', type: 'number' },
-                            { name: 'creation_date', type: 'date' },
-                            { name: 'modification_date', type: 'date' },
-                            { name: 'Due', type: 'date' },
-                            { name: 'tags', type: 'array' },
-                            { name: 'Completed', type: 'boolean' }
-                        );
-                    }
-                    
-                    // Create a new filter builder
-                    const addFilterBtn = document.getElementById('addFilterBtn');
-                    window.filterState.activeBuilder = createFilterBuilder({
-                        container: filterBuilder,
-                        fields: fields,
-                        addButton: addFilterBtn,
-                        conditions: [],
-                        conjunction: 'and'
-                    });
-                    
-                    debugLog('Successfully created missing filter builder', window.filterState.activeBuilder);
-                }
-            } catch (e) {
-                debugLog('Error creating filter builder:', e);
-            }
-        }
-
-        // Check if we can access the active builder
-        const activeBuilder = window.filterState && window.filterState.activeBuilder;
-        if (activeBuilder) {
-            debugLog('Active filter builder found:', activeBuilder);
-        } else {
-            debugLog('WARNING: Active filter builder not found!');
-            // Fallback to classic component if available
-            if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
-                debugLog('Using legacy filterBuilderComponent instead');
-            } else {
-                debugLog('ERROR: No filter builder available! Cannot apply filters.');
-                // Create a visual error notification
-                try {
-                    const filterPanel = document.getElementById('filterPanel');
-                    if (filterPanel) {
-                        const errorMsg = document.createElement('div');
-                        errorMsg.className = 'filter-error';
-                        errorMsg.textContent = 'Error: Filter builder not initialized properly.';
-                        errorMsg.style.color = 'red';
-                        errorMsg.style.padding = '8px';
-                        errorMsg.style.margin = '8px 0';
-                        errorMsg.style.border = '1px solid red';
-                        filterPanel.prepend(errorMsg);
-                        
-                        // Auto-remove after 5 seconds
-                        setTimeout(() => {
-                            if (errorMsg.parentNode) {
-                                errorMsg.parentNode.removeChild(errorMsg);
-                            }
-                        }, 5000);
-                    }
-                } catch (e) {
-                    // Ignore DOM errors
-                }
-                return;
-            }
+          window.filterState.activeBuilder = filterBuilder;
         }
         
-        // Get filter conditions from the UI
-        const builder = activeBuilder || filterBuilderComponent;
-        if (builder) {
-            debugLog('Getting conditions from builder:', builder);
-            
-            const conditions = builder.getConditions();
-            const conjunction = builder.getConjunction();
-            
-            debugLog('Retrieved conditions:', conditions);
-            debugLog('Retrieved conjunction:', conjunction);
-            
-            // Update current filters
-            currentFilters = {
-                conjunction: conjunction,
-                conditions: conditions
-            };
-            
-            // Store filter state
-            vscode.setState({ filters: currentFilters });
-            
-            // Send filter command to extension
-            const message = {
-                command: 'refreshData',
-                filterConditions: conditions,
-                conjunction: conjunction
-            };
-            
-            debugLog('Sending message to extension:', message);
-            vscode.postMessage(message);
-            
-            // Visual confirmation
-            try {
-                const applyBtn = document.getElementById('applyFiltersBtn');
-                if (applyBtn) {
-                    const originalText = applyBtn.textContent;
-                    applyBtn.textContent = '✓ Applied';
-                    applyBtn.style.backgroundColor = '#4CAF50';
-                    
-                    setTimeout(() => {
-                        applyBtn.textContent = originalText;
-                        applyBtn.style.backgroundColor = '';
-                    }, 2000);
-                }
-            } catch (e) {
-                // Ignore DOM errors
-            }
-        }
+        this.filterState = window.filterState;
+        
+        this.log('Filter builder initialized with empty condition');
+      } catch (error) {
+        console.error('Error initializing filter builder:', error);
+      }
     }
-    
-    /**
-     * Handle Calendar Apply Filter button click
-     */
-    function handleCalendarApplyFilter() {
-        // Get filter conditions from the calendar filter UI
-        const calendarFilterBuilder = document.getElementById('calendarFilterBuilder');
-        
-        if (calendarFilterBuilder) {
-            const conditions = [];
-            
-            // Collect filter conditions from UI
-            calendarFilterBuilder.querySelectorAll('.filter-condition').forEach((conditionEl, index) => {
-                const propertySelect = conditionEl.querySelector('.filter-property');
-                const operatorSelect = conditionEl.querySelector('.filter-operator');
-                const valueInput = conditionEl.querySelector('.filter-value');
-                const joinSelect = conditionEl.querySelector('.filter-join');
-                
-                if (propertySelect && propertySelect.value) {
-                    const property = propertySelect.value;
-                    const operator = operatorSelect ? operatorSelect.value : 'contains';
-                    const value = valueInput ? valueInput.value : '';
-                    
-                    // Get the logical join (AND/OR) if not the first condition
-                    const join = index > 0 && joinSelect ? joinSelect.value : null;
-                    
-                    // Always include isEmpty/isNotEmpty operators even without value
-                    if (value || operator === 'isEmpty' || operator === 'isNotEmpty') {
-                        conditions.push({
-                            field: property,
-                            operator: operator,
-                            value: value,
-                            join: join
-                        });
-                    }
-                }
-            });
-            
-            // Determine the conjunction type
-            const joinSelects = Array.from(calendarFilterBuilder.querySelectorAll('.filter-join'));
-            const conjunction = joinSelects.length > 0 && joinSelects.every(join => join.value === 'or') ? 'or' : 'and';
-            
-            // Update current filters
-            currentFilters = {
-                conjunction: conjunction,
-                conditions: conditions
-            };
-            
-            // Store filter state
-            vscode.setState({ filters: currentFilters });
-            
-            // Send filter command to extension
-            vscode.postMessage({
-                command: 'refreshData',
-                filterConditions: conditions,
-                conjunction: conjunction
-            });
-        }
-    }
-    
-    /**
-     * Clear all filter conditions
-     */
-    function clearFilters() {
-        // Clear UI filter builder if it exists
-        if (window.filterState && window.filterState.activeBuilder) {
-            window.filterState.activeBuilder.clear();
-        }
-        else if (typeof filterBuilderComponent !== 'undefined' && filterBuilderComponent) {
-            filterBuilderComponent.clear();
-        }
-        
-        // Reset current filters
-        currentFilters = {
-            conjunction: 'and',
-            conditions: []
+  },
+
+  /**
+   * Attempt to create the filter builder if it doesn't exist
+   */
+  createFilterBuilderIfMissing() {
+    // Check if we have the filter state
+    if (!this.filterState || !this.filterState.activeBuilder) {
+      this.log('Attempting to create missing filter builder');
+      
+      // Only proceed if the create function exists
+      if (typeof createFilterBuilder === 'function') {
+        // Create with default options
+        const options = {
+          container: this.filterBuilder,
+          fields: window.dataframeFields || [],
+          addButton: this.addFilterButton,
+          conjunction: 'and',
+          conditions: [{
+            property: (window.dataframeFields && window.dataframeFields.length > 0) 
+              ? window.dataframeFields[0].name 
+              : 'name',
+            operator: 'contains',
+            value: ''
+          }]
         };
         
-        // Store filter state
-        vscode.setState({ filters: currentFilters });
+        this.log('Creating filter builder with options:', options);
         
-        // Send filter command to extension with empty conditions
-        vscode.postMessage({
-            command: 'refreshData',
-            filterConditions: [],
-            conjunction: 'and'
-        });
+        try {
+          // If we have an external add button, connect it
+          if (this.addFilterButton) {
+            this.log('Connecting external add button', this.addFilterButton);
+          }
+          
+          // Create the builder instance
+          const builder = createFilterBuilder(options);
+          this.log('Filter builder created successfully', builder);
+          
+          // Store the reference
+          if (!window.filterState) {
+            window.filterState = { activeBuilder: builder };
+          } else {
+            window.filterState.activeBuilder = builder;
+          }
+          
+          this.filterState = window.filterState;
+          this.log('Successfully created missing filter builder', builder);
+          return true;
+        } catch (error) {
+          console.error('Failed to create filter builder:', error);
+          return false;
+        }
+      } else {
+        console.error('createFilterBuilder function not available');
+        return false;
+      }
     }
     
-    // Make functions available to the global scope
-    window.projectsFilter = {
-        applyFilter: handleApplyFilter,
-        applyCalendarFilter: handleCalendarApplyFilter,
-        clearFilters: clearFilters
+    return true; // Builder already exists
+  },
+  
+  /**
+   * Attach event handlers to filter controls
+   */
+  attachFilterHandlers() {
+    // Show/Hide filters button
+    if (this.showFiltersButton) {
+      this.log('Attaching click handler to Show Filters button');
+      this.showFiltersButton.addEventListener('click', () => this.toggleFilterPanel());
+    }
+    
+    // Clear filter button
+    if (this.clearFilterButton) {
+      this.log('Attaching click handler to Clear Filter button');
+      this.clearFilterButton.addEventListener('click', () => this.handleClearFilter());
+    }
+    
+    // Apply filter button
+    if (this.applyFilterButton) {
+      this.log('Attaching click handler to Apply Filter button');
+      this.applyFilterButton.addEventListener('click', () => this.handleApplyFilter());
+    }
+    
+    // Save filter button
+    if (this.saveFilterButton) {
+      this.log('Attaching click handler to Save Filter button');
+      this.saveFilterButton.addEventListener('click', () => this.handleSaveFilter());
+    }
+  },
+  
+  /**
+   * Toggle filter panel visibility
+   */
+  toggleFilterPanel() {
+    if (!this.filterPanel) return;
+    
+    const isVisible = this.filterPanel.style.display !== 'none';
+    this.filterPanel.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+      this.log('Filter panel shown');
+      // If showing the panel, ensure filter builder is initialized
+      this.initFilterBuilder();
+    } else {
+      this.log('Filter panel hidden');
+    }
+  },
+  
+  /**
+   * Handle clear filter button click
+   */
+  handleClearFilter() {
+    this.log('Clear Filter button clicked');
+    
+    // Make sure we have our references
+    if (!this.createFilterBuilderIfMissing()) return;
+    
+    try {
+      // First hide any error message
+      const errorElement = document.getElementById('filterError');
+      if (errorElement) {
+        errorElement.style.display = 'none';
+      }
+      
+      // Remove all conditions except one
+      if (this.filterState && this.filterState.activeBuilder) {
+        const builder = this.filterState.activeBuilder;
+        
+        // Clear all conditions and add a single empty one
+        builder.clearConditions();
+        
+        // Add a default empty condition
+        const fields = window.dataframeFields || [];
+        const defaultProperty = fields.length > 0 ? fields[0].name : 'name';
+        
+        builder.addCondition({
+          property: defaultProperty,
+          operator: 'contains',
+          value: ''
+        });
+        
+        // Send message to extension
+        this.sendRefreshMessage([]);
+      }
+    } catch (error) {
+      console.error('Failed to clear filter:', error);
+      this.showError('Failed to clear filter: ' + error.message);
+    }
+  },
+  
+  /**
+   * Handle apply filter button click
+   */
+  handleApplyFilter() {
+    this.log('Apply Filter button clicked');
+    this.log('handleApplyFilter() called');
+    
+    // Make sure we have filter state
+    if (!this.filterState) {
+      this.log('Looking for filterState:', window.filterState);
+      this.filterState = window.filterState;
+      
+      // If still no filter state, attempt to create it
+      if (!this.filterState) {
+        this.log('No filter state found, creating default state');
+        window.filterState = {
+          version: '1.3.0',
+          activeBuilder: null,
+          conditions: [],
+          conjunction: 'and'
+        };
+        this.filterState = window.filterState;
+      }
+    }
+    
+    // Create filter builder if it doesn't exist
+    if (!this.createFilterBuilderIfMissing()) {
+      this.log('Error: Failed to create filter builder on demand');
+      this.showError('Filter builder not initialized properly. Please refresh the page and try again.');
+      return;
+    }
+    
+    try {
+      // Get the active builder
+      const builder = this.filterState.activeBuilder;
+      this.log('Active filter builder found:', builder);
+      
+      // Get conditions from the builder
+      this.log('Getting conditions from builder:', builder);
+      const conditions = builder.getConditions();
+      this.log('Retrieved conditions:', conditions);
+      
+      // Get conjunction (AND/OR)
+      const conjunction = builder.getConjunction();
+      this.log('Retrieved conjunction:', conjunction);
+      
+      // Send message to extension
+      const message = {
+        command: 'refreshData',
+        filterConditions: conditions,
+        conjunction: conjunction
+      };
+      
+      this.log('Sending message to extension:', message);
+      this.sendMessageToExtension(message);
+    } catch (error) {
+      console.error('Failed to apply filter:', error);
+      this.showError('Failed to apply filter: ' + error.message);
+    }
+  },
+  
+  /**
+   * Handle save filter button click
+   */
+  handleSaveFilter() {
+    this.log('Save Filter button clicked');
+    
+    // Make sure filter builder exists
+    if (!this.createFilterBuilderIfMissing()) {
+      this.showError('Filter builder not initialized properly.');
+      return;
+    }
+    
+    try {
+      // Get the active builder
+      const builder = this.filterState.activeBuilder;
+      
+      // Get conditions from the builder
+      const conditions = builder.getConditions();
+      
+      // Get conjunction (AND/OR)
+      const conjunction = builder.getConjunction();
+      
+      // Send message to extension
+      const message = {
+        command: 'saveFilter',
+        filterConditions: conditions,
+        conjunction: conjunction
+      };
+      
+      this.sendMessageToExtension(message);
+    } catch (error) {
+      console.error('Failed to save filter:', error);
+      this.showError('Failed to save filter: ' + error.message);
+    }
+  },
+  
+  /**
+   * Send a refresh message to the extension
+   */
+  sendRefreshMessage(conditions, conjunction = 'and') {
+    const message = {
+      command: 'refreshData',
+      filterConditions: conditions,
+      conjunction: conjunction
     };
-})();
+    
+    this.sendMessageToExtension(message);
+  },
+  
+  /**
+   * Send a message to the VSCode extension
+   */
+  sendMessageToExtension(message) {
+    // Check if vscode API is available
+    if (window.vscode) {
+      window.vscode.postMessage(message);
+    } else {
+      console.error('VSCode API not available');
+    }
+  },
+  
+  /**
+   * Show an error message
+   */
+  showError(message) {
+    // Try to find or create error element
+    let errorElement = document.getElementById('filterError');
+    
+    if (!errorElement) {
+      errorElement = document.createElement('div');
+      errorElement.id = 'filterError';
+      errorElement.className = 'filter-error';
+      
+      // Insert after filter panel if it exists
+      if (this.filterPanel && this.filterPanel.parentNode) {
+        this.filterPanel.parentNode.insertBefore(errorElement, this.filterPanel.nextSibling);
+      } else {
+        // Otherwise try to add to the body
+        document.body.appendChild(errorElement);
+      }
+    }
+    
+    // Set the error message
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+};
+
+// When DOM is loaded, look for new filter elements to initialize
+function checkForFilterElements() {
+  FilterHandler.log('New filter elements detected, attaching handlers');
+  FilterHandler.initialize();
+  
+  // Check window.filterState initialization to ensure proper sync
+  if (!window.filterState) {
+    FilterHandler.log('Initializing global filter state');
+    window.filterState = {
+      version: '1.3.0',
+      activeBuilder: null,
+      conditions: [],
+      conjunction: 'and'
+    };
+    
+    // Log for debugging
+    FilterHandler.log('Filter state initialized with version ' + window.filterState.version);
+    console.log('Object data:');
+    console.log(window.filterState);
+  }
+  
+  // Attempt an immediate initialization of the filter builder
+  setTimeout(() => FilterHandler.initFilterBuilder(), 10);
+  
+  // Schedule verification that filter builder is properly initialized
+  setTimeout(() => {
+    if (!window.filterState?.activeBuilder) {
+      FilterHandler.log('Filter builder not found, retrying initialization');
+      FilterHandler.createFilterBuilderIfMissing();
+    }
+  }, 300);
+}
+
+// On document load
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait a moment before initializing to ensure other scripts have loaded
+  setTimeout(checkForFilterElements, 50);
+});
+
+// Export FilterHandler to global scope and initialize immediately if possible
+window.FilterHandler = FilterHandler;
+
+// If loading after DOM is ready, initialize immediately
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  FilterHandler.log('Filter handler script loaded. Adding event listeners...');
+  // Run the check on next tick to ensure scripts are fully loaded
+  setTimeout(checkForFilterElements, 5);
+}
